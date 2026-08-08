@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Uric">
-<title>Uric — Seu dinheiro, mais inteligente</title>
+<meta name="apple-mobile-web-app-title" content="Finanças">
+<title>Finanças</title>
 <style>
   :root{
     --bg:#F5F5F7; --card:#FFFFFF; --card-glass:rgba(255,255,255,.68); --border:rgba(0,0,0,.06); --text:#1D1D1F; --sub:#6E6E73; --muted:#A6A399;
@@ -133,7 +133,7 @@
 <body>
 
 <header>
-  <h1 id="header-title">Uric</h1>
+  <h1 id="header-title">Finanças</h1>
   <p id="header-sub">Carregando...</p>
 </header>
 
@@ -141,7 +141,7 @@
 
   <div class="view active" id="view-dashboard">
     <div class="card hero">
-      <p class="stat-label">Saldo projetado do mês</p>
+      <p class="stat-label">Saldo do mês</p>
       <p class="stat-value hero-value" id="dash-saldo">--</p>
       <p class="stat-label" id="dash-saldo-sub"></p>
     </div>
@@ -159,10 +159,9 @@
       </div>
     </div>
 
-    <div class="card" id="dash-uric-profile" style="padding:14px 16px;"></div>
     <div id="dash-tips"></div>
 
-    <div class="section-title">Compromissos financeiros</div>
+    <div class="section-title">Crediário da empresa</div>
     <div class="card" id="dash-crediario"></div>
 
     <div class="section-title">Contas fixas do mês</div>
@@ -216,12 +215,7 @@
     <div class="card" id="config-resumo"></div>
   </div>
   <div class="view" id="view-uric">
-    <div class="card hero" style="margin-bottom:12px;">
-      <p class="stat-label">Seu assistente financeiro</p>
-      <p style="font-size:24px;font-weight:700;margin:4px 0;">Uric</p>
-      <p style="color:var(--sub);line-height:1.5;margin:0;">Eu acompanho seus números, encontro padrões e te aviso quando alguma coisa merece atenção.</p>
-    </div>
-    <div class="section-title">O que está acontecendo</div>
+    <div class="section-title">Uric</div>
     <div class="card" id="uric-feed"></div>
   </div>
 
@@ -256,47 +250,13 @@ const DEFAULT_DATA = {
   extras: [],
   ponto: {},
   contasFixas: [],
-  onboardingDone: false,
-  perfil: {
-    nome: '',
-    tipoRenda: '',
-    objetivo: '',
-    prioridade: '',
-    criadoEm: null
-  },
-  contasBancarias: [],
-  cartoes: [],
-  dividas: [],
-  metas: [],
   config: {
     salarioBase: 0,
-    rendaTipo: '',
-    regime: '',
-    dataPagamento: '',
-    segundaEntrada: false,
-    segundaEntradaTipo: '',
-    segundaEntradaValor: 0,
-    segundaEntradaPercentual: 0,
-    segundaEntradaDia: '',
-    valePct: 0,
-    grupoNomes: {dia5:'Salário líquido', dia20:'Adiantamento', extra:'Ganhos extras'},
+    valePct: 0.4,
+    grupoNomes: {dia5:'Entrada do dia 5', dia20:'Entrada do dia 20', extra:'Ganhos extras'},
     descontosFixos: [
       {id:'df1', nome:'Crediário / Cartão', valor:0, limite:0, meta:0}
-    ],
-    dependentes: 0,
-    pensaoValor: 0,
-    valeTransporteValor: 0,
-    valeAlimentacaoValor: 0,
-    planoSaudeValor: 0,
-    outrosDescontos: 0,
-    jornadaSemanal: 44,
-    horasDia: 8,
-    trabalhaSabado: false,
-    adicionalNoturno: 0,
-    insalubridade: 0,
-    periculosidade: 0,
-    dataAdmissao: '',
-    usaDescontoSimplificadoIRRF: true
+    ]
   }
 }
 
@@ -313,14 +273,6 @@ function load(){
     if(!data.config.grupoNomes) data.config.grupoNomes = {dia5:'Sobra do dia 5', dia20:'Dinheiro do dia 20', extra:'Ganhos extras'};
     if(!data.config.grupoNomes.extra) data.config.grupoNomes.extra = 'Ganhos extras';
     if(!data.extras) data.extras = [];
-    if(!data.perfil) data.perfil = JSON.parse(JSON.stringify(DEFAULT_DATA.perfil));
-    if(!data.contasBancarias) data.contasBancarias = [];
-    if(!data.cartoes) data.cartoes = [];
-    if(!data.dividas) data.dividas = [];
-    if(!data.metas) data.metas = [];
-    data.config = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_DATA.config)), data.config||{});
-    if(!data.config.grupoNomes) data.config.grupoNomes = JSON.parse(JSON.stringify(DEFAULT_DATA.config.grupoNomes));
-    if(!data.config.descontosFixos) data.config.descontosFixos = JSON.parse(JSON.stringify(DEFAULT_DATA.config.descontosFixos));
     // migração: limite antigo do crediário era 1500, meta 900 — agora é limite 1000, meta 600
     data.config.descontosFixos.forEach(d=>{
       if(d.id==='df1' && d.limite===1500) d.limite = 1000;
@@ -352,27 +304,11 @@ function mesNome(m){ return MESES[m].charAt(0).toUpperCase()+MESES[m].slice(1); 
 function renderAll(){
   renderHeader();
   renderDashboard();
-  renderUricProfile();
   renderHolerites();
   renderContas();
   renderGastos();
   renderPonto();
   renderUric();
-}
-
-function renderUricProfile(){
-  const el=document.getElementById('dash-uric-profile');
-  if(!el) return;
-  const nome=data?.perfil?.nome||'';
-  const objetivo=data?.perfil?.objetivo;
-  const mapa={organizar:'organizar sua vida financeira',dividas:'reduzir suas dívidas',economizar:'economizar mais',reserva:'montar sua reserva',cartao:'controlar seus cartões',investir:'começar a investir',planejar:'planejar seus próximos meses'};
-  const prioridade=mapa[objetivo]||'entender sua vida financeira';
-  el.innerHTML=`<div style="display:flex;gap:12px;align-items:flex-start;">
-    <div style="width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent-light);color:var(--accent);font-weight:800;">U</div>
-    <div style="flex:1;"><div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Uric viu</div>
-    <div style="font-size:14px;line-height:1.45;margin-top:3px;">${nome?nome+', ':''}sua prioridade agora é <strong>${prioridade}</strong>.</div>
-    <button class="btn secondary small" style="margin-top:9px;" onclick="mostrarView('uric')">Ver o que o Uric encontrou</button></div>
-  </div>`;
 }
 
 function gerarInsightsUric(){
@@ -446,9 +382,7 @@ function renderUric(){
 
 function renderHeader(){
   const now = new Date();
-  const nome=data?.perfil?.nome ? data.perfil.nome : '';
-  document.getElementById('header-title').textContent = nome ? `Olá, ${nome}` : 'Uric';
-  document.getElementById('header-sub').textContent = nome ? `Seu dinheiro, mais inteligente · ${mesNome(now.getMonth())} de ${now.getFullYear()}` : `Seu dinheiro, mais inteligente · ${mesNome(now.getMonth())} de ${now.getFullYear()}`;
+  document.getElementById('header-sub').textContent = mesNome(now.getMonth()) + ' de ' + now.getFullYear();
 }
 
 function ultimosHolerites(n){
@@ -928,71 +862,35 @@ function abrirPreviewHolerite(mes, ano, horas50, horas100){
   document.getElementById('modal-bg').classList.add('active');
 }
 
-function calcularINSS2026(base){
-  const teto = 8475.55;
-  const b = Math.min(Math.max(Number(base)||0,0), teto);
-  const faixas = [
-    {lim:1621.00, aliq:.075},
-    {lim:2902.84, aliq:.09},
-    {lim:4354.27, aliq:.12},
-    {lim:8475.55, aliq:.14}
-  ];
-  let anterior=0, total=0;
-  for(const f of faixas){
-    const parcela=Math.max(0, Math.min(b,f.lim)-anterior);
-    total += parcela*f.aliq;
-    anterior=f.lim;
-    if(b<=f.lim) break;
-  }
-  return Math.min(total, 8475.55*.14);
-}
-
-function calcularIRRF2026(rendimentosTributaveis, deducoesLegais){
-  const rend = Math.max(0, Number(rendimentosTributaveis)||0);
-  const dep = Math.max(0, Number(deducoesLegais)||0);
-  const descontoSimplificado = 607.20;
-  const baseLegal = Math.max(0, rend - dep);
-  const baseSimplificada = Math.max(0, rend - descontoSimplificado);
-  const base = Math.min(baseLegal, baseSimplificada);
-  let imposto = 0;
-  if(base<=2428.80) imposto=0;
-  else if(base<=2826.65) imposto=base*.075-182.16;
-  else if(base<=3751.05) imposto=base*.15-394.16;
-  else if(base<=4664.68) imposto=base*.225-675.49;
-  else imposto=base*.275-908.73;
-  imposto=Math.max(0, imposto);
-  let reducao=0;
-  if(rend<=5000) reducao=Math.min(imposto,312.89);
-  else if(rend<=7350) reducao=Math.min(imposto, Math.max(0,978.62-(.133145*rend)));
-  return {base, impostoBruto:imposto, reducao, imposto:Math.max(0,imposto-reducao), metodo:baseSimplificada<=baseLegal?'simplificado':'legal'};
-}
-
 function gerarHolerite(mes, ano, horas50, horas100, feriadosQtd, domingosQtd, faltasValor){
   const cfg = data.config;
-  const base = Number(cfg.salarioBase)||0;
-  const divisor = Number(cfg.horasMensais)||220;
-  const rate50 = divisor ? base/divisor*1.5 : 0;
-  const rate100 = divisor ? base/divisor*2 : 0;
+  const base = cfg.salarioBase;
+  const rate50 = base/220*1.5;
+  const rate100 = base/220*2;
   const he50v = horas50*rate50;
   const he100v = horas100*rate100;
-  const feriadosValor = feriadosQtd*Number(cfg.valorFeriado||0);
-  const domingosValor = domingosQtd*Number(cfg.valorDomingo||0);
-  const adicionais = Number(cfg.adicionalNoturno||0)+Number(cfg.insalubridade||0)+Number(cfg.periculosidade||0);
-  const dsr = (he50v+he100v)*Number(cfg.dsrPercentual||0.16667);
-  const proventos = base+he50v+he100v+feriadosValor+domingosValor+adicionais+dsr;
+  const feriadosValor = feriadosQtd*200;
+  const domingosValor = domingosQtd*135;
+  const dsr = (he50v+he100v)*0.16667;
+  const proventos = base+he50v+he100v+feriadosValor+domingosValor+dsr;
 
-  const inss = calcularINSS2026(proventos);
+  const inssPct = 0.075;
+  const inss = proventos*inssPct;
   const dependentes = Number(cfg.dependentes||0);
   const deducaoDependentes = dependentes * 189.59;
   const pensaoValor = Number(cfg.pensaoValor||0);
-  const deducoesLegais = inss + deducaoDependentes + pensaoValor;
-  const ir = calcularIRRF2026(proventos, deducoesLegais);
-  const irrf = ir.imposto;
+  const baseIrrf = Math.max(0, proventos - inss - deducaoDependentes - pensaoValor);
+  let irrf = 0;
+  if(baseIrrf<=2259.20) irrf=0;
+  else if(baseIrrf<=2826.65) irrf = baseIrrf*0.075-169.44;
+  else if(baseIrrf<=3751.05) irrf = baseIrrf*0.15-381.44;
+  else irrf = baseIrrf*0.275-662.75;
+  irrf = Math.max(0, irrf);
 
   const fgtsPct = 0.08;
-  const fgtsValor = proventos*fgtsPct;
+  const fgtsValor = proventos*fgtsPct; // informativo, não entra no total de descontos
 
-  const vale = Number(cfg.valePct||0)>0 ? base*Number(cfg.valePct) : Number(cfg.segundaEntradaValor||0);
+  const vale = base*cfg.valePct;
   const beneficios = [];
   if(pensaoValor>0) beneficios.push({codigo:'Pensão alimentícia', nome:'Pensão alimentícia', valor:pensaoValor});
   if(Number(cfg.valeTransporteValor||0)>0) beneficios.push({codigo:'Vale-transporte', nome:'Vale-transporte', valor:Number(cfg.valeTransporteValor)});
@@ -1002,15 +900,13 @@ function gerarHolerite(mes, ano, horas50, horas100, feriadosQtd, domingosQtd, fa
 
   const descFixosDetalhe = cfg.descontosFixos.map(d=>({codigo:d.nome, nome:d.nome, valor:Number(d.valor||0)}));
   const descFixosTotal = descFixosDetalhe.reduce((a,d)=>a+d.valor,0);
-  const outrosDescontos = Number(cfg.outrosDescontos||0);
-  const descontosTotal = inss+irrf+vale+faltasValor+beneficiosTotal+descFixosTotal+outrosDescontos;
+  const descontosTotal = inss+irrf+vale+faltasValor+beneficiosTotal+descFixosTotal;
   const liquido = proventos - descontosTotal;
 
   const detalhe = {
-    base, horas50, horas100, he50v, he100v, feriadosQtd, feriadosValor, domingosQtd, domingosValor, adicionais, dsr,
-    proventos, faltasValor, inssPct:null, inss, dependentes, deducaoDependentes, baseIrrf:ir.base, irrf,
-    irrfBruto:ir.impostoBruto, irrfReducao:ir.reducao, irrfMetodo:ir.metodo,
-    fgtsPct, fgtsValor, vale, beneficios, descFixosDetalhe, outrosDescontos, descontosTotal, liquido
+    base, horas50, horas100, he50v, he100v, feriadosQtd, feriadosValor, domingosQtd, domingosValor, dsr,
+    proventos, faltasValor, inssPct, inss, dependentes, deducaoDependentes, baseIrrf, irrf, fgtsPct, fgtsValor, vale,
+    beneficios, descFixosDetalhe, descontosTotal, liquido
   };
   let h = data.holerites.find(x=>x.mes===mes && x.ano===ano);
   if(h){ Object.assign(h, {dia5:liquido, dia20:vale, calculado:true, readonly:false, detalhe}); }
@@ -1019,7 +915,6 @@ function gerarHolerite(mes, ano, horas50, horas100, feriadosQtd, domingosQtd, fa
   renderAll();
   abrirHolerite(h.id);
 }
-
 
 document.querySelectorAll('nav .tab').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -1312,316 +1207,342 @@ document.getElementById('input-scan').addEventListener('change', async e=>{
 
 load();
 renderAll();
-if(!data.onboardingDone && !data.config.salarioBase && data.contasFixas.length===0 && !data.perfil.nome){
-  setTimeout(()=>iniciarOnboarding(), 200);
+// Primeira configuração do Uric: versões anteriores podem ter dados no localStorage,
+// então não usamos apenas a existência de salário/contas para decidir se o onboarding foi concluído.
+const URIC_ONBOARDING_VERSION = 1;
+if(data.uricOnboardingVersion !== URIC_ONBOARDING_VERSION){
+  setTimeout(()=>iniciarOnboarding(), 250);
 }
 
-/* ---------- ONBOARDING INTELIGENTE URIC ---------- */
-let ob = {step:0, r:{}};
-
-function novoOnboarding(){
-  return {
-    nome:'',
-    tipoRenda:'',
-    objetivo:'',
-    prioridade:'',
-    regime:'',
-    salarioBase:0,
-    dataPagamento:'',
-    entradas:1,
-    segundaEntradaTipo:'',
-    segundaEntradaValor:0,
-    segundaEntradaPercentual:0,
-    segundaEntradaDia:'',
-    dataAdmissao:'',
-    jornadaSemanal:44,
-    horasDia:8,
-    trabalhaSabado:false,
-    dependentes:0,
-    temDependentes:false,
-    temPensao:false,
-    pensaoValor:0,
-    temVT:false,
-    valeTransporteValor:0,
-    temVA:false,
-    valeAlimentacaoValor:0,
-    temPlano:false,
-    planoSaudeValor:0,
-    temHorasExtras:false,
-    horasExtrasMedia:0,
-    percentualExtra:50,
-    temAdicional:false,
-    adicionalTipo:'',
-    adicionalValor:0,
-    temOutrosDescontos:false,
-    outrosDescontos:0,
-    temBanco:false,
-    bancoNome:'',
-    bancoSaldo:0,
-    temCartao:false,
-    cartoes:[],
-    temDivida:false,
-    dividas:[],
-    contasNovas:[],
-    metas:[],
-    rendaExtra:false,
-    rendaExtraValor:0
-  };
-}
-
-function iniciarOnboarding(){
-  ob={step:0,r:novoOnboarding()};
-  renderOnboarding();
-}
-
+/* ---------- ONBOARDING ---------- */
+let ob = { step:0, r:{ tipoRenda:'clt', entradas:'2', nome1:'Vale', dia1:20, valeFixo:'sim', valePct:40, nome2:'Salário líquido', dia2:'5º dia útil', temDep:'nao', dependentes:0, temPensao:'nao', pensaoValor:0, temVT:'nao', valeTransporteValor:0, temVA:'nao', valeAlimentacaoValor:0, temPlano:'nao', planoSaudeValor:0, temCred:'nao', credNome:'Crediário / Cartão', credLimite:'', credMeta:'', contasNovas:[] } };
+function iniciarOnboarding(){ ob = { step:0, r:{ tipoRenda:'clt', entradas:'2', nome1:'Vale', dia1:20, valeFixo:'sim', valePct:40, nome2:'Salário líquido', dia2:'5º dia útil', temDep:'nao', dependentes:0, temPensao:'nao', pensaoValor:0, temVT:'nao', valeTransporteValor:0, temVA:'nao', valeAlimentacaoValor:0, temPlano:'nao', planoSaudeValor:0, temCred:'nao', credNome:'Crediário / Cartão', credLimite:'', credMeta:'', contasNovas:[] } }; renderOnboarding(); }
 function obSteps(){
-  const r=ob.r;
-  const s=[
-    {id:'welcome'},{id:'nome'},{id:'tipoRenda'}
+  const r = ob.r;
+  const steps = [
+    { id:'welcome' },
+    { id:'tipoRenda' },
+    { id:'salario' },
   ];
   if(r.tipoRenda==='clt'){
-    s.push({id:'regime'},{id:'salario'},{id:'dataAdmissao'},{id:'pagamento'},{id:'jornada'});
-    if(r.jornadaSemanal && r.trabalhaSabado) s.push({id:'sabado'});
-    s.push({id:'dependentes'});
-    if(r.temDependentes) s.push({id:'qtdDependentes'});
-    s.push({id:'pensao'});
-    if(r.temPensao) s.push({id:'pensaoValor'});
-    s.push({id:'beneficios'});
-    if(r.temVT) s.push({id:'vtValor'});
-    if(r.temVA) s.push({id:'vaValor'});
-    if(r.temPlano) s.push({id:'planoValor'});
-    s.push({id:'extras'});
-    if(r.temHorasExtras) s.push({id:'horasExtras'});
-    if(r.temAdicional) s.push({id:'adicional'});
-    s.push({id:'outrosDescontos'});
+    steps.push({id:'entradas'});
+    if(r.entradas==='2'){
+      steps.push({id:'nome1'},{id:'dia1'},{id:'valeFixo'});
+      if(r.valeFixo==='sim') steps.push({id:'valePct'});
+      steps.push({id:'nome2'},{id:'dia2'});
+    } else {
+      steps.push({id:'nomeUnica'},{id:'diaUnica'});
+    }
+    steps.push({id:'dependentes'});
+    if(r.temDep==='sim') steps.push({id:'qtdDependentes'});
+    steps.push({id:'pensao'});
+    if(r.temPensao==='sim') steps.push({id:'pensaoValor'});
+    steps.push({id:'vt'});
+    if(r.temVT==='sim') steps.push({id:'vtValor'});
+    steps.push({id:'va'});
+    if(r.temVA==='sim') steps.push({id:'vaValor'});
+    steps.push({id:'plano'});
+    if(r.temPlano==='sim') steps.push({id:'planoValor'});
   } else {
-    s.push({id:'salario'},{id:'pagamento'});
-    s.push({id:'rendaExtra'});
+    steps.push({id:'nomeUnica'},{id:'diaUnica'});
   }
-  s.push({id:'banco'});
-  if(r.temBanco) s.push({id:'bancoDetalhe'});
-  s.push({id:'cartao'});
-  if(r.temCartao) s.push({id:'cartaoDetalhe'});
-  s.push({id:'divida'});
-  if(r.temDivida) s.push({id:'dividaDetalhe'});
-  s.push({id:'contas'});
-  s.push({id:'objetivo'},{id:'fim'});
-  return s;
+  steps.push({id:'crediario'});
+  if(r.temCred==='sim') steps.push({id:'credDetalhe'});
+  steps.push({id:'contas'});
+  steps.push({id:'fim'});
+  return steps;
 }
-
-function obNext(){ if(ob.step<obSteps().length-1) ob.step++; renderOnboarding(); }
+function obNext(){ if(ob.step < obSteps().length-1) ob.step++; renderOnboarding(); }
 function obBack(){ if(ob.step>0) ob.step--; renderOnboarding(); }
-
-function obWrap(title,body,opts={}){
-  const steps=obSteps(), el=document.getElementById('modal-content');
-  el.innerHTML=`
-    <div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/steps.length)*100)}%"></div></div>
-    <div style="font-size:11px;color:var(--sub);margin-top:12px;">${ob.step+1} de ${steps.length}</div>
-    <h3 style="margin:8px 0 6px;">${title}</h3>
-    ${opts.help?`<p style="color:var(--sub);font-size:13px;line-height:1.5;margin:0 0 12px;">${opts.help}</p>`:''}
-    <form id="ob-form">${body}
-      <div class="btnrow" style="margin-top:16px;">
-        ${ob.step>0?'<button type="button" class="btn secondary" onclick="obBack()">Voltar</button>':''}
-        <button type="submit" class="btn">${opts.btn||'Continuar'}</button>
-      </div>
-    </form>`;
-  document.getElementById('ob-form').addEventListener('submit',e=>{
-    e.preventDefault();
-    if(opts.onSubmit) opts.onSubmit();
-    obNext();
-  });
-  document.getElementById('modal-bg').classList.add('active');
-}
-
-function selectOptions(id, value, options){
-  return `<select id="${id}">${options.map(o=>`<option value="${o[0]}" ${value===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`;
-}
-
 function renderOnboarding(){
-  const r=ob.r, cur=obSteps()[ob.step], el=document.getElementById('modal-content');
+  const steps = obSteps();
+  const cur = steps[ob.step];
+  const r = ob.r;
+  const el = document.getElementById('modal-content');
+  const wrap = (title, body, opts) => {
+    opts = opts||{};
+    el.innerHTML = `
+      <div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/steps.length)*100)}%;"></div></div>
+      <h3 style="margin-top:16px;">${title}</h3>
+      <form id="ob-form">
+        ${body}
+        <div class="btnrow" style="margin-top:14px;">
+          ${ob.step>0 && !opts.noBack ? '<button type="button" class="btn secondary" onclick="obBack()">Voltar</button>' : ''}
+          <button type="submit" class="btn">${opts.btnLabel||'Continuar'}</button>
+        </div>
+      </form>`;
+    document.getElementById('ob-form').addEventListener('submit', e=>{ e.preventDefault(); (opts.onSubmit||(()=>{}))(); obNext(); });
+    document.getElementById('modal-bg').classList.add('active');
+  };
+
   if(cur.id==='welcome'){
-    el.innerHTML=`<div style="padding:10px 0 4px;">
-      <div style="font-size:42px;margin-bottom:10px;">◉</div>
-      <div style="font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;">URIC</div>
-      <h3 style="font-size:26px;margin:6px 0;">Seu dinheiro, mais inteligente.</h3>
-      <p style="color:var(--sub);line-height:1.6;">Eu vou conhecer sua realidade financeira, fazer só as perguntas que realmente importam e montar seu app automaticamente.</p>
-      <div class="tip" style="margin-top:18px;"><span class="ic">✦</span><div>Quanto mais preciso você for agora, mais útil será o Uric depois — inclusive para estimar seu holerite.</div></div>
-      <button class="btn" onclick="obNext()">Começar</button>
-    </div>`;
-    document.getElementById('modal-bg').classList.add('active'); return;
+    el.innerHTML = `
+      <h3>Olá! Eu sou o Uric.</h3>
+      <p style="color:var(--sub); line-height:1.6;">Vou te ajudar a organizar sua vida financeira. Não precisa configurar tudo sozinho — vou te fazer algumas perguntas, uma de cada vez, e montar seu painel automaticamente.</p>
+      <button class="btn" onclick="obNext()">Começar</button>`;
+    document.getElementById('modal-bg').classList.add('active');
+    return;
   }
 
-  if(cur.id==='nome') obWrap('Como posso te chamar?',`<label>Seu nome</label><input id="ob-nome" value="${r.nome}" placeholder="Ex.: Leonardo" required autofocus>`,{onSubmit:()=>r.nome=document.getElementById('ob-nome').value.trim()});
-  else if(cur.id==='tipoRenda') obWrap('De onde vem sua principal renda?',selectOptions('ob-tipo',r.tipoRenda,[['clt','Salário CLT'],['servidor','Servidor público'],['pj','PJ / empresa'],['autonomo','Autônomo / freelancer'],['aposentado','Aposentadoria / benefício'],['variavel','Renda variável'],['outro','Outra fonte']]),{help:'Isso define quais perguntas financeiras e de folha o Uric vai fazer.' ,onSubmit:()=>r.tipoRenda=document.getElementById('ob-tipo').value});
-  else if(cur.id==='regime') obWrap('Como funciona seu salário?',selectOptions('ob-regime',r.regime,[['mensalista','Mensalista'],['horista','Horista'],['comissao','Mensalista + comissão'],['variavel','Salário com valores variáveis']]),{onSubmit:()=>r.regime=document.getElementById('ob-regime').value});
-  else if(cur.id==='salario') obWrap(r.tipoRenda==='clt'||r.tipoRenda==='servidor'?'Qual é seu salário bruto mensal?':'Quanto você recebe por mês, em média?',`<label>Valor bruto / renda média</label><input type="number" step="0.01" id="ob-salario" value="${r.salarioBase||''}" placeholder="0,00" required><small style="color:var(--sub);display:block;margin-top:4px;">Informe o valor antes dos descontos quando isso fizer sentido.</small>`,{onSubmit:()=>r.salarioBase=Number(document.getElementById('ob-salario').value)||0});
-  else if(cur.id==='dataAdmissao') obWrap('Quando você entrou no emprego atual?',`<label>Data de admissão</label><input type="date" id="ob-adm" value="${r.dataAdmissao||''}" required>`,{onSubmit:()=>r.dataAdmissao=document.getElementById('ob-adm').value});
-  else if(cur.id==='pagamento') obWrap('Como e quando você recebe?',`
-    <label>Quantidade de entradas por mês</label>
-    ${selectOptions('ob-entradas',String(r.entradas),[['1','Uma vez por mês'],['2','Duas vezes por mês'],['3','Mais de duas vezes / variável']])}
-    <label style="margin-top:4px;">Dia ou regra do pagamento principal</label>
-    <input id="ob-pagamento" value="${r.dataPagamento||''}" placeholder="Ex.: dia 5 ou 5º dia útil" required>
-    <div id="ob-segunda-box" style="margin-top:4px;">
-      ${r.entradas===2?`
-        <label>Como funciona a segunda entrada?</label>
-        ${selectOptions('ob-seg-tipo',r.segundaEntradaTipo||'percentual',[['percentual','Percentual do salário'],['valor','Valor fixo'],['variavel','Valor variável']])}
-        <label>Valor ou percentual</label>
-        <input type="number" step=".01" id="ob-seg-val" value="${r.segundaEntradaPercentual||r.segundaEntradaValor||''}" placeholder="Ex.: 40">
-        <label>Dia ou regra</label>
-        <input id="ob-seg-dia" value="${r.segundaEntradaDia||''}" placeholder="Ex.: dia 20">
-      `:''}
-    </div>
-  `,{onSubmit:()=>{
-      r.entradas=Number(document.getElementById('ob-entradas').value);
-      r.dataPagamento=document.getElementById('ob-pagamento').value.trim();
-      if(r.entradas===2){
-        r.segundaEntradaTipo=document.getElementById('ob-seg-tipo')?.value||'percentual';
-        const val=Number(document.getElementById('ob-seg-val')?.value)||0;
-        if(r.segundaEntradaTipo==='percentual') r.segundaEntradaPercentual=val;
-        else r.segundaEntradaValor=val;
-        r.segundaEntradaDia=document.getElementById('ob-seg-dia')?.value||'';
-      }
-    }});
-  else if(cur.id==='jornada') obWrap('Como é sua jornada de trabalho?',`
-    <label>Horas por semana</label><input type="number" step=".5" id="ob-hs" value="${r.jornadaSemanal}" required>
-    <label>Horas por dia</label><input type="number" step=".25" id="ob-hd" value="${r.horasDia}" required>
-    <label>Trabalha aos sábados?</label>${selectOptions('ob-sab',r.trabalhaSabado?'sim':'nao',[['nao','Não'],['sim','Sim']])}
-  `,{onSubmit:()=>{r.jornadaSemanal=Number(document.getElementById('ob-hs').value)||44;r.horasDia=Number(document.getElementById('ob-hd').value)||8;r.trabalhaSabado=document.getElementById('ob-sab').value==='sim';}});
-  else if(cur.id==='sabado') obWrap('Quantas horas você costuma trabalhar no sábado?',`<input type="number" step=".25" id="ob-sabhoras" value="4" required>`,{onSubmit:()=>r.sabadoHoras=Number(document.getElementById('ob-sabhoras').value)||4});
-  else if(cur.id==='dependentes') obWrap('Você possui dependentes para o imposto de renda?',selectOptions('ob-dep',r.temDependentes?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temDependentes=document.getElementById('ob-dep').value==='sim'});
-  else if(cur.id==='qtdDependentes') obWrap('Quantos dependentes?',`<input type="number" min="1" step="1" id="ob-qtd" value="${r.dependentes||1}" required>`,{onSubmit:()=>r.dependentes=Number(document.getElementById('ob-qtd').value)||0});
-  else if(cur.id==='pensao') obWrap('Existe pensão alimentícia descontada em folha?',selectOptions('ob-pensao',r.temPensao?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temPensao=document.getElementById('ob-pensao').value==='sim'});
-  else if(cur.id==='pensaoValor') obWrap('Qual o valor mensal da pensão?',`<input type="number" step=".01" id="ob-pensao-v" value="${r.pensaoValor||''}" required>`,{onSubmit:()=>r.pensaoValor=Number(document.getElementById('ob-pensao-v').value)||0});
-  else if(cur.id==='beneficios') obWrap('Quais benefícios ou descontos aparecem no seu holerite?',`
-    <label>Vale-transporte</label>${selectOptions('ob-vt',r.temVT?'sim':'nao',[['nao','Não'],['sim','Sim']])}
-    <label>Vale-alimentação / refeição</label>${selectOptions('ob-va',r.temVA?'sim':'nao',[['nao','Não'],['sim','Sim']])}
-    <label>Plano de saúde / odontológico</label>${selectOptions('ob-plano',r.temPlano?'sim':'nao',[['nao','Não'],['sim','Sim']])}
-  `,{onSubmit:()=>{r.temVT=document.getElementById('ob-vt').value==='sim';r.temVA=document.getElementById('ob-va').value==='sim';r.temPlano=document.getElementById('ob-plano').value==='sim';}});
-  else if(cur.id==='vtValor') obWrap('Qual o valor descontado de vale-transporte?',`<input type="number" step=".01" id="ob-vt-v" value="${r.valeTransporteValor||''}" required>`,{onSubmit:()=>r.valeTransporteValor=Number(document.getElementById('ob-vt-v').value)||0});
-  else if(cur.id==='vaValor') obWrap('Qual o valor descontado de vale-alimentação/refeição?',`<input type="number" step=".01" id="ob-va-v" value="${r.valeAlimentacaoValor||''}" required>`,{onSubmit:()=>r.valeAlimentacaoValor=Number(document.getElementById('ob-va-v').value)||0});
-  else if(cur.id==='planoValor') obWrap('Qual o valor descontado do plano?',`<input type="number" step=".01" id="ob-plano-v" value="${r.planoSaudeValor||''}" required>`,{onSubmit:()=>r.planoSaudeValor=Number(document.getElementById('ob-plano-v').value)||0});
-  else if(cur.id==='extras') obWrap('Você costuma receber horas extras?',selectOptions('ob-he',r.temHorasExtras?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temHorasExtras=document.getElementById('ob-he').value==='sim'});
-  else if(cur.id==='horasExtras') obWrap('Quantas horas extras você costuma fazer por mês?',`<input type="number" step=".25" id="ob-heq" value="${r.horasExtrasMedia||''}" required><label>Percentual mais comum</label>${selectOptions('ob-hep',String(r.percentualExtra),[['50','50%'],['100','100%'],['outro','Outro / informar depois']])}`,{onSubmit:()=>{r.horasExtrasMedia=Number(document.getElementById('ob-heq').value)||0;r.percentualExtra=Number(document.getElementById('ob-hep').value)||50}});
-  else if(cur.id==='adicional') obWrap('Você recebe algum adicional?',`
-    ${selectOptions('ob-ad',r.adicionalTipo,[['','Nenhum'],['noturno','Adicional noturno'],['insalubridade','Insalubridade'],['periculosidade','Periculosidade'],['outro','Outro']])}
-    <label>Valor médio mensal desse adicional</label>
-    <input type="number" step=".01" id="ob-ad-v" value="${r.adicionalValor||''}" placeholder="0,00">
-  `,{onSubmit:()=>{r.adicionalTipo=document.getElementById('ob-ad').value;r.temAdicional=!!r.adicionalTipo;r.adicionalValor=Number(document.getElementById('ob-ad-v').value)||0;}});
-  else if(cur.id==='outrosDescontos') obWrap('Existe outro desconto fixo no seu holerite?',selectOptions('ob-out',r.temOutrosDescontos?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temOutrosDescontos=document.getElementById('ob-out').value==='sim'});
-  else if(cur.id==='banco') obWrap('Você quer cadastrar sua conta bancária inicial?',selectOptions('ob-banco',r.temBanco?'sim':'nao',[['nao','Não agora'],['sim','Sim']]),{onSubmit:()=>r.temBanco=document.getElementById('ob-banco').value==='sim'});
-  else if(cur.id==='bancoDetalhe') obWrap('Qual é sua conta principal?',`<label>Banco / instituição</label><input id="ob-banco-n" value="${r.bancoNome||''}" required><label>Saldo atual aproximado</label><input type="number" step=".01" id="ob-banco-s" value="${r.bancoSaldo||''}" required>`,{onSubmit:()=>{r.bancoNome=document.getElementById('ob-banco-n').value;r.bancoSaldo=Number(document.getElementById('ob-banco-s').value)||0;}});
-  else if(cur.id==='cartao') obWrap('Você usa cartão de crédito?',selectOptions('ob-cartao',r.temCartao?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temCartao=document.getElementById('ob-cartao').value==='sim'});
-  else if(cur.id==='cartaoDetalhe') {
-    const cards=r.cartoes;
-    el.innerHTML=`<div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/obSteps().length)*100)}%"></div></div>
-    <h3 style="margin-top:16px;">Cadastre seus cartões</h3><p style="color:var(--sub);font-size:13px;">Você pode cadastrar um agora e adicionar outros depois.</p>
-    <form id="ob-card-form">
-      <label>Nome do cartão</label><input id="ob-card-n" placeholder="Ex.: Nubank" required>
-      <label>Limite</label><input type="number" step=".01" id="ob-card-l" required>
-      <label>Dia de fechamento</label><input type="number" min="1" max="31" id="ob-card-f" required>
-      <label>Dia de vencimento</label><input type="number" min="1" max="31" id="ob-card-v" required>
-      <button type="submit" class="btn secondary">+ Adicionar cartão</button>
-    </form>
-    <div style="margin-top:12px;">${cards.map(c=>`<div class="row"><div><div class="desc">${c.nome}</div><div class="meta">Limite ${brl(c.limite)} · fecha dia ${c.fechamento} · vence dia ${c.vencimento}</div></div></div>`).join('')}</div>
-    <div class="btnrow" style="margin-top:14px;"><button type="button" class="btn secondary" onclick="obBack()">Voltar</button><button type="button" class="btn" onclick="obNext()">${cards.length?'Continuar':'Pular'}</button></div>`;
-    document.getElementById('ob-card-form').addEventListener('submit',e=>{e.preventDefault();cards.push({id:uid(),nome:document.getElementById('ob-card-n').value,limite:Number(document.getElementById('ob-card-l').value)||0,fechamento:Number(document.getElementById('ob-card-f').value)||1,vencimento:Number(document.getElementById('ob-card-v').value)||1,faturaAtual:0});renderOnboarding();});
-    document.getElementById('modal-bg').classList.add('active');
+  if(cur.id==='tipoRenda'){
+    wrap('Como você recebe sua renda principal?', `
+      <label>Escolha</label>
+      <select id="ob-tiporenda">
+        <option value="clt" ${r.tipoRenda==='clt'?'selected':''}>Salário CLT / servidor público</option>
+        <option value="outro" ${r.tipoRenda==='outro'?'selected':''}>Autônomo, PJ, freelancer, aposentadoria ou renda variável</option>
+      </select>
+    `, { onSubmit:()=>{ r.tipoRenda = document.getElementById('ob-tiporenda').value; } });
+    return;
   }
-  else if(cur.id==='divida') obWrap('Você possui alguma dívida ou financiamento?',selectOptions('ob-div',r.temDivida?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temDivida=document.getElementById('ob-div').value==='sim'});
-  else if(cur.id==='dividaDetalhe') {
-    const ds=r.dividas;
-    el.innerHTML=`<div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/obSteps().length)*100)}%"></div></div><h3 style="margin-top:16px;">Cadastre suas dívidas</h3>
-      <form id="ob-div-form"><label>Tipo</label><input id="ob-div-t" placeholder="Ex.: empréstimo" required><label>Nome</label><input id="ob-div-n" required><label>Saldo devedor</label><input type="number" step=".01" id="ob-div-s" required><label>Parcela mensal</label><input type="number" step=".01" id="ob-div-p" required><label>Parcelas restantes</label><input type="number" id="ob-div-q" required><button type="submit" class="btn secondary">+ Adicionar dívida</button></form>
-      <div style="margin-top:12px;">${ds.map(d=>`<div class="row"><div><div class="desc">${d.nome}</div><div class="meta">${d.tipo} · saldo ${brl(d.saldo)} · parcela ${brl(d.parcela)}</div></div></div>`).join('')}</div>
-      <div class="btnrow" style="margin-top:14px;"><button type="button" class="btn secondary" onclick="obBack()">Voltar</button><button type="button" class="btn" onclick="obNext()">${ds.length?'Continuar':'Pular'}</button></div>`;
-    document.getElementById('ob-div-form').addEventListener('submit',e=>{e.preventDefault();ds.push({id:uid(),tipo:document.getElementById('ob-div-t').value,nome:document.getElementById('ob-div-n').value,saldo:Number(document.getElementById('ob-div-s').value)||0,parcela:Number(document.getElementById('ob-div-p').value)||0,parcelasRestantes:Number(document.getElementById('ob-div-q').value)||0});renderOnboarding();});
-    document.getElementById('modal-bg').classList.add('active');
+
+  if(cur.id==='salario'){
+    wrap(r.tipoRenda==='clt' ? 'Qual é o seu salário bruto mensal?' : 'Qual é a sua renda mensal aproximada?', `
+      <label>Valor</label>
+      <input type="number" step="0.01" id="ob-salario" placeholder="0,00" value="${r.salarioBase||''}" required autofocus>
+    `, { onSubmit:()=>{ r.salarioBase = Number(document.getElementById('ob-salario').value)||0; } });
+    return;
   }
-  else if(cur.id==='contas'){
-    const entradaOpts=r.entradas===2?`<option value="dia5">Salário</option><option value="dia20">Adiantamento</option>`:`<option value="dia5">Entrada principal</option>`;
-    el.innerHTML=`<div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/obSteps().length)*100)}%"></div></div>
-      <h3 style="margin-top:16px;">Quais contas você paga todos os meses?</h3><p style="color:var(--sub);font-size:13px;">Adicione aluguel, energia, internet, assinaturas, escola e outras contas recorrentes.</p>
-      <div id="ob-contas-lista">${r.contasNovas.map(c=>`<div class="row"><div class="desc">${c.nome}</div><div class="amount neg">-${brl(c.valor)}</div></div>`).join('')}</div>
-      <form id="ob-form-conta" style="margin-top:10px;"><label>Nome</label><input id="ob-c-nome" placeholder="Ex.: aluguel"><label>Valor aproximado</label><input type="number" step=".01" id="ob-c-valor" placeholder="0,00"><label>Vencimento</label><input type="number" min="1" max="31" id="ob-c-dia" placeholder="Dia"><button type="submit" class="btn secondary">+ Adicionar conta</button></form>
-      <div class="btnrow" style="margin-top:14px;"><button type="button" class="btn secondary" onclick="obBack()">Voltar</button><button type="button" class="btn" onclick="obNext()">${r.contasNovas.length?'Continuar':'Não tenho / pular'}</button></div>`;
-    document.getElementById('ob-form-conta').addEventListener('submit',e=>{e.preventDefault();const nome=document.getElementById('ob-c-nome').value.trim();if(!nome)return;r.contasNovas.push({nome,valor:Number(document.getElementById('ob-c-valor').value)||0,dia:Number(document.getElementById('ob-c-dia').value)||null,grupo:'dia5'});renderOnboarding();});
-    document.getElementById('modal-bg').classList.add('active');
+
+  if(cur.id==='entradas'){
+    wrap('Você recebe seu pagamento em quantas datas por mês?', `
+      <label>Escolha</label>
+      <select id="ob-entradas">
+        <option value="2" ${r.entradas==='2'?'selected':''}>Duas vezes (ex: vale/adiantamento + salário líquido)</option>
+        <option value="1" ${r.entradas==='1'?'selected':''}>Uma vez só</option>
+      </select>
+    `, { onSubmit:()=>{ r.entradas = document.getElementById('ob-entradas').value; } });
+    return;
   }
-  else if(cur.id==='objetivo') obWrap('O que você quer melhorar primeiro?',`
-    <select id="ob-obj">${[
-      ['organizar','Organizar minha vida financeira'],
-      ['dividas','Sair das dívidas'],
-      ['economizar','Economizar mais'],
-      ['reserva','Montar uma reserva de emergência'],
-      ['cartao','Controlar melhor meus cartões'],
-      ['investir','Começar a investir'],
-      ['planejar','Planejar meus próximos meses']
-    ].map(o=>`<option value="${o[0]}" ${r.objetivo===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`,{onSubmit:()=>{r.objetivo=document.getElementById('ob-obj').value;r.prioridade=r.objetivo;}});
-  else if(cur.id==='rendaExtra') obWrap('Você costuma ter renda extra?',selectOptions('ob-rex',r.rendaExtra?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.rendaExtra=document.getElementById('ob-rex').value==='sim'});
-  else if(cur.id==='fim'){
+
+  if(cur.id==='dependentes'){
+    wrap('Você possui dependentes para fins de imposto de renda?', `
+      <select id="ob-temdep">
+        <option value="nao" ${r.temDep==='nao'?'selected':''}>Não</option>
+        <option value="sim" ${r.temDep==='sim'?'selected':''}>Sim</option>
+      </select>
+    `, { onSubmit:()=>{ r.temDep = document.getElementById('ob-temdep').value; } });
+    return;
+  }
+  if(cur.id==='qtdDependentes'){
+    wrap('Quantos dependentes?', `
+      <label>Quantidade</label>
+      <input type="number" min="1" step="1" id="ob-qtddep" value="${r.dependentes||1}" required>
+    `, { onSubmit:()=>{ r.dependentes = Number(document.getElementById('ob-qtddep').value)||0; } });
+    return;
+  }
+  if(cur.id==='pensao'){
+    wrap('Existe pensão alimentícia descontada diretamente do seu salário?', `
+      <select id="ob-tempensao">
+        <option value="nao" ${r.temPensao==='nao'?'selected':''}>Não</option>
+        <option value="sim" ${r.temPensao==='sim'?'selected':''}>Sim</option>
+      </select>
+    `, { onSubmit:()=>{ r.temPensao = document.getElementById('ob-tempensao').value; } });
+    return;
+  }
+  if(cur.id==='pensaoValor'){
+    wrap('Qual o valor mensal da pensão?', `
+      <label>Valor</label>
+      <input type="number" step="0.01" id="ob-pensaoval" value="${r.pensaoValor||''}" required>
+    `, { onSubmit:()=>{ r.pensaoValor = Number(document.getElementById('ob-pensaoval').value)||0; } });
+    return;
+  }
+  if(cur.id==='vt'){
+    wrap('Você recebe vale-transporte com desconto em folha?', `
+      <select id="ob-temvt">
+        <option value="nao" ${r.temVT==='nao'?'selected':''}>Não</option>
+        <option value="sim" ${r.temVT==='sim'?'selected':''}>Sim</option>
+      </select>
+    `, { onSubmit:()=>{ r.temVT = document.getElementById('ob-temvt').value; } });
+    return;
+  }
+  if(cur.id==='vtValor'){
+    wrap('Qual o valor descontado de vale-transporte?', `
+      <label>Valor</label>
+      <input type="number" step="0.01" id="ob-vtval" value="${r.valeTransporteValor||''}" required>
+    `, { onSubmit:()=>{ r.valeTransporteValor = Number(document.getElementById('ob-vtval').value)||0; } });
+    return;
+  }
+  if(cur.id==='va'){
+    wrap('Você tem vale-refeição ou vale-alimentação com desconto em folha?', `
+      <select id="ob-temva">
+        <option value="nao" ${r.temVA==='nao'?'selected':''}>Não</option>
+        <option value="sim" ${r.temVA==='sim'?'selected':''}>Sim</option>
+      </select>
+    `, { onSubmit:()=>{ r.temVA = document.getElementById('ob-temva').value; } });
+    return;
+  }
+  if(cur.id==='vaValor'){
+    wrap('Qual o valor descontado?', `
+      <label>Valor</label>
+      <input type="number" step="0.01" id="ob-vaval" value="${r.valeAlimentacaoValor||''}" required>
+    `, { onSubmit:()=>{ r.valeAlimentacaoValor = Number(document.getElementById('ob-vaval').value)||0; } });
+    return;
+  }
+  if(cur.id==='plano'){
+    wrap('Você tem plano de saúde ou odontológico descontado em folha?', `
+      <select id="ob-templano">
+        <option value="nao" ${r.temPlano==='nao'?'selected':''}>Não</option>
+        <option value="sim" ${r.temPlano==='sim'?'selected':''}>Sim</option>
+      </select>
+    `, { onSubmit:()=>{ r.temPlano = document.getElementById('ob-templano').value; } });
+    return;
+  }
+  if(cur.id==='planoValor'){
+    wrap('Qual o valor descontado do plano?', `
+      <label>Valor</label>
+      <input type="number" step="0.01" id="ob-planoval" value="${r.planoSaudeValor||''}" required>
+    `, { onSubmit:()=>{ r.planoSaudeValor = Number(document.getElementById('ob-planoval').value)||0; } });
+    return;
+  }
+
+  if(cur.id==='nome1'){
+    wrap('Como você chama a primeira entrada (o adiantamento)?', `
+      <label>Nome</label>
+      <input type="text" id="ob-nome1" value="${r.nome1}" required>
+    `, { onSubmit:()=>{ r.nome1 = document.getElementById('ob-nome1').value || 'Vale'; } });
+    return;
+  }
+  if(cur.id==='dia1'){
+    wrap(`Em que dia do mês cai "${r.nome1}"?`, `
+      <label>Dia</label>
+      <input type="number" min="1" max="31" id="ob-dia1" value="${r.dia1}" required>
+    `, { onSubmit:()=>{ r.dia1 = Number(document.getElementById('ob-dia1').value)||20; } });
+    return;
+  }
+  if(cur.id==='valeFixo'){
+    wrap(`"${r.nome1}" é uma porcentagem fixa do salário, sem nenhum desconto?`, `
+      <label>Escolha</label>
+      <select id="ob-valefixo">
+        <option value="sim" ${r.valeFixo==='sim'?'selected':''}>Sim, é uma % fixa sem desconto</option>
+        <option value="nao" ${r.valeFixo==='nao'?'selected':''}>Não, varia — vou lançar manualmente todo mês</option>
+      </select>
+    `, { onSubmit:()=>{ r.valeFixo = document.getElementById('ob-valefixo').value; } });
+    return;
+  }
+  if(cur.id==='valePct'){
+    wrap(`Qual porcentagem do salário é "${r.nome1}"?`, `
+      <label>Porcentagem (%)</label>
+      <input type="number" step="1" id="ob-valepct" value="${r.valePct}" required>
+    `, { onSubmit:()=>{ r.valePct = Number(document.getElementById('ob-valepct').value)||40; } });
+    return;
+  }
+  if(cur.id==='nome2'){
+    wrap('Como você chama a segunda entrada (o salário líquido)?', `
+      <label>Nome</label>
+      <input type="text" id="ob-nome2" value="${r.nome2}" required>
+    `, { onSubmit:()=>{ r.nome2 = document.getElementById('ob-nome2').value || 'Salário líquido'; } });
+    return;
+  }
+  if(cur.id==='dia2'){
+    wrap(`Em que dia cai "${r.nome2}"?`, `
+      <label>Dia (pode escrever "5º dia útil", por exemplo)</label>
+      <input type="text" id="ob-dia2" value="${r.dia2}" required>
+    `, { onSubmit:()=>{ r.dia2 = document.getElementById('ob-dia2').value || '5º dia útil'; } });
+    return;
+  }
+  if(cur.id==='nomeUnica'){
+    wrap('Como você chama sua entrada de pagamento?', `
+      <label>Nome</label>
+      <input type="text" id="ob-nomeu" value="${r.nomeUnica||'Salário'}" required>
+    `, { onSubmit:()=>{ r.nomeUnica = document.getElementById('ob-nomeu').value || 'Salário'; } });
+    return;
+  }
+  if(cur.id==='diaUnica'){
+    wrap('Em que dia do mês você recebe?', `
+      <label>Dia</label>
+      <input type="text" id="ob-diau" value="${r.diaUnica||''}" required>
+    `, { onSubmit:()=>{ r.diaUnica = document.getElementById('ob-diau').value; } });
+    return;
+  }
+  if(cur.id==='crediario'){
+    wrap('Você tem crediário ou cartão de crédito que quer controlar por aqui?', `
+      <label>Escolha</label>
+      <select id="ob-temcred">
+        <option value="sim" ${r.temCred==='sim'?'selected':''}>Sim</option>
+        <option value="nao" ${r.temCred==='nao'?'selected':''}>Não</option>
+      </select>
+    `, { onSubmit:()=>{ r.temCred = document.getElementById('ob-temcred').value; } });
+    return;
+  }
+  if(cur.id==='credDetalhe'){
+    wrap('Detalhes do crediário/cartão', `
+      <label>Como você chama esse cartão?</label>
+      <input type="text" id="ob-crednome" value="${r.credNome}">
+      <label>Limite total</label>
+      <input type="number" step="0.01" id="ob-credlimite" value="${r.credLimite}">
+      <label>Meta de gasto máximo por mês</label>
+      <input type="number" step="0.01" id="ob-credmeta" value="${r.credMeta}">
+    `, { onSubmit:()=>{
+      r.credNome = document.getElementById('ob-crednome').value || 'Crediário / Cartão';
+      r.credLimite = Number(document.getElementById('ob-credlimite').value)||0;
+      r.credMeta = Number(document.getElementById('ob-credmeta').value)||0;
+    } });
+    return;
+  }
+  if(cur.id==='contas'){
+    const entradaOpts = r.entradas==='2'
+      ? `<option value="dia5">${r.nome1}</option><option value="dia20">${r.nome2}</option>`
+      : `<option value="dia20">${r.nomeUnica||'Salário'}</option>`;
+    el.innerHTML = `
+      <div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/steps.length)*100)}%;"></div></div>
+      <h3 style="margin-top:16px;">Tem alguma conta fixa mensal? (aluguel, academia, assinatura...)</h3>
+      <div id="ob-contas-lista">${r.contasNovas.map((c,i)=>`<div class="row"><div class="desc">${c.nome}</div><div class="amount neg">-${brl(c.valor)}</div></div>`).join('')}</div>
+      <form id="ob-form-conta" style="margin-top:10px;">
+        <label>Nome da conta</label>
+        <input type="text" id="ob-c-nome" placeholder="Ex: Academia, aluguel...">
+        <label>Valor aproximado</label>
+        <input type="number" step="0.01" id="ob-c-valor" placeholder="0,00">
+        <label>Pagar com qual entrada?</label>
+        <select id="ob-c-fonte">${entradaOpts}</select>
+        <button type="submit" class="btn secondary" style="margin-top:6px;">+ Adicionar esta conta</button>
+      </form>
+      <div class="btnrow" style="margin-top:14px;">
+        <button type="button" class="btn secondary" onclick="obBack()">Voltar</button>
+        <button type="button" class="btn" onclick="obNext()">${r.contasNovas.length?'Continuar':'Não tenho / pular'}</button>
+      </div>`;
+    document.getElementById('ob-form-conta').addEventListener('submit', e=>{
+      e.preventDefault();
+      const nome = document.getElementById('ob-c-nome').value;
+      const valor = Number(document.getElementById('ob-c-valor').value)||0;
+      const fonte = document.getElementById('ob-c-fonte').value;
+      if(nome){ r.contasNovas.push({nome, valor, grupo:fonte}); renderOnboarding(); }
+    });
+    document.getElementById('modal-bg').classList.add('active');
+    return;
+  }
+  if(cur.id==='fim'){
     aplicarOnboarding();
-    const nome=r.nome||'';
-    el.innerHTML=`<div style="text-align:center;padding:12px 0 4px;">
-      <div style="font-size:42px;color:var(--accent);">✓</div>
-      <h3 style="font-size:26px;margin:6px 0;">Tudo pronto${nome?', '+nome:''}!</h3>
-      <p style="color:var(--sub);line-height:1.6;">O Uric já entendeu sua renda, seus compromissos e seus objetivos. A partir de agora, ele vai usar essas informações para personalizar seu painel.</p>
-      <div class="tip"><span class="ic">✦</span><div><strong>Seu próximo passo:</strong> explore o Início. O Uric vai destacar o que merece sua atenção primeiro.</div></div>
-      <button class="btn" onclick="closeModal();mostrarView('dashboard');renderAll();">Vamos lá →</button>
-    </div>`;
+    el.innerHTML = `
+      <h3>Tudo pronto!</h3>
+      <p style="color:var(--sub); line-height:1.6;">Configurei suas entradas, contas fixas${r.temCred==='sim'?' e o crediário':''} do seu jeito. Agora é só usar: registre seu ponto, seus gastos, e calcule o holerite quando fechar o mês.</p>
+      <button class="btn" onclick="closeModal(); renderAll();">Vamos lá</button>`;
     document.getElementById('modal-bg').classList.add('active');
+    return;
   }
 }
-
 function aplicarOnboarding(){
-  const r=ob.r, cfg=data.config;
-  data.perfil.nome=r.nome;
-  data.perfil.tipoRenda=r.tipoRenda;
-  data.perfil.objetivo=r.objetivo;
-  data.perfil.prioridade=r.prioridade;
-  data.perfil.criadoEm=data.perfil.criadoEm||new Date().toISOString();
-  cfg.rendaTipo=r.tipoRenda;
-  cfg.regime=r.regime||'';
-  cfg.salarioBase=Number(r.salarioBase)||0;
-  cfg.dataPagamento=r.dataPagamento||'';
-  cfg.segundaEntrada=(r.entradas===2);
-  cfg.segundaEntradaTipo=r.segundaEntradaTipo||'adiantamento';
-  cfg.segundaEntradaValor=Number(r.segundaEntradaValor)||0;
-  cfg.segundaEntradaPercentual=Number(r.segundaEntradaPercentual)||0;
-  cfg.segundaEntradaDia=r.segundaEntradaDia||'';
-  cfg.dependentes=Number(r.dependentes)||0;
-  cfg.pensaoValor=Number(r.pensaoValor)||0;
-  cfg.valeTransporteValor=Number(r.valeTransporteValor)||0;
-  cfg.valeAlimentacaoValor=Number(r.valeAlimentacaoValor)||0;
-  cfg.planoSaudeValor=Number(r.planoSaudeValor)||0;
-  cfg.outrosDescontos=Number(r.outrosDescontos)||0;
-  cfg.jornadaSemanal=Number(r.jornadaSemanal)||44;
-  cfg.horasDia=Number(r.horasDia)||8;
-  cfg.trabalhaSabado=!!r.trabalhaSabado;
-  cfg.dataAdmissao=r.dataAdmissao||'';
-  cfg.sabadoHoras=Number(r.sabadoHoras)||0;
-  cfg.horasExtrasMedia=Number(r.horasExtrasMedia)||0;
-  cfg.percentualExtra=Number(r.percentualExtra)||50;
-  cfg.adicionalNoturno=r.adicionalTipo==='noturno'?Number(r.adicionalValor||0):0;
-  cfg.insalubridade=r.adicionalTipo==='insalubridade'?Number(r.adicionalValor||0):0;
-  cfg.periculosidade=r.adicionalTipo==='periculosidade'?Number(r.adicionalValor||0):0;
-  if(r.entradas===2){
-    cfg.valePct=(Number(r.segundaEntradaPercentual)||0)/100;
-    cfg.grupoNomes={dia5:'Salário líquido',dia20:'Adiantamento',extra:'Ganhos extras'};
-  }else{
-    cfg.valePct=0;
-    cfg.grupoNomes={dia5:'Salário',dia20:'Outras entradas',extra:'Ganhos extras'};
+  const r = ob.r;
+  data.config.salarioBase = r.salarioBase||0;
+  if(r.entradas==='2'){
+    data.config.valePct = r.valeFixo==='sim' ? (Number(r.valePct)||0)/100 : 0;
+    data.config.grupoNomes = { dia5: r.nome2, dia20: r.nome1, extra: data.config.grupoNomes.extra||'Ganhos extras' };
+  } else {
+    data.config.valePct = 0;
+    data.config.grupoNomes = { dia5: r.nomeUnica||'Salário', dia20: r.nomeUnica||'Salário', extra: data.config.grupoNomes.extra||'Ganhos extras' };
   }
-  if(r.temBanco && r.bancoNome){
-    data.contasBancarias.push({id:uid(),nome:r.bancoNome,saldo:Number(r.bancoSaldo)||0});
+  if(r.temCred==='sim'){
+    const existente = data.config.descontosFixos.find(d=>d.limite>0);
+    if(existente){ existente.nome=r.credNome; existente.limite=r.credLimite; existente.meta=r.credMeta; }
+    else{ data.config.descontosFixos.push({id:uid(), nome:r.credNome, valor:0, limite:r.credLimite, meta:r.credMeta}); }
   }
-  if(r.cartoes?.length) data.cartoes.push(...r.cartoes);
-  if(r.dividas?.length) data.dividas.push(...r.dividas);
-  const keyAtual=pontoKey(new Date());
-  r.contasNovas.forEach(c=>data.contasFixas.push({id:uid(),sigla:'',nome:c.nome,grupo:c.grupo,valores:{[keyAtual]:c.valor},dia:c.dia||null}));
-  data.onboardingDone=true;
+  const keyAtual = pontoKey(new Date());
+  r.contasNovas.forEach(c=>{
+    data.contasFixas.push({id:uid(), sigla:'', nome:c.nome, grupo:c.grupo, valores:{[keyAtual]: c.valor}});
+  });
+  data.onboardingDone = true;
+  data.uricOnboardingVersion = URIC_ONBOARDING_VERSION;
   save();
 }
-
 </script>
 </body>
 </html>

@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Uric">
+<title>Uric — Seu dinheiro, mais inteligente</title>
+<style>
+  :root{
+    --bg:#F5F5F7; --card:#FFFFFF; --card-glass:rgba(255,255,255,.68); --border:rgba(0,0,0,.06); --text:#1D1D1F; --sub:#6E6E73; --muted:#A6A399;
+    --accent:#3C8C6E; --accent-light:rgba(60,140,110,.12); --danger:#D45B4E; --danger-light:rgba(212,91,78,.12);
+    --warn:#B8862F; --warn-light:#F5EDDD; --blue:#3D6FA8; --blue-light:#E5EDF6; --radius:22px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0C0C0E; --card:#1C1C1E; --card-glass:rgba(28,28,30,.68); --border:rgba(255,255,255,.08); --text:#F5F5F7; --sub:#9C999D; --muted:#6E6B60;
+    --accent:#5FBF9B; --accent-light:rgba(95,191,155,.14); --danger:#E5837A; --danger-light:rgba(229,131,122,.14);
+    --warn:#E3B65B; --warn-light:#372C17; --blue:#7CA6D9; --blue-light:#1F2A38; }
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0; background:var(--bg) radial-gradient(circle at 20% 0%, rgba(60,140,110,.06), transparent 45%), radial-gradient(circle at 90% 10%, rgba(61,111,168,.05), transparent 40%); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
+    padding-bottom: calc(78px + env(safe-area-inset-bottom)); padding-top: env(safe-area-inset-top); -webkit-font-smoothing:antialiased;}
+  header{padding:18px 20px 10px; position:sticky; top:0; background:color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px); z-index:5;}
+  header h1{font-size:24px; margin:0; font-weight:700; letter-spacing:-.02em;}
+  header p{margin:2px 0 0; color:var(--sub); font-size:13px;}
+  main{padding:12px 16px 20px;}
+  .card{background:var(--card-glass); backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:0 4px 24px rgba(0,0,0,.04);}
+  .card.hero{background:var(--card-glass); backdrop-filter:blur(28px) saturate(200%); -webkit-backdrop-filter:blur(28px) saturate(200%); padding:26px 22px; text-align:left;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .stat-label{font-size:12px; color:var(--sub); margin:0 0 4px;}
+  .stat-value{font-size:24px; font-weight:700; margin:0; letter-spacing:-.02em;}
+  .stat-value.hero-value{font-size:40px; margin-top:6px;}
+  .stat-value.pos{color:var(--accent);}
+  .stat-value.neg{color:var(--danger);}
+  .section-title{font-size:13px; font-weight:600; color:var(--sub); text-transform:uppercase; letter-spacing:.03em; margin:18px 4px 8px; display:flex; justify-content:space-between; align-items:center;}
+  .section-title a{color:var(--accent); font-size:12px; font-weight:600; text-transform:none; letter-spacing:0;}
+  .row{display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border);}
+  .row:last-child{border-bottom:none;}
+  .row .desc{font-size:15px; font-weight:500;}
+  .row .meta{font-size:12px; color:var(--sub); margin-top:2px;}
+  .amount{font-size:15px; font-weight:600; white-space:nowrap;}
+  .amount.neg{color:var(--danger);}
+  .amount.pos{color:var(--accent);}
+  .tag{font-size:11px; padding:3px 8px; border-radius:20px; font-weight:600;}
+  .tag.warn{background:var(--warn-light); color:var(--warn);}
+  .tag.danger{background:var(--danger-light); color:var(--danger);}
+  .tag.ok{background:var(--accent-light); color:var(--accent);}
+  .tag.blue{background:var(--blue-light); color:var(--blue);}
+  .tip{background:var(--accent-light); border-radius:var(--radius); padding:14px 16px; font-size:14px; line-height:1.5; color:var(--text); display:flex; gap:12px; margin-bottom:12px;}
+  .tip .tip-bar{width:3px; border-radius:3px; background:var(--accent); flex-shrink:0;}
+  .tip.warn .tip-bar{background:var(--warn);}
+  .tip.warn{background:var(--warn-light);}
+  .tip .ic{font-size:18px;}
+  form{display:flex; flex-direction:column; gap:10px;}
+  input, select{width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:15px; font-family:inherit;}
+  label{font-size:12px; color:var(--sub); margin-bottom:-4px;}
+  .btn{padding:13px; border-radius:12px; border:none; background:var(--accent); color:#fff; font-size:15px; font-weight:600; transition:transform .1s;}
+  .btn:active{transform:scale(.97);}
+  .btn.secondary{background:transparent; border:1px solid var(--border); color:var(--text);}
+  .btn.small{padding:6px 12px; font-size:13px; width:auto;}
+  .btnrow{display:flex; gap:8px;}
+  .fab{position:fixed; right:18px; bottom:calc(90px + env(safe-area-inset-bottom)); width:54px; height:54px; border-radius:50%; background:var(--accent); color:#fff; font-size:26px; border:none; box-shadow:0 6px 18px rgba(0,0,0,.28); z-index:10;}
+  .fab:active{transform:scale(.94);}
+  .empty{text-align:center; color:var(--sub); padding:24px 10px; font-size:14px;}
+  nav{position:fixed; bottom:0; left:0; right:0; background:color-mix(in srgb, var(--card) 85%, transparent); backdrop-filter:saturate(180%) blur(16px); -webkit-backdrop-filter:saturate(180%) blur(16px); border-top:1px solid var(--border); display:flex; padding-bottom:env(safe-area-inset-bottom); z-index:10;}
+  nav button{flex:1; background:none; border:none; padding:10px 0 8px; color:var(--muted); font-size:9.5px; font-family:inherit; display:flex; flex-direction:column; align-items:center; gap:3px;}
+  nav button.active{color:var(--accent);}
+  nav .ico{width:22px; height:22px; display:block; margin:0 auto;}
+  nav .ico svg{width:100%; height:100%;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .modal-bg{position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; align-items:flex-end; z-index:20;}
+  .modal-bg.active{display:flex;}
+  .modal{background:var(--card); width:100%; border-radius:20px 20px 0 0; padding:20px 20px calc(24px + env(safe-area-inset-bottom)); max-height:85vh; overflow-y:auto; position:relative;}
+  .modal h3{margin:0 0 14px;}
+  .close{position:absolute; right:20px; top:16px; background:none; border:none; font-size:22px; color:var(--sub);}
+  .monthnav{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .monthnav button{background:var(--card); border:1px solid var(--border); border-radius:10px; width:36px; height:36px; font-size:16px; color:var(--text);}
+  .monthnav .lbl{font-size:15px; font-weight:600;}
+  .daycard{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:8px;}
+  .daycard .dhead{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .daycard .dhead .dnum{font-weight:600; font-size:14px;}
+  .daycard .dhead .ddow{font-size:11px; color:var(--sub); text-transform:uppercase;}
+  .punches{display:grid; grid-template-columns:repeat(4,1fr); gap:6px;}
+  .punch{background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:8px 4px; text-align:center;}
+  .punch .plabel{font-size:9px; color:var(--sub); text-transform:uppercase; display:block; margin-bottom:3px;}
+  .punch .pval{font-size:14px; font-weight:600; color:var(--muted);}
+  .punch.filled .pval{color:var(--text);}
+  .grouphead{display:flex; justify-content:space-between; align-items:center; padding:8px 0 6px; font-size:13px; font-weight:600;}
+  .grouphead .dot{width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px;}
+  .progress{height:8px; background:var(--bg); border-radius:6px; overflow:hidden; margin-top:8px;}
+  .progress .fill{height:100%; border-radius:6px;}
+  .chart-bar-row{margin-bottom:12px;}
+  .chart-bar-row:last-child{margin-bottom:0;}
+  .chart-bar-head{display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;}
+  .chart-bar-head .cat{font-weight:500;}
+  .chart-bar-head .val{color:var(--sub); font-variant-numeric:tabular-nums;}
+  .chart-bar-track{height:10px; background:var(--bg); border-radius:6px; overflow:hidden;}
+  .chart-bar-fill{height:100%; border-radius:6px; background:var(--accent);}
+  .slider{-webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:6px; background:var(--border); outline:none; padding:0; margin:0;}
+  .slider::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:26px; height:26px; border-radius:50%; background:var(--accent); border:3px solid var(--card); box-shadow:0 2px 6px rgba(0,0,0,.3); cursor:pointer;}
+  .slider::-moz-range-thumb{width:26px; height:26px; border-radius:50%; background:var(--accent); border:3px solid var(--card); box-shadow:0 2px 6px rgba(0,0,0,.3); cursor:pointer; border-style:solid;}
+  .ob-progress{height:4px; background:var(--border); border-radius:4px; overflow:hidden;}
+  .ob-progress-fill{height:100%; background:var(--accent); border-radius:4px; transition:width .25s;}
+  .uric-card{border-radius:18px; padding:16px; margin-bottom:12px; background:var(--card-glass); backdrop-filter:blur(20px); border:1px solid var(--border);}
+  .uric-card:last-child{margin-bottom:0;}
+  .uric-label{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:6px;}
+  .uric-label.viu{color:var(--blue);}
+  .uric-label.calculou{color:var(--accent);}
+  .uric-label.recomenda{color:var(--accent);}
+  .uric-label.alerta{color:var(--danger);}
+  .uric-text{font-size:15px; line-height:1.5;}
+  .uric-mini{display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border-radius:18px; background:var(--card-glass); backdrop-filter:blur(20px); border:1px solid var(--border); margin-bottom:12px; cursor:pointer;}
+  .uric-mini .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); margin-top:6px; flex-shrink:0;}
+  .htable{width:100%; border-collapse:collapse; font-size:12.5px; min-width:480px; background:#fff;}
+  .htable th{background:#1C1B18; color:#fff; text-align:left; padding:7px 8px; border:1px solid #1C1B18; white-space:nowrap;}
+  .htable td{padding:6px 8px; border:1px solid #B7B4AA; white-space:nowrap; color:#1C1B18;}
+  .htable-items td:nth-child(4){color:#1155CC; text-align:right; font-weight:500;}
+  .htable-items td:nth-child(5){color:#1155CC; text-align:right; font-weight:500;}
+  .sheet{border-collapse:collapse; font-size:12px; min-width:560px; background:#fff; font-family:Arial,sans-serif;}
+  .sheet th{background:#F1F3F4; color:#5F6368; font-weight:400; text-align:center; padding:4px 8px; border:1px solid #E1E3E6; min-width:90px;}
+  .sheet th.rn{min-width:22px; background:#F1F3F4;}
+  .sheet td{padding:4px 8px; border:1px solid #E1E3E6; color:#1C1B18; white-space:nowrap;}
+  .sheet td.rn{background:#F1F3F4; color:#5F6368; text-align:center; font-size:11px;}
+  .sheet td.hcell{font-weight:700; background:#EFEFEF;}
+  .sheet td.num{color:#1155CC; text-align:right; font-weight:500;}
+  .sheet td.txt{text-align:left;}
+  .sheet tr.italic td{font-style:italic; color:#8A8A85;}
+  .sheet tr.italic td.num{color:#9db3d8;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="header-title">Uric</h1>
+  <p id="header-sub">Carregando...</p>
+</header>
+
+<main>
+
+  <div class="view active" id="view-dashboard">
+    <div class="card hero">
+      <p class="stat-label">Saldo projetado do mês</p>
+      <p class="stat-value hero-value" id="dash-saldo">--</p>
+      <p class="stat-label" id="dash-saldo-sub"></p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <p class="stat-label">Próximo pagamento</p>
+        <p class="stat-value pos" id="dash-proximo" style="font-size:19px;">--</p>
+        <p class="stat-label" id="dash-proximo-data"></p>
+      </div>
+      <div class="card">
+        <p class="stat-label">Crediário devido</p>
+        <p class="stat-value" id="dash-cred-mini" style="font-size:19px;">--</p>
+        <p class="stat-label" id="dash-cred-mini-sub"></p>
+      </div>
+    </div>
+
+    <div class="card" id="dash-uric-profile" style="padding:14px 16px;"></div>
+    <div id="dash-tips"></div>
+
+    <div class="section-title">Compromissos financeiros</div>
+    <div class="card" id="dash-crediario"></div>
+
+    <div class="section-title">Contas fixas do mês</div>
+    <div class="card" id="dash-contas-fixas"></div>
+
+    <div class="section-title">Contas avulsas próximas</div>
+    <div class="card" id="dash-contas"></div>
+
+    <div class="section-title">Últimos gastos</div>
+    <div class="card" id="dash-gastos"></div>
+  </div>
+
+  <div class="view" id="view-holerites">
+    <div class="section-title">Histórico de holerites</div>
+    <div class="card" id="lista-holerites"></div>
+    <div class="section-title">Ganhos extras <a href="#" onclick="abrirExtra(null); return false;">+ novo</a></div>
+    <div class="card" id="lista-extras"></div>
+  </div>
+
+  <div class="view" id="view-contas">
+    <div class="monthnav">
+      <button onclick="mudarMesContas(-1)">‹</button>
+      <span class="lbl" id="contas-mes-lbl"></span>
+      <button onclick="mudarMesContas(1)">›</button>
+    </div>
+    <div class="section-title">Pagas com a sobra do dia 5 (azul) <a href="#" onclick="novaContaFixa(); return false;">+ item</a></div>
+    <div class="card" id="lista-fixas-dia5"></div>
+    <div class="section-title">Pagas com o dinheiro do dia 20 (cinza)</div>
+    <div class="card" id="lista-fixas-dia20"></div>
+    <div class="section-title">Outras contas (avulsas)</div>
+    <div class="card" id="lista-contas-avulsas"></div>
+  </div>
+
+  <div class="view" id="view-gastos">
+    <button class="btn" style="margin-bottom:12px;" onclick="abrirScanner()">Escanear nota / cupom</button>
+    <div class="section-title">Gráfico de gastos por categoria (mês atual)</div>
+    <div class="card" id="gastos-categoria"></div>
+    <div class="section-title">Todos os lançamentos</div>
+    <div class="card" id="lista-gastos"></div>
+  </div>
+
+  <div class="view" id="view-ponto">
+    <div class="monthnav">
+      <button onclick="mudarMesPonto(-1)">‹</button>
+      <span class="lbl" id="ponto-mes-lbl"></span>
+      <button onclick="mudarMesPonto(1)">›</button>
+    </div>
+    <div id="ponto-dias"></div>
+    <button class="btn" style="margin:14px 0;" onclick="calcularHoleriteMes()">Calcular holerite deste mês</button>
+    <div class="section-title">Configurações da folha <a href="#" onclick="abrirConfig(); return false;">editar</a></div>
+    <div class="card" id="config-resumo"></div>
+  </div>
+  <div class="view" id="view-uric">
+    <div class="card hero" style="margin-bottom:12px;">
+      <p class="stat-label">Seu assistente financeiro</p>
+      <p style="font-size:24px;font-weight:700;margin:4px 0;">Uric</p>
+      <p style="color:var(--sub);line-height:1.5;margin:0;">Eu acompanho seus números, encontro padrões e te aviso quando alguma coisa merece atenção.</p>
+    </div>
+    <div class="section-title">O que está acontecendo</div>
+    <div class="card" id="uric-feed"></div>
+  </div>
+
+</main>
+
+<button class="fab" id="fab">+</button>
+
+<nav>
+  <button class="tab active" data-view="dashboard"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"/></svg></span>Início</button>
+  <button class="tab" data-view="holerites"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v0M18 15v0"/></svg></span>Holerites</button>
+  <button class="tab" data-view="ponto"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>Ponto</button>
+  <button class="tab" data-view="contas"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1Z"/><path d="M9.5 12h5M9.5 15.5h5M9.5 8.5h2"/></svg></span>Contas</button>
+  <button class="tab" data-view="gastos"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3v-17Z"/><path d="M9 8h6M9 11.5h6M9 15h4"/></svg></span>Gastos</button>
+  <button class="tab" data-view="uric"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 10.2a2.5 2.5 0 1 1 3.2 2.4c-.7.3-1.2.9-1.2 1.7v.4"/><circle cx="12" cy="16.8" r=".3" fill="currentColor"/></svg></span>Uric</button>
+</nav>
+
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<input type="file" accept="image/*" capture="environment" id="input-scan" style="display:none">
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const DOW = ['dom','seg','ter','qua','qui','sex','sáb'];
+
+const DEFAULT_DATA = {
+  holerites: [],
+  contas: [],
+  gastos: [],
+  extras: [],
+  ponto: {},
+  contasFixas: [],
+  onboardingDone: false,
+  perfil: {
+    nome: '',
+    tipoRenda: '',
+    objetivo: '',
+    prioridade: '',
+    criadoEm: null
+  },
+  contasBancarias: [],
+  cartoes: [],
+  dividas: [],
+  metas: [],
+  config: {
+    salarioBase: 0,
+    rendaTipo: '',
+    regime: '',
+    dataPagamento: '',
+    segundaEntrada: false,
+    segundaEntradaTipo: '',
+    segundaEntradaValor: 0,
+    segundaEntradaPercentual: 0,
+    segundaEntradaDia: '',
+    valePct: 0,
+    grupoNomes: {dia5:'Salário líquido', dia20:'Adiantamento', extra:'Ganhos extras'},
+    descontosFixos: [
+      {id:'df1', nome:'Crediário / Cartão', valor:0, limite:0, meta:0}
+    ],
+    dependentes: 0,
+    pensaoValor: 0,
+    valeTransporteValor: 0,
+    valeAlimentacaoValor: 0,
+    planoSaudeValor: 0,
+    outrosDescontos: 0,
+    jornadaSemanal: 44,
+    horasDia: 8,
+    trabalhaSabado: false,
+    adicionalNoturno: 0,
+    insalubridade: 0,
+    periculosidade: 0,
+    dataAdmissao: '',
+    usaDescontoSimplificadoIRRF: true
+  }
+}
+
+let data = null;
+let pontoRef = new Date();
+
+function load(){
+  try{
+    const raw = localStorage.getItem('financas_app_v2');
+    data = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_DATA));
+    if(!data.ponto) data.ponto = {};
+    if(!data.config) data.config = JSON.parse(JSON.stringify(DEFAULT_DATA.config));
+    if(!data.contasFixas) data.contasFixas = JSON.parse(JSON.stringify(DEFAULT_DATA.contasFixas));
+    if(!data.config.grupoNomes) data.config.grupoNomes = {dia5:'Sobra do dia 5', dia20:'Dinheiro do dia 20', extra:'Ganhos extras'};
+    if(!data.config.grupoNomes.extra) data.config.grupoNomes.extra = 'Ganhos extras';
+    if(!data.extras) data.extras = [];
+    if(!data.perfil) data.perfil = JSON.parse(JSON.stringify(DEFAULT_DATA.perfil));
+    if(!data.contasBancarias) data.contasBancarias = [];
+    if(!data.cartoes) data.cartoes = [];
+    if(!data.dividas) data.dividas = [];
+    if(!data.metas) data.metas = [];
+    data.config = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_DATA.config)), data.config||{});
+    if(!data.config.grupoNomes) data.config.grupoNomes = JSON.parse(JSON.stringify(DEFAULT_DATA.config.grupoNomes));
+    if(!data.config.descontosFixos) data.config.descontosFixos = JSON.parse(JSON.stringify(DEFAULT_DATA.config.descontosFixos));
+    // migração: limite antigo do crediário era 1500, meta 900 — agora é limite 1000, meta 600
+    data.config.descontosFixos.forEach(d=>{
+      if(d.id==='df1' && d.limite===1500) d.limite = 1000;
+      if(d.id==='df1' && d.meta===900) d.meta = 600;
+    });
+    // migração: versões antigas guardavam um único "valor" por conta fixa;
+    // agora guardamos um valor por mês em "valores"
+    const keyHoje = pontoKey(new Date());
+    data.contasFixas.forEach(c=>{
+      if(!c.valores){
+        c.valores = {};
+        if(c.valor!==undefined){ c.valores[keyHoje] = Number(c.valor)||0; delete c.valor; }
+      }
+    });
+  }catch(e){
+    data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+}
+function save(){
+  try{ localStorage.setItem('financas_app_v2', JSON.stringify(data)); }catch(e){}
+}
+function uid(){ return 'id' + Date.now() + Math.floor(Math.random()*1000); }
+function brl(v){
+  const n = Number(v)||0;
+  return (n<0?'-':'') + 'R$ ' + Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function mesNome(m){ return MESES[m].charAt(0).toUpperCase()+MESES[m].slice(1); }
+
+function renderAll(){
+  renderHeader();
+  renderDashboard();
+  renderUricProfile();
+  renderHolerites();
+  renderContas();
+  renderGastos();
+  renderPonto();
+  renderUric();
+}
+
+function renderUricProfile(){
+  const el=document.getElementById('dash-uric-profile');
+  if(!el) return;
+  const nome=data?.perfil?.nome||'';
+  const objetivo=data?.perfil?.objetivo;
+  const mapa={organizar:'organizar sua vida financeira',dividas:'reduzir suas dívidas',economizar:'economizar mais',reserva:'montar sua reserva',cartao:'controlar seus cartões',investir:'começar a investir',planejar:'planejar seus próximos meses'};
+  const prioridade=mapa[objetivo]||'entender sua vida financeira';
+  el.innerHTML=`<div style="display:flex;gap:12px;align-items:flex-start;">
+    <div style="width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent-light);color:var(--accent);font-weight:800;">U</div>
+    <div style="flex:1;"><div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Uric viu</div>
+    <div style="font-size:14px;line-height:1.45;margin-top:3px;">${nome?nome+', ':''}sua prioridade agora é <strong>${prioridade}</strong>.</div>
+    <button class="btn secondary small" style="margin-top:9px;" onclick="mostrarView('uric')">Ver o que o Uric encontrou</button></div>
+  </div>`;
+}
+
+function gerarInsightsUric(){
+  const now = new Date();
+  const mesAtual = now.getMonth(), anoAtual = now.getFullYear();
+  const mesPassadoDate = new Date(anoAtual, mesAtual-1, 1);
+  const gastosPorMes = (mes, ano) => data.gastos.filter(g=>{ const d=new Date(g.data); return d.getMonth()===mes && d.getFullYear()===ano; });
+  const gastosMes = gastosPorMes(mesAtual, anoAtual);
+  const gastosMesPassado = gastosPorMes(mesPassadoDate.getMonth(), mesPassadoDate.getFullYear());
+  const somaPorCat = lista => { const m={}; lista.forEach(g=>{ m[g.categoria]=(m[g.categoria]||0)+Number(g.valor||0); }); return m; };
+  const catAtual = somaPorCat(gastosMes), catPassado = somaPorCat(gastosMesPassado);
+  const insights = [];
+
+  Object.keys(catAtual).forEach(cat=>{
+    const atual = catAtual[cat], passado = catPassado[cat];
+    if(passado && passado>0){
+      const variacao = ((atual-passado)/passado)*100;
+      if(Math.abs(variacao) >= 15){
+        if(variacao < 0){
+          insights.push({label:'viu', texto:`Você gastou ${Math.abs(Math.round(variacao))}% menos com ${cat.toLowerCase()} este mês, comparado ao mês passado.`});
+        } else {
+          insights.push({label:'alerta', texto:`Seus gastos com ${cat.toLowerCase()} estão ${Math.round(variacao)}% acima do mês passado.`});
+        }
+      }
+    }
+  });
+
+  const credItem = data.config.descontosFixos.find(d=>d.limite>0);
+  if(credItem && credItem.valor > 0){
+    if(credItem.valor > credItem.meta){
+      insights.push({label:'alerta', texto:`Sua fatura do ${credItem.nome.toLowerCase()} está em ${brl(credItem.valor)}, acima da sua meta de ${brl(credItem.meta)}.`});
+    } else {
+      insights.push({label:'calculou', texto:`Seu ${credItem.nome.toLowerCase()} está em ${brl(credItem.valor)}, dentro da meta de ${brl(credItem.meta)}.`});
+    }
+  }
+
+  const keyAtual = pontoKey(now);
+  const holeriteAtual = data.holerites.find(h=>h.mes===mesAtual && h.ano===anoAtual);
+  const totalGastosMes = gastosMes.reduce((a,g)=>a+Number(g.valor||0),0);
+  const fixasTotal = totalFixas('dia5', keyAtual) + totalFixas('dia20', keyAtual);
+  const extrasMes = data.extras.filter(x=>{ const d=new Date(x.data); return d.getMonth()===mesAtual && d.getFullYear()===anoAtual; }).reduce((a,x)=>a+Number(x.valor||0),0);
+  const receitaMes = (holeriteAtual ? (holeriteAtual.dia5||0)+(holeriteAtual.dia20||0) : 0) + extrasMes;
+  if(receitaMes>0 || totalGastosMes>0){
+    const projecao = receitaMes - totalGastosMes - fixasTotal;
+    insights.push({label:'recomenda', texto: projecao>=0
+      ? `Se você mantiver esse ritmo de gastos, deve terminar o mês com aproximadamente ${brl(projecao)} livres.`
+      : `No ritmo atual, suas contas e gastos já superam o que entrou este mês em ${brl(Math.abs(projecao))}. Vale rever alguma coisa.`});
+  }
+
+  const entradasCat = Object.entries(catAtual).sort((a,b)=>b[1]-a[1]);
+  if(entradasCat.length){
+    insights.push({label:'calculou', texto:`Sua maior categoria de gasto este mês é ${entradasCat[0][0].toLowerCase()}, com ${brl(entradasCat[0][1])}.`});
+  }
+
+  if(!insights.length){
+    insights.push({label:'viu', texto:'Ainda não há dados suficientes este mês. Continue lançando ponto, gastos e contas que eu vou aparecendo com mais observações.'});
+  }
+  return insights;
+}
+function renderUric(){
+  const feed = document.getElementById('uric-feed');
+  if(!feed) return;
+  const insights = gerarInsightsUric();
+  const labelTxt = {viu:'Uric viu', calculou:'Uric calculou', recomenda:'Uric recomenda', alerta:'Uric alerta'};
+  feed.innerHTML = insights.map(i=>`
+    <div class="uric-card">
+      <div class="uric-label ${i.label}">${labelTxt[i.label]}</div>
+      <div class="uric-text">${i.texto}</div>
+    </div>`).join('');
+}
+
+function renderHeader(){
+  const now = new Date();
+  const nome=data?.perfil?.nome ? data.perfil.nome : '';
+  document.getElementById('header-title').textContent = nome ? `Olá, ${nome}` : 'Uric';
+  document.getElementById('header-sub').textContent = nome ? `Seu dinheiro, mais inteligente · ${mesNome(now.getMonth())} de ${now.getFullYear()}` : `Seu dinheiro, mais inteligente · ${mesNome(now.getMonth())} de ${now.getFullYear()}`;
+}
+
+function ultimosHolerites(n){
+  return [...data.holerites].sort((a,b)=> (a.ano*12+a.mes) - (b.ano*12+b.mes)).slice(-n);
+}
+
+function totalCrediarioMes(mes, ano){
+  return data.gastos.filter(g=>{ const d = new Date(g.data); return g.categoria==='Crediário' && d.getMonth()===mes && d.getFullYear()===ano; })
+    .reduce((a,g)=>a+Number(g.valor||0),0);
+}
+function totalFixas(grupo, key){
+  return data.contasFixas.filter(c=>c.grupo===grupo).reduce((a,c)=>a+valorFixaMes(c,key),0);
+}
+function valorFixaMes(c, key){
+  return (c.valores && c.valores[key]!==undefined) ? Number(c.valores[key])||0 : 0;
+}
+function setValorFixaMes(c, key, val){
+  if(!c.valores) c.valores = {};
+  c.valores[key] = Number(val)||0;
+}
+
+function renderDashboard(){
+  const now = new Date();
+  const diaHoje = now.getDate();
+  const proxIsDia20 = diaHoje >= 5 && diaHoje < 20; // depois do dia5 e antes do dia20, o próximo é o dia20
+  let proximoValor, proximoLabel;
+  if(proxIsDia20){
+    proximoValor = data.config.salarioBase * data.config.valePct;
+    proximoLabel = 'Vale fixo (40% do salário, sem descontos) · dia 20';
+  } else {
+    const calculados = data.holerites.filter(h=>h.calculado).sort((a,b)=>(a.ano*12+a.mes)-(b.ano*12+b.mes));
+    const ultimos3d5 = calculados.slice(-3).map(h=>h.dia5||0);
+    proximoValor = ultimos3d5.length ? ultimos3d5.reduce((a,b)=>a+b,0)/ultimos3d5.length : 0;
+    proximoLabel = ultimos3d5.length ? `Estimativa baseada nos últimos ${ultimos3d5.length} líquidos calculados · dia 5` : 'Calcule o holerite do mês em Ponto pra ver uma estimativa · dia 5';
+  }
+  document.getElementById('dash-proximo').textContent = brl(proximoValor);
+  document.getElementById('dash-proximo-data').textContent = proximoLabel;
+
+  const mesAtual = now.getMonth(), anoAtual = now.getFullYear();
+  const keyAtual = pontoKey(now);
+  const gastosMes = data.gastos.filter(g=>{ const d = new Date(g.data); return d.getMonth()===mesAtual && d.getFullYear()===anoAtual; });
+  const extrasMes = data.extras.filter(x=>{ const d = new Date(x.data); return d.getMonth()===mesAtual && d.getFullYear()===anoAtual; });
+  const totalExtrasMes = extrasMes.reduce((a,x)=>a+Number(x.valor||0),0);
+  const totalGastosMes = gastosMes.reduce((a,g)=>a+Number(g.valor||0),0);
+  const holeriteAtual = data.holerites.find(h=>h.mes===mesAtual && h.ano===anoAtual);
+  const receitaMes = (holeriteAtual ? (holeriteAtual.dia5||0)+(holeriteAtual.dia20||0) : proximoValor) + totalExtrasMes;
+  const fixasTotal = totalFixas('dia5', keyAtual) + totalFixas('dia20', keyAtual);
+  const saldo = receitaMes - totalGastosMes - fixasTotal;
+  const saldoEl = document.getElementById('dash-saldo');
+  saldoEl.textContent = brl(saldo);
+  saldoEl.className = 'stat-value hero-value ' + (saldo>=0?'pos':'neg');
+  document.getElementById('dash-saldo-sub').textContent = brl(totalGastosMes+fixasTotal) + ' comprometido de ' + brl(receitaMes);
+  const credMiniEl = document.getElementById('dash-cred-mini');
+  const credMiniSubEl = document.getElementById('dash-cred-mini-sub');
+  const credItemMini = data.config.descontosFixos.find(d=>d.limite>0);
+  if(credItemMini && credMiniEl){
+    credMiniEl.textContent = brl(credItemMini.valor);
+    credMiniEl.className = 'stat-value ' + (credItemMini.valor>credItemMini.meta?'neg':'pos');
+    credMiniSubEl.textContent = 'de até ' + brl(credItemMini.meta);
+  }
+
+  // Uric — destaque com o insight mais relevante do momento
+  const tipsEl = document.getElementById('dash-tips');
+  if(tipsEl){
+    const insights = gerarInsightsUric();
+    const labelTxt = {viu:'Uric viu', calculou:'Uric calculou', recomenda:'Uric recomenda', alerta:'Uric alerta'};
+    const destaque = insights.find(i=>i.label==='alerta') || insights[0];
+    tipsEl.innerHTML = destaque ? `
+      <div class="uric-mini" onclick="mostrarView('uric')">
+        <span class="dot" style="background:${destaque.label==='alerta'?'var(--danger)':'var(--accent)'};"></span>
+        <div><div class="uric-label ${destaque.label}" style="margin-bottom:4px;">${labelTxt[destaque.label]}</div><div class="uric-text">${destaque.texto}</div></div>
+      </div>` : '';
+  }
+
+  // crediario — atualizado manualmente pelo usuário a cada compra, com slider
+  const cred = credItem;
+  const credEl = document.getElementById('dash-crediario');
+  if(cred){
+    const pct = Math.min(100, Math.round((cred.valor/cred.limite)*100));
+    credEl.innerHTML = `
+      <div class="row"><div class="desc">Valor total devido</div><div class="amount ${cred.valor>cred.meta?'neg':'pos'}" id="cred-valor-display">${brl(cred.valor)}</div></div>
+      <div class="row"><div class="desc">Meta (diminuindo sempre)</div><div class="amount">até ${brl(cred.meta)}</div></div>
+      <div class="row"><div class="desc">Limite do cartão</div><div class="amount">${brl(cred.limite)}</div></div>
+      <div class="progress"><div class="fill" id="cred-progress-fill" style="width:${pct}%; background:${cred.valor>cred.meta?'var(--danger)':'var(--accent)'};"></div></div>
+      <input type="range" id="cred-slider" class="slider" min="0" max="${cred.limite}" step="5" value="${Math.min(cred.valor, cred.limite)}" style="margin-top:14px;">
+      <div class="row" style="border:none; padding-top:4px;"><span class="meta">R$ 0</span><span class="meta">${brl(cred.limite)}</span></div>
+      <form id="form-cred-quick" style="margin-top:6px; display:flex; gap:8px; align-items:flex-end;">
+        <div style="flex:1;"><label>Ou digite o valor exato</label><input type="number" step="0.01" id="cred-quick-valor" value="${cred.valor}"></div>
+        <button type="submit" class="btn" style="width:auto; padding:11px 16px;">Salvar</button>
+      </form>
+    `;
+    const slider = document.getElementById('cred-slider');
+    const numInput = document.getElementById('cred-quick-valor');
+    const display = document.getElementById('cred-valor-display');
+    const fill = document.getElementById('cred-progress-fill');
+    const updateLive = (val)=>{
+      const p = Math.min(100, Math.round((val/cred.limite)*100));
+      display.textContent = brl(val);
+      display.className = 'amount ' + (val>cred.meta?'neg':'pos');
+      fill.style.width = p+'%';
+      fill.style.background = val>cred.meta?'var(--danger)':'var(--accent)';
+    };
+    slider.addEventListener('input', ()=>{ numInput.value = slider.value; updateLive(Number(slider.value)); });
+    slider.addEventListener('change', ()=>{ cred.valor = Number(slider.value)||0; save(); renderDashboard(); });
+    numInput.addEventListener('input', ()=>{ const v = Number(numInput.value)||0; if(v<=cred.limite) slider.value = v; updateLive(v); });
+    const fq = document.getElementById('form-cred-quick');
+    if(fq) fq.addEventListener('submit', e=>{
+      e.preventDefault();
+      cred.valor = Number(document.getElementById('cred-quick-valor').value)||0;
+      save(); renderAll();
+    });
+  } else {
+    credEl.innerHTML = '<div class="empty">Configure o crediário em Ponto → editar</div>';
+  }
+
+  // contas fixas resumo (com remanente, igual à planilha)
+  const fixasEl = document.getElementById('dash-contas-fixas');
+  const d5 = data.contasFixas.filter(c=>c.grupo==='dia5');
+  const d20 = data.contasFixas.filter(c=>c.grupo==='dia20');
+  const tot5 = totalFixas('dia5', keyAtual), tot20 = totalFixas('dia20', keyAtual);
+  const recDia5 = holeriteAtual ? (holeriteAtual.dia5||0) : 0;
+  const recDia20 = holeriteAtual ? (holeriteAtual.dia20||0) : 0;
+  const rem5 = recDia5 - tot5, rem20 = recDia20 - tot20;
+  const gn = data.config.grupoNomes || {dia5:'Sobra do dia 5', dia20:'Dinheiro do dia 20'};
+  fixasEl.innerHTML = `
+    <div class="grouphead"><span><span class="dot" style="background:var(--blue);"></span>${gn.dia5}</span><span>${brl(tot5)}</span></div>
+    ${d5.map(c=>`<div class="row"><div class="desc">${c.nome} <span class="meta">(${c.sigla})</span></div><div class="amount neg">-${brl(valorFixaMes(c,keyAtual))}</div></div>`).join('')}
+    <div class="row" style="border:none; padding-top:6px;"><div class="desc" style="font-weight:600;">Remanente ${gn.dia5}</div><div class="amount ${rem5>=0?'pos':'neg'}" style="font-weight:600;">${brl(rem5)}</div></div>
+    <div class="grouphead" style="margin-top:10px;"><span><span class="dot" style="background:var(--muted);"></span>${gn.dia20}</span><span>${brl(tot20)}</span></div>
+    ${d20.map(c=>`<div class="row"><div class="desc">${c.nome} <span class="meta">(${c.sigla})</span></div><div class="amount neg">-${brl(valorFixaMes(c,keyAtual))}</div></div>`).join('')}
+    <div class="row" style="border:none; padding-top:6px;"><div class="desc" style="font-weight:600;">Remanente ${gn.dia20}</div><div class="amount ${rem20>=0?'pos':'neg'}" style="font-weight:600;">${brl(rem20)}</div></div>
+  `;
+
+  const contasEl = document.getElementById('dash-contas');
+  const proximas = [...data.contas].filter(c=>!c.paga).sort((a,b)=> new Date(a.vencimento)-new Date(b.vencimento)).slice(0,4);
+  contasEl.innerHTML = proximas.length ? proximas.map(c=>rowConta(c,false)).join('') : '<div class="empty">Nenhuma conta avulsa pendente</div>';
+
+  const gastosEl = document.getElementById('dash-gastos');
+  const ultimosG = [...data.gastos].sort((a,b)=> new Date(b.data)-new Date(a.data)).slice(0,4);
+  gastosEl.innerHTML = ultimosG.length ? ultimosG.map(g=>rowGasto(g,false)).join('') : '<div class="empty">Nenhum gasto lançado ainda</div>';
+}
+
+function rowConta(c, withActions){
+  const venc = new Date(c.vencimento+'T00:00:00');
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const atrasada = venc < hoje && !c.paga;
+  const tagClass = c.paga ? 'ok' : (atrasada ? 'danger' : 'warn');
+  const tagText = c.paga ? 'Paga' : (atrasada ? 'Atrasada' : 'Pendente');
+  return `<div class="row" onclick="${withActions? `abrirConta('${c.id}')`:''}">
+    <div><div class="desc">${c.desc}</div><div class="meta">${venc.toLocaleDateString('pt-BR')} · <span class="tag ${tagClass}">${tagText}</span></div></div>
+    <div class="amount ${c.tipo==='pagar'?'neg':'pos'}">${c.tipo==='pagar'?'-':'+'}${brl(c.valor)}</div>
+  </div>`;
+}
+function rowGasto(g, withActions){
+  const d = new Date(g.data+'T00:00:00');
+  return `<div class="row" onclick="${withActions? `abrirGasto('${g.id}')`:''}">
+    <div><div class="desc">${g.desc}</div><div class="meta">${g.categoria} · ${d.toLocaleDateString('pt-BR')}</div></div>
+    <div class="amount neg">-${brl(g.valor)}</div>
+  </div>`;
+}
+
+function renderHolerites(){
+  const el = document.getElementById('lista-holerites');
+  const ordenado = [...data.holerites].sort((a,b)=> (b.ano*12+b.mes)-(a.ano*12+a.mes));
+  el.innerHTML = ordenado.length ? ordenado.map(h=>{
+    const total = (h.dia5||0)+(h.dia20||0);
+    const tagHtml = h.calculado ? '<span class="tag ok">Calculado</span>' : (h.readonly ? '<span class="tag warn">Importado</span>' : '');
+    return `<div class="row" onclick="abrirHolerite('${h.id}')">
+      <div><div class="desc">${mesNome(h.mes)} ${h.ano}</div><div class="meta">Dia 5 (líquido): ${brl(h.dia5)} · Dia 20 (vale): ${brl(h.dia20)} ${tagHtml}</div></div>
+      <div class="amount pos">${brl(total)}</div>
+    </div>`;
+  }).join('') : '<div class="empty">Nenhum holerite cadastrado</div>';
+  renderExtras();
+}
+function renderExtras(){
+  const el = document.getElementById('lista-extras');
+  if(!el) return;
+  const ordenado = [...data.extras].sort((a,b)=> new Date(b.data)-new Date(a.data));
+  el.innerHTML = ordenado.length ? ordenado.map(x=>`
+    <div class="row" onclick="abrirExtra('${x.id}')">
+      <div><div class="desc">${x.desc}</div><div class="meta">${new Date(x.data+'T00:00:00').toLocaleDateString('pt-BR')}</div></div>
+      <div class="amount pos">+${brl(x.valor)}</div>
+    </div>`).join('') : '<div class="empty">Nenhum ganho extra lançado. Bico, PIX, venda avulsa etc — toque em "+ novo".</div>';
+}
+function abrirExtra(id){
+  const x = id ? data.extras.find(e=>e.id===id) : null;
+  const el = document.getElementById('modal-content');
+  const hoje = new Date().toISOString().slice(0,10);
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>${x?'Editar ganho extra':'Novo ganho extra'}</h3>
+    <form id="form-extra">
+      <label>Descrição</label>
+      <input type="text" id="fe-desc" placeholder="Ex: bico, venda, PIX de cliente..." value="${x?x.desc:''}" required>
+      <label>Valor</label>
+      <input type="number" step="0.01" id="fe-valor" value="${x?x.valor:''}" required>
+      <label>Data</label>
+      <input type="date" id="fe-data" value="${x?x.data:hoje}" required>
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Salvar</button>
+        ${x?'<button type="button" class="btn secondary" onclick="excluirExtra(\''+x.id+'\')">Excluir</button>':''}
+      </div>
+    </form>`;
+  document.getElementById('form-extra').addEventListener('submit', e=>{
+    e.preventDefault();
+    const desc = document.getElementById('fe-desc').value;
+    const valor = Number(document.getElementById('fe-valor').value)||0;
+    const dataC = document.getElementById('fe-data').value;
+    if(x){ x.desc=desc; x.valor=valor; x.data=dataC; }
+    else{ data.extras.push({id:uid(), desc, valor, data:dataC}); }
+    save(); renderAll(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function excluirExtra(id){ data.extras = data.extras.filter(e=>e.id!==id); save(); renderAll(); closeModal(); }
+
+let contasRef = new Date();
+function mudarMesContas(delta){
+  contasRef = new Date(contasRef.getFullYear(), contasRef.getMonth()+delta, 1);
+  renderContas();
+}
+function renderContas(){
+  const key = pontoKey(contasRef);
+  const lbl = document.getElementById('contas-mes-lbl');
+  if(lbl) lbl.textContent = mesNome(contasRef.getMonth()) + ' ' + contasRef.getFullYear();
+  const d5 = data.contasFixas.filter(c=>c.grupo==='dia5');
+  const d20 = data.contasFixas.filter(c=>c.grupo==='dia20');
+  const tot5 = totalFixas('dia5', key), tot20 = totalFixas('dia20', key);
+  const holerite = data.holerites.find(h=>h.mes===contasRef.getMonth() && h.ano===contasRef.getFullYear());
+  const rem5 = (holerite?holerite.dia5:0) - tot5;
+  const rem20 = (holerite?holerite.dia20:0) - tot20;
+  document.getElementById('lista-fixas-dia5').innerHTML = (d5.length ? d5.map(c=>rowFixa(c,key)).join('') : '<div class="empty">Nenhuma conta neste grupo</div>')
+    + `<div class="row" style="border:none; padding-top:10px;"><div class="desc" style="font-weight:700;">Total</div><div class="amount neg">-${brl(tot5)}</div></div>`
+    + `<div class="row" style="border:none;"><div class="desc" style="font-weight:700;">Remanente (recebido - contas)</div><div class="amount ${rem5>=0?'pos':'neg'}" style="font-weight:700;">${brl(rem5)}</div></div>`;
+  document.getElementById('lista-fixas-dia20').innerHTML = (d20.length ? d20.map(c=>rowFixa(c,key)).join('') : '<div class="empty">Nenhuma conta neste grupo</div>')
+    + `<div class="row" style="border:none; padding-top:10px;"><div class="desc" style="font-weight:700;">Total</div><div class="amount neg">-${brl(tot20)}</div></div>`
+    + `<div class="row" style="border:none;"><div class="desc" style="font-weight:700;">Remanente (recebido - contas)</div><div class="amount ${rem20>=0?'pos':'neg'}" style="font-weight:700;">${brl(rem20)}</div></div>`;
+
+  const avulsas = [...data.contas].sort((a,b)=> new Date(a.vencimento)-new Date(b.vencimento));
+  document.getElementById('lista-contas-avulsas').innerHTML = avulsas.length ? avulsas.map(c=>rowConta(c,true)).join('') : '<div class="empty">Nenhuma conta avulsa. Toque em "+" pra adicionar.</div>';
+}
+function rowFixa(c, key){
+  return `<div class="row" onclick="abrirContaFixa('${c.id}')">
+    <div><div class="desc">${c.nome}</div><div class="meta">${c.sigla}</div></div>
+    <div class="amount neg">-${brl(valorFixaMes(c,key))}</div>
+  </div>`;
+}
+
+function renderGastos(){
+  const now = new Date();
+  const gastosMes = data.gastos.filter(g=>{ const d = new Date(g.data); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); });
+  const porCat = {};
+  gastosMes.forEach(g=>{ porCat[g.categoria] = (porCat[g.categoria]||0)+Number(g.valor||0); });
+  const catsEl = document.getElementById('gastos-categoria');
+  const entradas = Object.entries(porCat).sort((a,b)=>b[1]-a[1]);
+  const maiorVal = entradas.length ? entradas[0][1] : 0;
+  catsEl.innerHTML = entradas.length ? entradas.map(([cat,val])=>`
+    <div class="chart-bar-row">
+      <div class="chart-bar-head"><span class="cat">${cat}</span><span class="val">${brl(val)}</span></div>
+      <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${maiorVal?Math.max(4,Math.round(val/maiorVal*100)):0}%;"></div></div>
+    </div>`).join('') : '<div class="empty">Nenhum gasto este mês</div>';
+
+  const listaEl = document.getElementById('lista-gastos');
+  const todos = [...data.gastos].sort((a,b)=> new Date(b.data)-new Date(a.data));
+  listaEl.innerHTML = todos.length ? todos.map(g=>rowGasto(g,true)).join('') : '<div class="empty">Nenhum gasto lançado</div>';
+}
+
+/* ---------- PONTO ---------- */
+function pontoKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function mudarMesPonto(delta){
+  pontoRef = new Date(pontoRef.getFullYear(), pontoRef.getMonth()+delta, 1);
+  renderPonto();
+}
+function diasNoMes(ano, mes){ return new Date(ano, mes+1, 0).getDate(); }
+
+function renderPonto(){
+  const ano = pontoRef.getFullYear(), mes = pontoRef.getMonth();
+  document.getElementById('ponto-mes-lbl').textContent = mesNome(mes) + ' ' + ano;
+  const key = pontoKey(pontoRef);
+  if(!data.ponto[key]) data.ponto[key] = {};
+  const nDias = diasNoMes(ano, mes);
+  let html = '';
+  for(let d=1; d<=nDias; d++){
+    const dow = new Date(ano, mes, d).getDay();
+    const rec = data.ponto[key][d] || {};
+    html += `<div class="daycard" onclick="abrirDiaPonto('${key}',${d})">
+      <div class="dhead"><span class="dnum">${String(d).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}</span><span class="ddow">${DOW[dow]} · toque para editar</span></div>
+      <div class="punches">
+        ${punchDisplay('Entrada',rec.entrada)}
+        ${punchDisplay('Saída alm.',rec.saidaAlmoco)}
+        ${punchDisplay('Retorno',rec.retornoAlmoco)}
+        ${punchDisplay('Saída',rec.saida)}
+      </div>
+    </div>`;
+  }
+  document.getElementById('ponto-dias').innerHTML = html;
+
+  const cfg = data.config;
+  document.getElementById('config-resumo').innerHTML = `
+    <div class="row"><div class="desc">Salário base</div><div class="amount">${brl(cfg.salarioBase)}</div></div>
+    <div class="row"><div class="desc">Vale dia 20 (sem descontos)</div><div class="amount">${Math.round(cfg.valePct*100)}% do salário</div></div>
+    ${cfg.descontosFixos.map(df=>`<div class="row"><div class="desc">${df.nome}</div><div class="amount neg">-${brl(df.valor)}</div></div>`).join('')}
+  `;
+}
+
+function punchDisplay(label, valor){
+  const filled = !!valor;
+  return `<div class="punch ${filled?'filled':''}">
+    <span class="plabel">${label}</span>
+    <span class="pval">${filled ? valor : '--:--'}</span>
+  </div>`;
+}
+
+function abrirDiaPonto(key, dia){
+  if(!data.ponto[key]) data.ponto[key] = {};
+  if(!data.ponto[key][dia]) data.ponto[key][dia] = {};
+  const rec = data.ponto[key][dia];
+  const el = document.getElementById('modal-content');
+  const campos = [['entrada','Entrada'],['saidaAlmoco','Saída almoço'],['retornoAlmoco','Retorno almoço'],['saida','Saída']];
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>Ponto do dia ${String(dia).padStart(2,'0')}/${String(pontoRef.getMonth()+1).padStart(2,'0')}</h3>
+    <form id="form-ponto">
+      ${campos.map(([id,lbl])=>`
+        <label>${lbl}</label>
+        <div class="btnrow">
+          <input type="time" id="f-${id}" value="${rec[id]||''}" style="flex:1;">
+          <button type="button" class="btn secondary small" onclick="document.getElementById('f-${id}').value=agoraHHMM()">Agora</button>
+        </div>
+      `).join('')}
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Salvar</button>
+        <button type="button" class="btn secondary" onclick="limparDiaPonto('${key}',${dia})">Limpar dia</button>
+      </div>
+    </form>`;
+  document.getElementById('form-ponto').addEventListener('submit', e=>{
+    e.preventDefault();
+    campos.forEach(([id])=>{
+      const v = document.getElementById('f-'+id).value;
+      if(v) rec[id] = v; else delete rec[id];
+    });
+    save(); renderPonto(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function agoraHHMM(){
+  const now = new Date();
+  return String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+}
+function limparDiaPonto(key, dia){
+  data.ponto[key][dia] = {};
+  save(); renderPonto(); closeModal();
+}
+
+function abrirConfig(){
+  const cfg = data.config;
+  const el = document.getElementById('modal-content');
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>Configurações da folha</h3>
+    <button type="button" class="btn secondary" style="margin-bottom:14px;" onclick="iniciarOnboarding()">Refazer o assistente de configuração</button>
+    <form id="form-config">
+      <label>Salário base</label>
+      <input type="number" step="0.01" id="f-base" value="${cfg.salarioBase}">
+      <label>Vale dia 20 (% do salário, sem descontos)</label>
+      <input type="number" step="1" id="f-vale" value="${Math.round(cfg.valePct*100)}">
+      <div class="section-title" style="margin-top:14px;">Nomes das suas entradas de dinheiro</div>
+      <label>Nome da entrada do dia 5</label>
+      <input type="text" id="f-gn5" value="${cfg.grupoNomes.dia5}">
+      <label>Nome da entrada do dia 20</label>
+      <input type="text" id="f-gn20" value="${cfg.grupoNomes.dia20}">
+      <div class="section-title" style="margin-top:14px;">Descontos do dia 5 (líquido)</div>
+      <div id="df-list"></div>
+      <button type="button" class="btn secondary small" onclick="addDescontoFixo()">+ Adicionar desconto</button>
+      <button type="submit" class="btn" style="margin-top:10px;">Salvar</button>
+    </form>`;
+  renderDescontosFixosForm();
+  document.getElementById('form-config').addEventListener('submit', e=>{
+    e.preventDefault();
+    cfg.salarioBase = Number(document.getElementById('f-base').value)||0;
+    cfg.valePct = (Number(document.getElementById('f-vale').value)||0)/100;
+    cfg.grupoNomes = { dia5: document.getElementById('f-gn5').value || 'Sobra do dia 5', dia20: document.getElementById('f-gn20').value || 'Dinheiro do dia 20' };
+    document.querySelectorAll('.df-row').forEach(row=>{
+      const id = row.dataset.id;
+      const nome = row.querySelector('.df-nome').value;
+      const valor = Number(row.querySelector('.df-valor').value)||0;
+      const limite = Number(row.querySelector('.df-limite').value)||0;
+      const meta = Number(row.querySelector('.df-meta').value)||0;
+      const item = cfg.descontosFixos.find(d=>d.id===id);
+      if(item){ item.nome = nome; item.valor = valor; item.limite = limite; item.meta = meta; }
+    });
+    save(); renderAll(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function renderDescontosFixosForm(){
+  const cfg = data.config;
+  document.getElementById('df-list').innerHTML = cfg.descontosFixos.map(df=>{
+    const isCredito = df.limite > 0;
+    return `
+    <div class="df-row card" data-id="${df.id}" style="padding:10px; margin-bottom:8px;">
+      <label>Nome</label>
+      <input class="df-nome" value="${df.nome}">
+      <label>${isCredito ? 'Valor total devido agora (atualize a cada compra)' : 'Valor usado este mês'}</label>
+      <input class="df-valor" type="number" step="0.01" value="${df.valor}">
+      <label>Limite (0 = sem limite/meta — deixe >0 pra este item virar um "crediário" com barra de progresso na Início)</label>
+      <input class="df-limite" type="number" step="0.01" value="${df.limite||0}">
+      <label>Meta (gastar no máximo até)</label>
+      <input class="df-meta" type="number" step="0.01" value="${df.meta||0}">
+      <button type="button" class="btn secondary small" style="margin-top:6px;" onclick="removerDescontoFixo('${df.id}')">Remover</button>
+    </div>`;
+  }).join('');
+}
+function addDescontoFixo(){
+  data.config.descontosFixos.push({id:uid(), nome:'Novo desconto', valor:0, limite:0, meta:0});
+  renderDescontosFixosForm();
+}
+function removerDescontoFixo(id){
+  data.config.descontosFixos = data.config.descontosFixos.filter(d=>d.id!==id);
+  renderDescontosFixosForm();
+}
+
+function calcularHoleriteMes(){
+  const ano = pontoRef.getFullYear(), mes = pontoRef.getMonth();
+  const key = pontoKey(pontoRef);
+  const registros = data.ponto[key] || {};
+  let horas50 = 0, horas100 = 0;
+  Object.keys(registros).forEach(diaStr=>{
+    const dia = Number(diaStr);
+    const r = registros[diaStr];
+    const camposPreenchidos = ['entrada','saidaAlmoco','retornoAlmoco','saida'].filter(c=>r[c]).length;
+    if(camposPreenchidos < 2) return;
+    const toMin = t => { if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; };
+    const eMin = toMin(r.entrada), saMin = toMin(r.saidaAlmoco), reMin = toMin(r.retornoAlmoco), sMin = toMin(r.saida);
+    let trabalhadoMin = 0;
+    if(eMin!==null && saMin!==null) trabalhadoMin += Math.max(0, saMin-eMin);
+    if(reMin!==null && sMin!==null) trabalhadoMin += Math.max(0, sMin-reMin);
+    const dow = new Date(ano, mes, dia).getDay();
+    const isSaturday = dow === 6;
+    const thresholdMin = isSaturday ? 240 : 480;
+    const extraMin = Math.max(0, trabalhadoMin - thresholdMin);
+    const extraHoras = extraMin/60;
+    if(dow === 0){ horas100 += extraHoras; } else { horas50 += extraHoras; }
+  });
+  abrirPreviewHolerite(mes, ano, horas50, horas100);
+}
+
+function abrirPreviewHolerite(mes, ano, horas50, horas100){
+  const el = document.getElementById('modal-content');
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>Gerar holerite — ${mesNome(mes)} ${ano}</h3>
+    <form id="form-preview">
+      <label>Horas extras 50% (calculadas do ponto)</label>
+      <input type="number" step="0.01" id="pv-h50" value="${horas50.toFixed(2)}">
+      <label>Horas extras 100% (calculadas do ponto)</label>
+      <input type="number" step="0.01" id="pv-h100" value="${horas100.toFixed(2)}">
+      <label>Feriados trabalhados (qtd, R$200 cada)</label>
+      <input type="number" step="1" id="pv-feriados" value="0">
+      <label>Domingos trabalhados (qtd, R$135 cada)</label>
+      <input type="number" step="1" id="pv-domingos" value="0">
+      <label>Faltas e atrasos (desconto R$)</label>
+      <input type="number" step="0.01" id="pv-faltas" value="0">
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Gerar holerite</button>
+      </div>
+    </form>`;
+  document.getElementById('form-preview').addEventListener('submit', e=>{
+    e.preventDefault();
+    const h50 = Number(document.getElementById('pv-h50').value)||0;
+    const h100 = Number(document.getElementById('pv-h100').value)||0;
+    const feriadosQtd = Number(document.getElementById('pv-feriados').value)||0;
+    const domingosQtd = Number(document.getElementById('pv-domingos').value)||0;
+    const faltasValor = Number(document.getElementById('pv-faltas').value)||0;
+    gerarHolerite(mes, ano, h50, h100, feriadosQtd, domingosQtd, faltasValor);
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+
+function calcularINSS2026(base){
+  const teto = 8475.55;
+  const b = Math.min(Math.max(Number(base)||0,0), teto);
+  const faixas = [
+    {lim:1621.00, aliq:.075},
+    {lim:2902.84, aliq:.09},
+    {lim:4354.27, aliq:.12},
+    {lim:8475.55, aliq:.14}
+  ];
+  let anterior=0, total=0;
+  for(const f of faixas){
+    const parcela=Math.max(0, Math.min(b,f.lim)-anterior);
+    total += parcela*f.aliq;
+    anterior=f.lim;
+    if(b<=f.lim) break;
+  }
+  return Math.min(total, 8475.55*.14);
+}
+
+function calcularIRRF2026(rendimentosTributaveis, deducoesLegais){
+  const rend = Math.max(0, Number(rendimentosTributaveis)||0);
+  const dep = Math.max(0, Number(deducoesLegais)||0);
+  const descontoSimplificado = 607.20;
+  const baseLegal = Math.max(0, rend - dep);
+  const baseSimplificada = Math.max(0, rend - descontoSimplificado);
+  const base = Math.min(baseLegal, baseSimplificada);
+  let imposto = 0;
+  if(base<=2428.80) imposto=0;
+  else if(base<=2826.65) imposto=base*.075-182.16;
+  else if(base<=3751.05) imposto=base*.15-394.16;
+  else if(base<=4664.68) imposto=base*.225-675.49;
+  else imposto=base*.275-908.73;
+  imposto=Math.max(0, imposto);
+  let reducao=0;
+  if(rend<=5000) reducao=Math.min(imposto,312.89);
+  else if(rend<=7350) reducao=Math.min(imposto, Math.max(0,978.62-(.133145*rend)));
+  return {base, impostoBruto:imposto, reducao, imposto:Math.max(0,imposto-reducao), metodo:baseSimplificada<=baseLegal?'simplificado':'legal'};
+}
+
+function gerarHolerite(mes, ano, horas50, horas100, feriadosQtd, domingosQtd, faltasValor){
+  const cfg = data.config;
+  const base = Number(cfg.salarioBase)||0;
+  const divisor = Number(cfg.horasMensais)||220;
+  const rate50 = divisor ? base/divisor*1.5 : 0;
+  const rate100 = divisor ? base/divisor*2 : 0;
+  const he50v = horas50*rate50;
+  const he100v = horas100*rate100;
+  const feriadosValor = feriadosQtd*Number(cfg.valorFeriado||0);
+  const domingosValor = domingosQtd*Number(cfg.valorDomingo||0);
+  const adicionais = Number(cfg.adicionalNoturno||0)+Number(cfg.insalubridade||0)+Number(cfg.periculosidade||0);
+  const dsr = (he50v+he100v)*Number(cfg.dsrPercentual||0.16667);
+  const proventos = base+he50v+he100v+feriadosValor+domingosValor+adicionais+dsr;
+
+  const inss = calcularINSS2026(proventos);
+  const dependentes = Number(cfg.dependentes||0);
+  const deducaoDependentes = dependentes * 189.59;
+  const pensaoValor = Number(cfg.pensaoValor||0);
+  const deducoesLegais = inss + deducaoDependentes + pensaoValor;
+  const ir = calcularIRRF2026(proventos, deducoesLegais);
+  const irrf = ir.imposto;
+
+  const fgtsPct = 0.08;
+  const fgtsValor = proventos*fgtsPct;
+
+  const vale = Number(cfg.valePct||0)>0 ? base*Number(cfg.valePct) : Number(cfg.segundaEntradaValor||0);
+  const beneficios = [];
+  if(pensaoValor>0) beneficios.push({codigo:'Pensão alimentícia', nome:'Pensão alimentícia', valor:pensaoValor});
+  if(Number(cfg.valeTransporteValor||0)>0) beneficios.push({codigo:'Vale-transporte', nome:'Vale-transporte', valor:Number(cfg.valeTransporteValor)});
+  if(Number(cfg.valeAlimentacaoValor||0)>0) beneficios.push({codigo:'Vale-alimentação/refeição', nome:'Vale-alimentação/refeição', valor:Number(cfg.valeAlimentacaoValor)});
+  if(Number(cfg.planoSaudeValor||0)>0) beneficios.push({codigo:'Plano de saúde', nome:'Plano de saúde', valor:Number(cfg.planoSaudeValor)});
+  const beneficiosTotal = beneficios.reduce((a,b)=>a+b.valor,0);
+
+  const descFixosDetalhe = cfg.descontosFixos.map(d=>({codigo:d.nome, nome:d.nome, valor:Number(d.valor||0)}));
+  const descFixosTotal = descFixosDetalhe.reduce((a,d)=>a+d.valor,0);
+  const outrosDescontos = Number(cfg.outrosDescontos||0);
+  const descontosTotal = inss+irrf+vale+faltasValor+beneficiosTotal+descFixosTotal+outrosDescontos;
+  const liquido = proventos - descontosTotal;
+
+  const detalhe = {
+    base, horas50, horas100, he50v, he100v, feriadosQtd, feriadosValor, domingosQtd, domingosValor, adicionais, dsr,
+    proventos, faltasValor, inssPct:null, inss, dependentes, deducaoDependentes, baseIrrf:ir.base, irrf,
+    irrfBruto:ir.impostoBruto, irrfReducao:ir.reducao, irrfMetodo:ir.metodo,
+    fgtsPct, fgtsValor, vale, beneficios, descFixosDetalhe, outrosDescontos, descontosTotal, liquido
+  };
+  let h = data.holerites.find(x=>x.mes===mes && x.ano===ano);
+  if(h){ Object.assign(h, {dia5:liquido, dia20:vale, calculado:true, readonly:false, detalhe}); }
+  else{ h = {id:uid(), mes, ano, dia5:liquido, dia20:vale, calculado:true, detalhe}; data.holerites.push(h); }
+  save();
+  renderAll();
+  abrirHolerite(h.id);
+}
+
+
+document.querySelectorAll('nav .tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav .tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  });
+});
+
+function currentView(){
+  return document.querySelector('nav .tab.active').dataset.view;
+}
+function mostrarView(name){
+  document.querySelectorAll('nav .tab').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+}
+
+document.getElementById('fab').addEventListener('click', ()=>{
+  const view = currentView();
+  if(view==='holerites') abrirHolerite(null);
+  else if(view==='contas') abrirConta(null);
+  else if(view==='gastos') abrirGasto(null);
+  else if(view==='ponto') abrirConfig();
+  else abrirGasto(null);
+});
+
+function closeModal(){ document.getElementById('modal-bg').classList.remove('active'); }
+document.getElementById('modal-bg').addEventListener('click', e=>{ if(e.target.id==='modal-bg') closeModal(); });
+
+function abrirHolerite(id){
+  const h = id ? data.holerites.find(x=>x.id===id) : null;
+  const el = document.getElementById('modal-content');
+  if(h && h.calculado && h.detalhe){
+    const dt = h.detalhe;
+    const h2 = n => n.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
+    let cod = 200;
+    const linhasBeneficios = (dt.beneficios||[]).map(b=>{ cod++; return {codigo:cod, desc:b.nome, ref:'', prov:'', desc_:brl(b.valor)}; });
+    const linhasFixas = dt.descFixosDetalhe.map(d=>{ cod++; return {codigo:cod, desc:d.nome, ref:'', prov:'', desc_:brl(d.valor)}; });
+    const linhas = [
+      {codigo:101, desc:'Salário Base', ref:'30 d', prov:brl(dt.base), desc_:''},
+      {codigo:102, desc:'Horas Extras 50%', ref:dt.horas50>0?h2(dt.horas50):'', prov:dt.he50v>0?brl(dt.he50v):'', desc_:''},
+      {codigo:103, desc:'Horas Extras 100%', ref:dt.horas100>0?h2(dt.horas100):'', prov:dt.he100v>0?brl(dt.he100v):'', desc_:''},
+      {codigo:104, desc:'Feriados (200 cada)', ref:dt.feriadosQtd||0, prov:dt.feriadosValor>0?brl(dt.feriadosValor):brl(0), desc_:''},
+      {codigo:105, desc:'Domingos (135 cada)', ref:dt.domingosQtd||0, prov:dt.domingosValor>0?brl(dt.domingosValor):brl(0), desc_:''},
+      {codigo:106, desc:'DSR sobre Extras', ref:'', prov:brl(dt.dsr), desc_:''},
+      {codigo:501, desc:'Faltas e Atrasos', ref:0, prov:'', desc_:brl(dt.faltasValor)},
+      {codigo:973, desc:'INSS', ref:Math.round(dt.inssPct*10000)/100+'%', prov:'', desc_:brl(dt.inss)},
+      ...(dt.dependentes>0 ? [{codigo:'DEP', desc:`Dedução dependentes (${dt.dependentes})`, ref:'', prov:'', desc_:brl(dt.deducaoDependentes), italic:true}] : []),
+      {codigo:974, desc:'IRRF', ref:'', prov:'', desc_:brl(dt.irrf)},
+      {codigo:975, desc:'FGTS (8%)', ref:Math.round(dt.fgtsPct*10000)/100+'%', prov:brl(dt.fgtsValor), desc_:'', italic:true},
+      {codigo:201, desc:'Vale (adiantamento)', ref:'', prov:'', desc_:brl(dt.vale)},
+      ...linhasBeneficios,
+      ...linhasFixas
+    ];
+    el.innerHTML = `
+      <button class="close" onclick="closeModal()">×</button>
+      <h3>${mesNome(h.mes)} ${h.ano} — Holerite</h3>
+      <div style="overflow-x:auto;">
+      <table class="sheet">
+        <thead><tr><th class="rn"></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr></thead>
+        <tbody>
+          <tr><td class="rn">6</td><td class="hcell">Cód.</td><td class="hcell">Descrição</td><td class="hcell">Referência</td><td class="hcell">Proventos</td><td class="hcell">Descontos</td></tr>
+          ${linhas.map((l,i)=>`<tr${l.italic?' class="italic"':''}><td class="rn">${7+i}</td><td>${l.codigo}</td><td class="txt">${l.desc}</td><td>${l.ref}</td><td class="num">${l.prov}</td><td class="num">${l.desc_}</td></tr>`).join('')}
+          <tr><td class="rn">${7+linhas.length+1}</td><td colspan="3" class="txt" style="text-align:right; font-weight:600;">Total de Proventos</td><td class="num" style="font-weight:600;">${brl(dt.proventos)}</td><td></td></tr>
+          <tr><td class="rn">${7+linhas.length+2}</td><td colspan="3" class="txt" style="text-align:right; font-weight:600;">Total de Descontos</td><td></td><td class="num" style="font-weight:600;">${brl(dt.descontosTotal)}</td></tr>
+          <tr><td class="rn">${7+linhas.length+3}</td><td colspan="3" class="txt" style="text-align:right; font-weight:700;">SALÁRIO LÍQUIDO</td><td></td><td class="num" style="font-weight:700;">${brl(h.dia5)}</td></tr>
+          <tr><td class="rn"></td><td class="hcell"></td><td class="hcell"></td><td class="hcell"></td><td class="hcell"></td><td class="hcell"></td></tr>
+          <tr><td class="rn">${7+linhas.length+5}</td><td class="hcell">Salário Base</td><td class="hcell">Base INSS</td><td class="hcell">Base FGTS</td><td class="hcell">FGTS do Mês</td><td class="hcell">Base IRRF</td></tr>
+          <tr><td class="rn">${7+linhas.length+6}</td><td class="num">${brl(dt.base)}</td><td class="num">${brl(dt.proventos)}</td><td class="num">${brl(dt.proventos)}</td><td class="num">${brl(dt.fgtsValor)}</td><td class="num">${brl(dt.baseIrrf)}</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="uric-card" style="margin-top:12px;">
+        <div class="uric-label calculou">Uric calculou</div>
+        <div class="uric-text">Seu líquido estimado é ${brl(h.dia5)}. O cálculo considera salário base (${brl(dt.base)}), horas extras, INSS (${brl(dt.inss)})${dt.dependentes>0?`, dedução de ${dt.dependentes} dependente(s)`:''}, IRRF (${brl(dt.irrf)})${(dt.beneficios&&dt.beneficios.length)?', benefícios descontados':''} e os descontos fixos cadastrados.</div>
+      </div>
+      <div class="row" style="margin-top:12px;"><div class="desc" style="font-weight:700;">Vale (dia 20, sem desconto)</div><div class="amount pos">${brl(h.dia20)}</div></div>
+      <button class="btn secondary" style="margin-top:14px;" onclick="excluirHolerite('${h.id}')">Excluir</button>
+    `;
+    document.getElementById('modal-bg').classList.add('active');
+    return;
+  }
+  const now = new Date();
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>${h?'Editar holerite':'Novo holerite'}</h3>
+    <form id="form-holerite">
+      <label>Mês</label>
+      <select id="f-mes">${MESES.map((m,i)=>`<option value="${i}" ${h&&h.mes===i?'selected':(!h&&i===now.getMonth()?'selected':'')}>${mesNome(i)}</option>`).join('')}</select>
+      <label>Ano</label>
+      <input type="number" id="f-ano" value="${h?h.ano:now.getFullYear()}">
+      <label>Valor dia 5 (líquido)</label>
+      <input type="number" step="0.01" id="f-dia5" value="${h?h.dia5:''}" placeholder="0,00">
+      <label>Valor dia 20 (vale)</label>
+      <input type="number" step="0.01" id="f-dia20" value="${h?h.dia20:''}" placeholder="0,00">
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Salvar</button>
+        ${h?'<button type="button" class="btn secondary" onclick="excluirHolerite(\''+h.id+'\')">Excluir</button>':''}
+      </div>
+    </form>`;
+  document.getElementById('form-holerite').addEventListener('submit', e=>{
+    e.preventDefault();
+    const mes = Number(document.getElementById('f-mes').value);
+    const ano = Number(document.getElementById('f-ano').value);
+    const dia5 = Number(document.getElementById('f-dia5').value)||0;
+    const dia20 = Number(document.getElementById('f-dia20').value)||0;
+    if(h){ h.mes=mes; h.ano=ano; h.dia5=dia5; h.dia20=dia20; h.calculado=false; }
+    else{ data.holerites.push({id:uid(), mes, ano, dia5, dia20}); }
+    save(); renderAll(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function excluirHolerite(id){ data.holerites = data.holerites.filter(h=>h.id!==id); save(); renderAll(); closeModal(); }
+
+function abrirContaFixa(id){
+  const c = data.contasFixas.find(x=>x.id===id);
+  const key = pontoKey(contasRef);
+  const el = document.getElementById('modal-content');
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>Editar conta fixa — ${mesNome(contasRef.getMonth())} ${contasRef.getFullYear()}</h3>
+    <form id="form-fixa">
+      <label>Nome</label>
+      <input type="text" id="f-nome" value="${c.nome}">
+      <label>Sigla</label>
+      <input type="text" id="f-sigla" value="${c.sigla}">
+      <label>Valor em ${mesNome(contasRef.getMonth())}/${contasRef.getFullYear()}</label>
+      <input type="number" step="0.01" id="f-valor" value="${valorFixaMes(c,key)}">
+      <label>Paga com dinheiro de</label>
+      <select id="f-grupo">
+        <option value="dia5" ${c.grupo==='dia5'?'selected':''}>${data.config.grupoNomes.dia5}</option>
+        <option value="dia20" ${c.grupo==='dia20'?'selected':''}>${data.config.grupoNomes.dia20}</option>
+      </select>
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Salvar</button>
+        <button type="button" class="btn secondary" onclick="removerContaFixa('${c.id}')">Excluir item</button>
+      </div>
+    </form>`;
+  document.getElementById('form-fixa').addEventListener('submit', e=>{
+    e.preventDefault();
+    c.nome = document.getElementById('f-nome').value;
+    c.sigla = document.getElementById('f-sigla').value;
+    c.grupo = document.getElementById('f-grupo').value;
+    setValorFixaMes(c, key, document.getElementById('f-valor').value);
+    save(); renderAll(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function removerContaFixa(id){ data.contasFixas = data.contasFixas.filter(c=>c.id!==id); save(); renderAll(); closeModal(); }
+function novaContaFixa(){
+  const key = pontoKey(contasRef);
+  const c = {id:uid(), sigla:'', nome:'Nova conta', grupo:'dia5', valores:{}};
+  data.contasFixas.push(c);
+  save(); renderAll();
+  abrirContaFixa(c.id);
+}
+
+function abrirConta(id){
+  const c = id ? data.contas.find(x=>x.id===id) : null;
+  const el = document.getElementById('modal-content');
+  const hoje = new Date().toISOString().slice(0,10);
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>${c?'Editar conta':'Nova conta avulsa'}</h3>
+    <form id="form-conta">
+      <label>Descrição</label>
+      <input type="text" id="f-desc" placeholder="Ex: Consulta médica, presente..." value="${c?c.desc:''}" required>
+      <label>Valor</label>
+      <input type="number" step="0.01" id="f-valor" placeholder="0,00" value="${c?c.valor:''}" required>
+      <label>Vencimento</label>
+      <input type="date" id="f-venc" value="${c?c.vencimento:hoje}" required>
+      <label>Tipo</label>
+      <select id="f-tipo">
+        <option value="pagar" ${c&&c.tipo==='pagar'?'selected':''}>A pagar</option>
+        <option value="receber" ${c&&c.tipo==='receber'?'selected':''}>A receber</option>
+      </select>
+      <label style="display:flex; align-items:center; gap:8px; flex-direction:row;"><input type="checkbox" id="f-paga" style="width:auto;" ${c&&c.paga?'checked':''}> Já paga/recebida</label>
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Salvar</button>
+        ${c?'<button type="button" class="btn secondary" onclick="excluirConta(\''+c.id+'\')">Excluir</button>':''}
+      </div>
+    </form>`;
+  document.getElementById('form-conta').addEventListener('submit', e=>{
+    e.preventDefault();
+    const desc = document.getElementById('f-desc').value;
+    const valor = Number(document.getElementById('f-valor').value)||0;
+    const vencimento = document.getElementById('f-venc').value;
+    const tipo = document.getElementById('f-tipo').value;
+    const paga = document.getElementById('f-paga').checked;
+    if(c){ c.desc=desc; c.valor=valor; c.vencimento=vencimento; c.tipo=tipo; c.paga=paga; }
+    else{ data.contas.push({id:uid(), desc, valor, vencimento, tipo, paga}); }
+    save(); renderAll(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function excluirConta(id){ data.contas = data.contas.filter(c=>c.id!==id); save(); renderAll(); closeModal(); }
+
+function abrirGasto(id, prefill){
+  const g = id ? data.gastos.find(x=>x.id===id) : null;
+  const el = document.getElementById('modal-content');
+  const hoje = new Date().toISOString().slice(0,10);
+  const cats = ['Crediário','Lanche/Impulso','Alimentação','Transporte','Lazer','Saúde','Compras','Outros'];
+  const gn = data.config.grupoNomes || {dia5:'Sobra do dia 5', dia20:'Dinheiro do dia 20'};
+  const valorIni = g ? g.valor : (prefill && prefill.valor) || '';
+  const descIni = g ? g.desc : (prefill && prefill.desc) || '';
+  const fonteIni = g ? (g.fonte||'') : '';
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>${g?'Editar gasto':'Novo gasto'}</h3>
+    ${prefill && prefill.imgSrc ? `<img src="${prefill.imgSrc}" style="width:100%; max-height:180px; object-fit:contain; border-radius:8px; margin-bottom:8px;">` : ''}
+    <form id="form-gasto">
+      <label>Descrição</label>
+      <input type="text" id="f-desc" placeholder="Ex: Lanche, doce, festa..." value="${descIni}" required>
+      <label>Valor</label>
+      <input type="number" step="0.01" id="f-valor" placeholder="0,00" value="${valorIni}" required>
+      <label>Data</label>
+      <input type="date" id="f-data" value="${g?g.data:hoje}" required>
+      <label>Categoria</label>
+      <select id="f-cat">${cats.map(c=>`<option ${g&&g.categoria===c?'selected':''}>${c}</option>`).join('')}</select>
+      <label>Pagar com qual entrada?</label>
+      <select id="f-fonte">
+        <option value="" ${fonteIni===''?'selected':''}>Não vincular</option>
+        <option value="dia5" ${fonteIni==='dia5'?'selected':''}>${gn.dia5}</option>
+        <option value="dia20" ${fonteIni==='dia20'?'selected':''}>${gn.dia20}</option>
+        <option value="extra" ${fonteIni==='extra'?'selected':''}>${gn.extra}</option>
+      </select>
+      <div class="btnrow" style="margin-top:8px;">
+        <button type="submit" class="btn">Salvar</button>
+        ${g?'<button type="button" class="btn secondary" onclick="excluirGasto(\''+g.id+'\')">Excluir</button>':''}
+      </div>
+    </form>`;
+  document.getElementById('form-gasto').addEventListener('submit', e=>{
+    e.preventDefault();
+    const desc = document.getElementById('f-desc').value;
+    const valor = Number(document.getElementById('f-valor').value)||0;
+    const dataC = document.getElementById('f-data').value;
+    const categoria = document.getElementById('f-cat').value;
+    const fonte = document.getElementById('f-fonte').value;
+    if(g){ g.desc=desc; g.valor=valor; g.data=dataC; g.categoria=categoria; g.fonte=fonte; }
+    else{ data.gastos.push({id:uid(), desc, valor, data:dataC, categoria, fonte}); }
+    save(); renderAll(); closeModal();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+function excluirGasto(id){ data.gastos = data.gastos.filter(g=>g.id!==id); save(); renderAll(); closeModal(); }
+
+function abrirScanner(){
+  document.getElementById('input-scan').click();
+}
+document.getElementById('input-scan').addEventListener('change', async e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const imgSrc = await new Promise(res=>{ const r = new FileReader(); r.onload = ()=>res(r.result); r.readAsDataURL(file); });
+  const el = document.getElementById('modal-content');
+  el.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h3>Lendo a nota...</h3>
+    <img src="${imgSrc}" style="width:100%; max-height:220px; object-fit:contain; border-radius:8px; margin-bottom:10px;">
+    <div class="empty" id="scan-status">Reconhecendo texto da imagem, aguarde...</div>
+  `;
+  document.getElementById('modal-bg').classList.add('active');
+  try{
+    const { data:{ text } } = await Tesseract.recognize(file, 'por');
+    const matches = [...text.matchAll(/(?:r\$\s*)?(\d{1,3}(?:\.\d{3})*,\d{2}|\d+,\d{2})/gi)].map(m=>{
+      const num = m[1].replace(/\./g,'').replace(',', '.');
+      return { raw:m[1], valor: parseFloat(num), idx:m.index };
+    }).filter(m=>!isNaN(m.valor) && m.valor>0 && m.valor<100000);
+    const lower = text.toLowerCase();
+    const totalIdx = lower.indexOf('total');
+    let melhor = null;
+    if(totalIdx>=0){
+      melhor = matches.filter(m=>Math.abs(m.idx-totalIdx)<40).sort((a,b)=>b.valor-a.valor)[0];
+    }
+    if(!melhor && matches.length){
+      melhor = matches.sort((a,b)=>b.valor-a.valor)[0];
+    }
+    document.getElementById('input-scan').value = '';
+    abrirGasto(null, { valor: melhor?melhor.valor:'', desc:'', imgSrc });
+    if(!melhor){
+      setTimeout(()=>{ const fv=document.getElementById('f-valor'); if(fv) fv.placeholder='Não consegui ler o valor, digite manualmente'; }, 50);
+    }
+  }catch(err){
+    document.getElementById('input-scan').value = '';
+    const st = document.getElementById('scan-status');
+    if(st) st.textContent = 'Não consegui ler a imagem. Tente tirar a foto com mais luz e foco no valor, ou digite manualmente.';
+  }
+});
+
+load();
+renderAll();
+if(!data.onboardingDone && !data.config.salarioBase && data.contasFixas.length===0 && !data.perfil.nome){
+  setTimeout(()=>iniciarOnboarding(), 200);
+}
+
+/* ---------- ONBOARDING INTELIGENTE URIC ---------- */
+let ob = {step:0, r:{}};
+
+function novoOnboarding(){
+  return {
+    nome:'',
+    tipoRenda:'',
+    objetivo:'',
+    prioridade:'',
+    regime:'',
+    salarioBase:0,
+    dataPagamento:'',
+    entradas:1,
+    segundaEntradaTipo:'',
+    segundaEntradaValor:0,
+    segundaEntradaPercentual:0,
+    segundaEntradaDia:'',
+    dataAdmissao:'',
+    jornadaSemanal:44,
+    horasDia:8,
+    trabalhaSabado:false,
+    dependentes:0,
+    temDependentes:false,
+    temPensao:false,
+    pensaoValor:0,
+    temVT:false,
+    valeTransporteValor:0,
+    temVA:false,
+    valeAlimentacaoValor:0,
+    temPlano:false,
+    planoSaudeValor:0,
+    temHorasExtras:false,
+    horasExtrasMedia:0,
+    percentualExtra:50,
+    temAdicional:false,
+    adicionalTipo:'',
+    adicionalValor:0,
+    temOutrosDescontos:false,
+    outrosDescontos:0,
+    temBanco:false,
+    bancoNome:'',
+    bancoSaldo:0,
+    temCartao:false,
+    cartoes:[],
+    temDivida:false,
+    dividas:[],
+    contasNovas:[],
+    metas:[],
+    rendaExtra:false,
+    rendaExtraValor:0
+  };
+}
+
+function iniciarOnboarding(){
+  ob={step:0,r:novoOnboarding()};
+  renderOnboarding();
+}
+
+function obSteps(){
+  const r=ob.r;
+  const s=[
+    {id:'welcome'},{id:'nome'},{id:'tipoRenda'}
+  ];
+  if(r.tipoRenda==='clt'){
+    s.push({id:'regime'},{id:'salario'},{id:'dataAdmissao'},{id:'pagamento'},{id:'jornada'});
+    if(r.jornadaSemanal && r.trabalhaSabado) s.push({id:'sabado'});
+    s.push({id:'dependentes'});
+    if(r.temDependentes) s.push({id:'qtdDependentes'});
+    s.push({id:'pensao'});
+    if(r.temPensao) s.push({id:'pensaoValor'});
+    s.push({id:'beneficios'});
+    if(r.temVT) s.push({id:'vtValor'});
+    if(r.temVA) s.push({id:'vaValor'});
+    if(r.temPlano) s.push({id:'planoValor'});
+    s.push({id:'extras'});
+    if(r.temHorasExtras) s.push({id:'horasExtras'});
+    if(r.temAdicional) s.push({id:'adicional'});
+    s.push({id:'outrosDescontos'});
+  } else {
+    s.push({id:'salario'},{id:'pagamento'});
+    s.push({id:'rendaExtra'});
+  }
+  s.push({id:'banco'});
+  if(r.temBanco) s.push({id:'bancoDetalhe'});
+  s.push({id:'cartao'});
+  if(r.temCartao) s.push({id:'cartaoDetalhe'});
+  s.push({id:'divida'});
+  if(r.temDivida) s.push({id:'dividaDetalhe'});
+  s.push({id:'contas'});
+  s.push({id:'objetivo'},{id:'fim'});
+  return s;
+}
+
+function obNext(){ if(ob.step<obSteps().length-1) ob.step++; renderOnboarding(); }
+function obBack(){ if(ob.step>0) ob.step--; renderOnboarding(); }
+
+function obWrap(title,body,opts={}){
+  const steps=obSteps(), el=document.getElementById('modal-content');
+  el.innerHTML=`
+    <div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/steps.length)*100)}%"></div></div>
+    <div style="font-size:11px;color:var(--sub);margin-top:12px;">${ob.step+1} de ${steps.length}</div>
+    <h3 style="margin:8px 0 6px;">${title}</h3>
+    ${opts.help?`<p style="color:var(--sub);font-size:13px;line-height:1.5;margin:0 0 12px;">${opts.help}</p>`:''}
+    <form id="ob-form">${body}
+      <div class="btnrow" style="margin-top:16px;">
+        ${ob.step>0?'<button type="button" class="btn secondary" onclick="obBack()">Voltar</button>':''}
+        <button type="submit" class="btn">${opts.btn||'Continuar'}</button>
+      </div>
+    </form>`;
+  document.getElementById('ob-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    if(opts.onSubmit) opts.onSubmit();
+    obNext();
+  });
+  document.getElementById('modal-bg').classList.add('active');
+}
+
+function selectOptions(id, value, options){
+  return `<select id="${id}">${options.map(o=>`<option value="${o[0]}" ${value===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`;
+}
+
+function renderOnboarding(){
+  const r=ob.r, cur=obSteps()[ob.step], el=document.getElementById('modal-content');
+  if(cur.id==='welcome'){
+    el.innerHTML=`<div style="padding:10px 0 4px;">
+      <div style="font-size:42px;margin-bottom:10px;">◉</div>
+      <div style="font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;">URIC</div>
+      <h3 style="font-size:26px;margin:6px 0;">Seu dinheiro, mais inteligente.</h3>
+      <p style="color:var(--sub);line-height:1.6;">Eu vou conhecer sua realidade financeira, fazer só as perguntas que realmente importam e montar seu app automaticamente.</p>
+      <div class="tip" style="margin-top:18px;"><span class="ic">✦</span><div>Quanto mais preciso você for agora, mais útil será o Uric depois — inclusive para estimar seu holerite.</div></div>
+      <button class="btn" onclick="obNext()">Começar</button>
+    </div>`;
+    document.getElementById('modal-bg').classList.add('active'); return;
+  }
+
+  if(cur.id==='nome') obWrap('Como posso te chamar?',`<label>Seu nome</label><input id="ob-nome" value="${r.nome}" placeholder="Ex.: Leonardo" required autofocus>`,{onSubmit:()=>r.nome=document.getElementById('ob-nome').value.trim()});
+  else if(cur.id==='tipoRenda') obWrap('De onde vem sua principal renda?',selectOptions('ob-tipo',r.tipoRenda,[['clt','Salário CLT'],['servidor','Servidor público'],['pj','PJ / empresa'],['autonomo','Autônomo / freelancer'],['aposentado','Aposentadoria / benefício'],['variavel','Renda variável'],['outro','Outra fonte']]),{help:'Isso define quais perguntas financeiras e de folha o Uric vai fazer.' ,onSubmit:()=>r.tipoRenda=document.getElementById('ob-tipo').value});
+  else if(cur.id==='regime') obWrap('Como funciona seu salário?',selectOptions('ob-regime',r.regime,[['mensalista','Mensalista'],['horista','Horista'],['comissao','Mensalista + comissão'],['variavel','Salário com valores variáveis']]),{onSubmit:()=>r.regime=document.getElementById('ob-regime').value});
+  else if(cur.id==='salario') obWrap(r.tipoRenda==='clt'||r.tipoRenda==='servidor'?'Qual é seu salário bruto mensal?':'Quanto você recebe por mês, em média?',`<label>Valor bruto / renda média</label><input type="number" step="0.01" id="ob-salario" value="${r.salarioBase||''}" placeholder="0,00" required><small style="color:var(--sub);display:block;margin-top:4px;">Informe o valor antes dos descontos quando isso fizer sentido.</small>`,{onSubmit:()=>r.salarioBase=Number(document.getElementById('ob-salario').value)||0});
+  else if(cur.id==='dataAdmissao') obWrap('Quando você entrou no emprego atual?',`<label>Data de admissão</label><input type="date" id="ob-adm" value="${r.dataAdmissao||''}" required>`,{onSubmit:()=>r.dataAdmissao=document.getElementById('ob-adm').value});
+  else if(cur.id==='pagamento') obWrap('Como e quando você recebe?',`
+    <label>Quantidade de entradas por mês</label>
+    ${selectOptions('ob-entradas',String(r.entradas),[['1','Uma vez por mês'],['2','Duas vezes por mês'],['3','Mais de duas vezes / variável']])}
+    <label style="margin-top:4px;">Dia ou regra do pagamento principal</label>
+    <input id="ob-pagamento" value="${r.dataPagamento||''}" placeholder="Ex.: dia 5 ou 5º dia útil" required>
+    <div id="ob-segunda-box" style="margin-top:4px;">
+      ${r.entradas===2?`
+        <label>Como funciona a segunda entrada?</label>
+        ${selectOptions('ob-seg-tipo',r.segundaEntradaTipo||'percentual',[['percentual','Percentual do salário'],['valor','Valor fixo'],['variavel','Valor variável']])}
+        <label>Valor ou percentual</label>
+        <input type="number" step=".01" id="ob-seg-val" value="${r.segundaEntradaPercentual||r.segundaEntradaValor||''}" placeholder="Ex.: 40">
+        <label>Dia ou regra</label>
+        <input id="ob-seg-dia" value="${r.segundaEntradaDia||''}" placeholder="Ex.: dia 20">
+      `:''}
+    </div>
+  `,{onSubmit:()=>{
+      r.entradas=Number(document.getElementById('ob-entradas').value);
+      r.dataPagamento=document.getElementById('ob-pagamento').value.trim();
+      if(r.entradas===2){
+        r.segundaEntradaTipo=document.getElementById('ob-seg-tipo')?.value||'percentual';
+        const val=Number(document.getElementById('ob-seg-val')?.value)||0;
+        if(r.segundaEntradaTipo==='percentual') r.segundaEntradaPercentual=val;
+        else r.segundaEntradaValor=val;
+        r.segundaEntradaDia=document.getElementById('ob-seg-dia')?.value||'';
+      }
+    }});
+  else if(cur.id==='jornada') obWrap('Como é sua jornada de trabalho?',`
+    <label>Horas por semana</label><input type="number" step=".5" id="ob-hs" value="${r.jornadaSemanal}" required>
+    <label>Horas por dia</label><input type="number" step=".25" id="ob-hd" value="${r.horasDia}" required>
+    <label>Trabalha aos sábados?</label>${selectOptions('ob-sab',r.trabalhaSabado?'sim':'nao',[['nao','Não'],['sim','Sim']])}
+  `,{onSubmit:()=>{r.jornadaSemanal=Number(document.getElementById('ob-hs').value)||44;r.horasDia=Number(document.getElementById('ob-hd').value)||8;r.trabalhaSabado=document.getElementById('ob-sab').value==='sim';}});
+  else if(cur.id==='sabado') obWrap('Quantas horas você costuma trabalhar no sábado?',`<input type="number" step=".25" id="ob-sabhoras" value="4" required>`,{onSubmit:()=>r.sabadoHoras=Number(document.getElementById('ob-sabhoras').value)||4});
+  else if(cur.id==='dependentes') obWrap('Você possui dependentes para o imposto de renda?',selectOptions('ob-dep',r.temDependentes?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temDependentes=document.getElementById('ob-dep').value==='sim'});
+  else if(cur.id==='qtdDependentes') obWrap('Quantos dependentes?',`<input type="number" min="1" step="1" id="ob-qtd" value="${r.dependentes||1}" required>`,{onSubmit:()=>r.dependentes=Number(document.getElementById('ob-qtd').value)||0});
+  else if(cur.id==='pensao') obWrap('Existe pensão alimentícia descontada em folha?',selectOptions('ob-pensao',r.temPensao?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temPensao=document.getElementById('ob-pensao').value==='sim'});
+  else if(cur.id==='pensaoValor') obWrap('Qual o valor mensal da pensão?',`<input type="number" step=".01" id="ob-pensao-v" value="${r.pensaoValor||''}" required>`,{onSubmit:()=>r.pensaoValor=Number(document.getElementById('ob-pensao-v').value)||0});
+  else if(cur.id==='beneficios') obWrap('Quais benefícios ou descontos aparecem no seu holerite?',`
+    <label>Vale-transporte</label>${selectOptions('ob-vt',r.temVT?'sim':'nao',[['nao','Não'],['sim','Sim']])}
+    <label>Vale-alimentação / refeição</label>${selectOptions('ob-va',r.temVA?'sim':'nao',[['nao','Não'],['sim','Sim']])}
+    <label>Plano de saúde / odontológico</label>${selectOptions('ob-plano',r.temPlano?'sim':'nao',[['nao','Não'],['sim','Sim']])}
+  `,{onSubmit:()=>{r.temVT=document.getElementById('ob-vt').value==='sim';r.temVA=document.getElementById('ob-va').value==='sim';r.temPlano=document.getElementById('ob-plano').value==='sim';}});
+  else if(cur.id==='vtValor') obWrap('Qual o valor descontado de vale-transporte?',`<input type="number" step=".01" id="ob-vt-v" value="${r.valeTransporteValor||''}" required>`,{onSubmit:()=>r.valeTransporteValor=Number(document.getElementById('ob-vt-v').value)||0});
+  else if(cur.id==='vaValor') obWrap('Qual o valor descontado de vale-alimentação/refeição?',`<input type="number" step=".01" id="ob-va-v" value="${r.valeAlimentacaoValor||''}" required>`,{onSubmit:()=>r.valeAlimentacaoValor=Number(document.getElementById('ob-va-v').value)||0});
+  else if(cur.id==='planoValor') obWrap('Qual o valor descontado do plano?',`<input type="number" step=".01" id="ob-plano-v" value="${r.planoSaudeValor||''}" required>`,{onSubmit:()=>r.planoSaudeValor=Number(document.getElementById('ob-plano-v').value)||0});
+  else if(cur.id==='extras') obWrap('Você costuma receber horas extras?',selectOptions('ob-he',r.temHorasExtras?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temHorasExtras=document.getElementById('ob-he').value==='sim'});
+  else if(cur.id==='horasExtras') obWrap('Quantas horas extras você costuma fazer por mês?',`<input type="number" step=".25" id="ob-heq" value="${r.horasExtrasMedia||''}" required><label>Percentual mais comum</label>${selectOptions('ob-hep',String(r.percentualExtra),[['50','50%'],['100','100%'],['outro','Outro / informar depois']])}`,{onSubmit:()=>{r.horasExtrasMedia=Number(document.getElementById('ob-heq').value)||0;r.percentualExtra=Number(document.getElementById('ob-hep').value)||50}});
+  else if(cur.id==='adicional') obWrap('Você recebe algum adicional?',`
+    ${selectOptions('ob-ad',r.adicionalTipo,[['','Nenhum'],['noturno','Adicional noturno'],['insalubridade','Insalubridade'],['periculosidade','Periculosidade'],['outro','Outro']])}
+    <label>Valor médio mensal desse adicional</label>
+    <input type="number" step=".01" id="ob-ad-v" value="${r.adicionalValor||''}" placeholder="0,00">
+  `,{onSubmit:()=>{r.adicionalTipo=document.getElementById('ob-ad').value;r.temAdicional=!!r.adicionalTipo;r.adicionalValor=Number(document.getElementById('ob-ad-v').value)||0;}});
+  else if(cur.id==='outrosDescontos') obWrap('Existe outro desconto fixo no seu holerite?',selectOptions('ob-out',r.temOutrosDescontos?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temOutrosDescontos=document.getElementById('ob-out').value==='sim'});
+  else if(cur.id==='banco') obWrap('Você quer cadastrar sua conta bancária inicial?',selectOptions('ob-banco',r.temBanco?'sim':'nao',[['nao','Não agora'],['sim','Sim']]),{onSubmit:()=>r.temBanco=document.getElementById('ob-banco').value==='sim'});
+  else if(cur.id==='bancoDetalhe') obWrap('Qual é sua conta principal?',`<label>Banco / instituição</label><input id="ob-banco-n" value="${r.bancoNome||''}" required><label>Saldo atual aproximado</label><input type="number" step=".01" id="ob-banco-s" value="${r.bancoSaldo||''}" required>`,{onSubmit:()=>{r.bancoNome=document.getElementById('ob-banco-n').value;r.bancoSaldo=Number(document.getElementById('ob-banco-s').value)||0;}});
+  else if(cur.id==='cartao') obWrap('Você usa cartão de crédito?',selectOptions('ob-cartao',r.temCartao?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temCartao=document.getElementById('ob-cartao').value==='sim'});
+  else if(cur.id==='cartaoDetalhe') {
+    const cards=r.cartoes;
+    el.innerHTML=`<div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/obSteps().length)*100)}%"></div></div>
+    <h3 style="margin-top:16px;">Cadastre seus cartões</h3><p style="color:var(--sub);font-size:13px;">Você pode cadastrar um agora e adicionar outros depois.</p>
+    <form id="ob-card-form">
+      <label>Nome do cartão</label><input id="ob-card-n" placeholder="Ex.: Nubank" required>
+      <label>Limite</label><input type="number" step=".01" id="ob-card-l" required>
+      <label>Dia de fechamento</label><input type="number" min="1" max="31" id="ob-card-f" required>
+      <label>Dia de vencimento</label><input type="number" min="1" max="31" id="ob-card-v" required>
+      <button type="submit" class="btn secondary">+ Adicionar cartão</button>
+    </form>
+    <div style="margin-top:12px;">${cards.map(c=>`<div class="row"><div><div class="desc">${c.nome}</div><div class="meta">Limite ${brl(c.limite)} · fecha dia ${c.fechamento} · vence dia ${c.vencimento}</div></div></div>`).join('')}</div>
+    <div class="btnrow" style="margin-top:14px;"><button type="button" class="btn secondary" onclick="obBack()">Voltar</button><button type="button" class="btn" onclick="obNext()">${cards.length?'Continuar':'Pular'}</button></div>`;
+    document.getElementById('ob-card-form').addEventListener('submit',e=>{e.preventDefault();cards.push({id:uid(),nome:document.getElementById('ob-card-n').value,limite:Number(document.getElementById('ob-card-l').value)||0,fechamento:Number(document.getElementById('ob-card-f').value)||1,vencimento:Number(document.getElementById('ob-card-v').value)||1,faturaAtual:0});renderOnboarding();});
+    document.getElementById('modal-bg').classList.add('active');
+  }
+  else if(cur.id==='divida') obWrap('Você possui alguma dívida ou financiamento?',selectOptions('ob-div',r.temDivida?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.temDivida=document.getElementById('ob-div').value==='sim'});
+  else if(cur.id==='dividaDetalhe') {
+    const ds=r.dividas;
+    el.innerHTML=`<div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/obSteps().length)*100)}%"></div></div><h3 style="margin-top:16px;">Cadastre suas dívidas</h3>
+      <form id="ob-div-form"><label>Tipo</label><input id="ob-div-t" placeholder="Ex.: empréstimo" required><label>Nome</label><input id="ob-div-n" required><label>Saldo devedor</label><input type="number" step=".01" id="ob-div-s" required><label>Parcela mensal</label><input type="number" step=".01" id="ob-div-p" required><label>Parcelas restantes</label><input type="number" id="ob-div-q" required><button type="submit" class="btn secondary">+ Adicionar dívida</button></form>
+      <div style="margin-top:12px;">${ds.map(d=>`<div class="row"><div><div class="desc">${d.nome}</div><div class="meta">${d.tipo} · saldo ${brl(d.saldo)} · parcela ${brl(d.parcela)}</div></div></div>`).join('')}</div>
+      <div class="btnrow" style="margin-top:14px;"><button type="button" class="btn secondary" onclick="obBack()">Voltar</button><button type="button" class="btn" onclick="obNext()">${ds.length?'Continuar':'Pular'}</button></div>`;
+    document.getElementById('ob-div-form').addEventListener('submit',e=>{e.preventDefault();ds.push({id:uid(),tipo:document.getElementById('ob-div-t').value,nome:document.getElementById('ob-div-n').value,saldo:Number(document.getElementById('ob-div-s').value)||0,parcela:Number(document.getElementById('ob-div-p').value)||0,parcelasRestantes:Number(document.getElementById('ob-div-q').value)||0});renderOnboarding();});
+    document.getElementById('modal-bg').classList.add('active');
+  }
+  else if(cur.id==='contas'){
+    const entradaOpts=r.entradas===2?`<option value="dia5">Salário</option><option value="dia20">Adiantamento</option>`:`<option value="dia5">Entrada principal</option>`;
+    el.innerHTML=`<div class="ob-progress"><div class="ob-progress-fill" style="width:${Math.round(((ob.step+1)/obSteps().length)*100)}%"></div></div>
+      <h3 style="margin-top:16px;">Quais contas você paga todos os meses?</h3><p style="color:var(--sub);font-size:13px;">Adicione aluguel, energia, internet, assinaturas, escola e outras contas recorrentes.</p>
+      <div id="ob-contas-lista">${r.contasNovas.map(c=>`<div class="row"><div class="desc">${c.nome}</div><div class="amount neg">-${brl(c.valor)}</div></div>`).join('')}</div>
+      <form id="ob-form-conta" style="margin-top:10px;"><label>Nome</label><input id="ob-c-nome" placeholder="Ex.: aluguel"><label>Valor aproximado</label><input type="number" step=".01" id="ob-c-valor" placeholder="0,00"><label>Vencimento</label><input type="number" min="1" max="31" id="ob-c-dia" placeholder="Dia"><button type="submit" class="btn secondary">+ Adicionar conta</button></form>
+      <div class="btnrow" style="margin-top:14px;"><button type="button" class="btn secondary" onclick="obBack()">Voltar</button><button type="button" class="btn" onclick="obNext()">${r.contasNovas.length?'Continuar':'Não tenho / pular'}</button></div>`;
+    document.getElementById('ob-form-conta').addEventListener('submit',e=>{e.preventDefault();const nome=document.getElementById('ob-c-nome').value.trim();if(!nome)return;r.contasNovas.push({nome,valor:Number(document.getElementById('ob-c-valor').value)||0,dia:Number(document.getElementById('ob-c-dia').value)||null,grupo:'dia5'});renderOnboarding();});
+    document.getElementById('modal-bg').classList.add('active');
+  }
+  else if(cur.id==='objetivo') obWrap('O que você quer melhorar primeiro?',`
+    <select id="ob-obj">${[
+      ['organizar','Organizar minha vida financeira'],
+      ['dividas','Sair das dívidas'],
+      ['economizar','Economizar mais'],
+      ['reserva','Montar uma reserva de emergência'],
+      ['cartao','Controlar melhor meus cartões'],
+      ['investir','Começar a investir'],
+      ['planejar','Planejar meus próximos meses']
+    ].map(o=>`<option value="${o[0]}" ${r.objetivo===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`,{onSubmit:()=>{r.objetivo=document.getElementById('ob-obj').value;r.prioridade=r.objetivo;}});
+  else if(cur.id==='rendaExtra') obWrap('Você costuma ter renda extra?',selectOptions('ob-rex',r.rendaExtra?'sim':'nao',[['nao','Não'],['sim','Sim']]),{onSubmit:()=>r.rendaExtra=document.getElementById('ob-rex').value==='sim'});
+  else if(cur.id==='fim'){
+    aplicarOnboarding();
+    const nome=r.nome||'';
+    el.innerHTML=`<div style="text-align:center;padding:12px 0 4px;">
+      <div style="font-size:42px;color:var(--accent);">✓</div>
+      <h3 style="font-size:26px;margin:6px 0;">Tudo pronto${nome?', '+nome:''}!</h3>
+      <p style="color:var(--sub);line-height:1.6;">O Uric já entendeu sua renda, seus compromissos e seus objetivos. A partir de agora, ele vai usar essas informações para personalizar seu painel.</p>
+      <div class="tip"><span class="ic">✦</span><div><strong>Seu próximo passo:</strong> explore o Início. O Uric vai destacar o que merece sua atenção primeiro.</div></div>
+      <button class="btn" onclick="closeModal();mostrarView('dashboard');renderAll();">Vamos lá →</button>
+    </div>`;
+    document.getElementById('modal-bg').classList.add('active');
+  }
+}
+
+function aplicarOnboarding(){
+  const r=ob.r, cfg=data.config;
+  data.perfil.nome=r.nome;
+  data.perfil.tipoRenda=r.tipoRenda;
+  data.perfil.objetivo=r.objetivo;
+  data.perfil.prioridade=r.prioridade;
+  data.perfil.criadoEm=data.perfil.criadoEm||new Date().toISOString();
+  cfg.rendaTipo=r.tipoRenda;
+  cfg.regime=r.regime||'';
+  cfg.salarioBase=Number(r.salarioBase)||0;
+  cfg.dataPagamento=r.dataPagamento||'';
+  cfg.segundaEntrada=(r.entradas===2);
+  cfg.segundaEntradaTipo=r.segundaEntradaTipo||'adiantamento';
+  cfg.segundaEntradaValor=Number(r.segundaEntradaValor)||0;
+  cfg.segundaEntradaPercentual=Number(r.segundaEntradaPercentual)||0;
+  cfg.segundaEntradaDia=r.segundaEntradaDia||'';
+  cfg.dependentes=Number(r.dependentes)||0;
+  cfg.pensaoValor=Number(r.pensaoValor)||0;
+  cfg.valeTransporteValor=Number(r.valeTransporteValor)||0;
+  cfg.valeAlimentacaoValor=Number(r.valeAlimentacaoValor)||0;
+  cfg.planoSaudeValor=Number(r.planoSaudeValor)||0;
+  cfg.outrosDescontos=Number(r.outrosDescontos)||0;
+  cfg.jornadaSemanal=Number(r.jornadaSemanal)||44;
+  cfg.horasDia=Number(r.horasDia)||8;
+  cfg.trabalhaSabado=!!r.trabalhaSabado;
+  cfg.dataAdmissao=r.dataAdmissao||'';
+  cfg.sabadoHoras=Number(r.sabadoHoras)||0;
+  cfg.horasExtrasMedia=Number(r.horasExtrasMedia)||0;
+  cfg.percentualExtra=Number(r.percentualExtra)||50;
+  cfg.adicionalNoturno=r.adicionalTipo==='noturno'?Number(r.adicionalValor||0):0;
+  cfg.insalubridade=r.adicionalTipo==='insalubridade'?Number(r.adicionalValor||0):0;
+  cfg.periculosidade=r.adicionalTipo==='periculosidade'?Number(r.adicionalValor||0):0;
+  if(r.entradas===2){
+    cfg.valePct=(Number(r.segundaEntradaPercentual)||0)/100;
+    cfg.grupoNomes={dia5:'Salário líquido',dia20:'Adiantamento',extra:'Ganhos extras'};
+  }else{
+    cfg.valePct=0;
+    cfg.grupoNomes={dia5:'Salário',dia20:'Outras entradas',extra:'Ganhos extras'};
+  }
+  if(r.temBanco && r.bancoNome){
+    data.contasBancarias.push({id:uid(),nome:r.bancoNome,saldo:Number(r.bancoSaldo)||0});
+  }
+  if(r.cartoes?.length) data.cartoes.push(...r.cartoes);
+  if(r.dividas?.length) data.dividas.push(...r.dividas);
+  const keyAtual=pontoKey(new Date());
+  r.contasNovas.forEach(c=>data.contasFixas.push({id:uid(),sigla:'',nome:c.nome,grupo:c.grupo,valores:{[keyAtual]:c.valor},dia:c.dia||null}));
+  data.onboardingDone=true;
+  save();
+}
+
+</script>
+</body>
+</html>

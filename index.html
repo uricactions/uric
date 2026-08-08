@@ -1209,7 +1209,7 @@ load();
 renderAll();
 // Primeira configuração do Uric: versões anteriores podem ter dados no localStorage,
 // então não usamos apenas a existência de salário/contas para decidir se o onboarding foi concluído.
-const URIC_ONBOARDING_VERSION = 1;
+const URIC_ONBOARDING_VERSION = 2;
 if(data.uricOnboardingVersion !== URIC_ONBOARDING_VERSION){
   setTimeout(()=>iniciarOnboarding(), 250);
 }

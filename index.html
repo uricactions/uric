@@ -46,13 +46,13 @@
   .health-state-dot{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 0 3px rgba(255,255,255,.8);}
   .uric-health-caption{margin-top:7px;font-size:12px;color:var(--sub);line-height:1.35;}
   body{margin:0; background:var(--bg) radial-gradient(circle at 20% 0%, rgba(56,76,255,.045), transparent 45%), radial-gradient(circle at 90% 10%, rgba(112,199,255,.045), transparent 40%); color:var(--text); font-family:'Calmius Sans Low', 'Calmius Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-    padding-bottom: calc(168px + env(safe-area-inset-bottom)); padding-top: env(safe-area-inset-top); -webkit-font-smoothing:antialiased;
+    padding-bottom: calc(78px + env(safe-area-inset-bottom)); padding-top: env(safe-area-inset-top); -webkit-font-smoothing:antialiased;
     text-transform:lowercase;}
   input, select, textarea{text-transform:none;}
   button{text-transform:lowercase;}
   .sheet, .htable, .sheet *, .htable *{text-transform:none;}
   .rs{text-transform:none;}
-  header{padding:8px 20px 4px; position:sticky; top:0; background:color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px); z-index:5; transform:translateZ(0); -webkit-transform:translateZ(0); will-change:transform;}
+  header{padding:8px 20px 4px; position:sticky; top:0; background:color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px); z-index:5;}
   header h1{font-size:24px; margin:0; font-weight:700; letter-spacing:-.02em; line-height:0;}
   header .logo-mark{height:120px; display:block;}
   header p{margin:0; color:var(--sub); font-size:13px;}
@@ -107,36 +107,14 @@
   .btn.secondary{background:transparent; border:1px solid var(--border); color:var(--text);}
   .btn.small{padding:6px 12px; font-size:13px; width:auto;}
   .btnrow{display:flex; gap:8px;}
-  .fab{position:fixed; right:18px; bottom:calc(90px + env(safe-area-inset-bottom)); width:54px; height:54px; border-radius:50%; background:var(--accent); color:#fff; font-size:26px; border:none; box-shadow:0 6px 18px rgba(0,0,0,.28); z-index:10; -webkit-transform:translateZ(0); will-change:transform;}
+  .fab{position:fixed; right:18px; bottom:calc(90px + env(safe-area-inset-bottom)); width:54px; height:54px; border-radius:50%; background:var(--accent); color:#fff; font-size:26px; border:none; box-shadow:0 6px 18px rgba(0,0,0,.28); z-index:10;}
   .fab:active{transform:scale(.94);}
-  .quickadd-bg{position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:30; display:none; align-items:flex-end;}
-  .quickadd-bg.active{display:flex;}
-  .quickadd-sheet{width:100%; background:var(--card); border-radius:20px 20px 0 0; padding:10px 16px calc(20px + env(safe-area-inset-bottom)); box-shadow:0 -10px 30px rgba(0,0,0,.3);}
-  .quickadd-handle{width:36px; height:4px; border-radius:2px; background:var(--border); margin:6px auto 14px;}
-  .quickadd-title{font-size:13px; color:var(--sub); text-align:center; margin-bottom:10px; font-weight:600;}
-  .quickadd-item{display:flex; align-items:center; gap:14px; width:100%; background:none; border:none; padding:13px 4px; font-family:inherit; font-size:15px; font-weight:600; color:var(--text); border-top:1px solid var(--border);}
-  .quickadd-item:first-of-type{border-top:none;}
-  .quickadd-item .qa-ico{width:34px; height:34px; border-radius:10px; background:color-mix(in srgb, var(--accent) 14%, transparent); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0;}
-  .quickadd-item:active{opacity:.6;}
-  .uric-capsule{position:fixed; left:14px; bottom:calc(90px + env(safe-area-inset-bottom)); display:flex; align-items:center; gap:9px; background:var(--card-glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:999px; padding:10px; box-shadow:0 6px 18px rgba(0,0,0,.18); z-index:9; font-family:inherit; text-align:left; max-width:44px; overflow:hidden; transition:max-width .45s cubic-bezier(.4,0,.2,1), padding .45s ease; -webkit-transform:translateZ(0); will-change:transform;}
-  .uric-capsule.expanded{max-width:calc(100vw - 90px); padding:10px 16px;}
-  .uric-capsule:active{transform:scale(.98);}
-  .uric-capsule-text{font-size:12.5px; color:var(--text); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:0; transition:opacity .25s ease .15s;}
-  .uric-capsule.expanded .uric-capsule-text{opacity:1;}
-  .uric-sheet-bg{position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:25; display:none; align-items:flex-end;}
-  .uric-sheet-bg.active{display:flex;}
-  .uric-sheet{width:100%; max-height:78vh; overflow-y:auto; background:var(--bg); border-radius:20px 20px 0 0; padding:10px 16px calc(24px + env(safe-area-inset-bottom));}
   .empty{text-align:center; color:var(--sub); padding:24px 10px; font-size:14px;}
-  nav{position:fixed; bottom:0; left:0; right:0; background:color-mix(in srgb, var(--card) 85%, transparent); backdrop-filter:saturate(180%) blur(16px); -webkit-backdrop-filter:saturate(180%) blur(16px); border-top:1px solid var(--border); display:flex; padding-bottom:env(safe-area-inset-bottom); z-index:10; transform:translateZ(0); -webkit-transform:translateZ(0); will-change:transform;}
+  nav{position:fixed; bottom:0; left:0; right:0; background:color-mix(in srgb, var(--card) 85%, transparent); backdrop-filter:saturate(180%) blur(16px); -webkit-backdrop-filter:saturate(180%) blur(16px); border-top:1px solid var(--border); display:flex; padding-bottom:env(safe-area-inset-bottom); z-index:10;}
   nav button{flex:1; background:none; border:none; padding:10px 0 8px; color:var(--muted); font-size:9.5px; font-family:inherit; display:flex; flex-direction:column; align-items:center; gap:3px;}
   nav button.active{color:var(--accent);}
   nav .ico{width:22px; height:22px; display:block; margin:0 auto;}
   nav .ico svg{width:100%; height:100%;}
-  .subtabs{display:flex; gap:6px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:14px;}
-  .subtab{flex:1; border:none; background:none; padding:9px 0; border-radius:9px; font-family:inherit; font-size:13px; font-weight:600; color:var(--muted);}
-  .subtab.active{background:var(--accent); color:#fff;}
-  .subview{display:none;}
-  .subview.active{display:block;}
   .view{display:none;}
   .view.active{display:block;}
   .modal-bg{position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; align-items:flex-end; z-index:20;}
@@ -229,204 +207,6 @@
   .splash-btn:active{transform:scale(.96);}
   @keyframes splashIn{to{opacity:1; transform:translateY(0);}}
   @keyframes splashSway{0%{background-position:0% 0%;} 50%{background-position:100% 0%;} 100%{background-position:0% 0%;}}
-
-  /* ============================================================
-     URIC — GLASS SYSTEM
-     A interface usa luz + translucidez + profundidade como linguagem.
-     As cores Uric aparecem como iluminação do ambiente, não como
-     preenchimento pesado dos componentes.
-     ============================================================ */
-  :root{
-    --glass-bg:rgba(255,255,255,.56);
-    --glass-bg-strong:rgba(255,255,255,.72);
-    --glass-bg-soft:rgba(255,255,255,.38);
-    --glass-line:rgba(255,255,255,.58);
-    --glass-shadow:0 18px 50px rgba(15,20,35,.08), 0 2px 12px rgba(15,20,35,.05);
-    --glass-shadow-soft:0 10px 30px rgba(15,20,35,.06);
-    --glass-blur:24px;
-    --glass-blur-strong:34px;
-  }
-
-  @media (prefers-color-scheme:dark){
-    :root{
-      --glass-bg:rgba(28,28,30,.52);
-      --glass-bg-strong:rgba(38,38,42,.66);
-      --glass-bg-soft:rgba(255,255,255,.055);
-      --glass-line:rgba(255,255,255,.14);
-      --glass-shadow:0 22px 60px rgba(0,0,0,.28), 0 2px 18px rgba(0,0,0,.18);
-      --glass-shadow-soft:0 14px 38px rgba(0,0,0,.22);
-    }
-  }
-
-  /* ambiente: as cores da saúde financeira atravessam o vidro */
-  body::before,
-  body::after{
-    content:"";
-    position:fixed;
-    inset:-18%;
-    pointer-events:none;
-    z-index:-1;
-    filter:blur(60px) saturate(125%);
-    transform:translateZ(0);
-  }
-  body::before{
-    background:
-      radial-gradient(circle at 8% 12%, rgba(255,14,0,.09), transparent 24%),
-      radial-gradient(circle at 92% 18%, rgba(56,76,255,.10), transparent 28%),
-      radial-gradient(circle at 50% 96%, rgba(77,255,84,.07), transparent 30%);
-  }
-  body::after{
-    background:
-      radial-gradient(circle at 42% 35%, rgba(255,255,27,.035), transparent 22%),
-      radial-gradient(circle at 72% 70%, rgba(112,199,255,.07), transparent 26%);
-    opacity:.85;
-  }
-  body > *{position:relative;z-index:1;}
-  body::before,body::after{z-index:0;}
-  @media (prefers-color-scheme:dark){
-    body::before{
-      background:
-        radial-gradient(circle at 6% 10%, rgba(255,14,0,.13), transparent 25%),
-        radial-gradient(circle at 94% 16%, rgba(56,76,255,.16), transparent 29%),
-        radial-gradient(circle at 48% 98%, rgba(77,255,84,.09), transparent 32%);
-    }
-    body::after{opacity:.95;}
-  }
-
-  /* glass surfaces */
-  .card,
-  .uric-card,
-  .uric-mini,
-  .daycard,
-  .modal,
-  .monthnav button,
-  .punch,
-  .tip,
-  .modal-bg:not(.ob-fullscreen) .modal,
-  nav{
-    background:var(--glass-bg);
-    border-color:var(--glass-line);
-    box-shadow:var(--glass-shadow-soft);
-    -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(155%);
-    backdrop-filter:blur(var(--glass-blur)) saturate(155%);
-  }
-
-  .card{
-    position:relative;
-    overflow:hidden;
-    box-shadow:var(--glass-shadow);
-  }
-  .card::after,
-  .uric-card::after,
-  .uric-mini::after{
-    content:"";
-    position:absolute;
-    left:10%;
-    right:10%;
-    top:0;
-    height:1px;
-    background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
-    opacity:.65;
-    pointer-events:none;
-  }
-  .card.hero{
-    background:var(--glass-bg-strong);
-    -webkit-backdrop-filter:blur(var(--glass-blur-strong)) saturate(175%);
-    backdrop-filter:blur(var(--glass-blur-strong)) saturate(175%);
-    box-shadow:0 24px 70px rgba(15,20,35,.11), inset 0 1px 0 rgba(255,255,255,.35);
-  }
-  @media (prefers-color-scheme:dark){
-    .card.hero{box-shadow:0 26px 72px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.10);}
-  }
-
-  /* inputs também são vidro, sem parecer formulário de sistema antigo */
-  input,select,textarea{
-    background:rgba(255,255,255,.42);
-    border-color:var(--glass-line);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.30);
-    -webkit-backdrop-filter:blur(18px) saturate(140%);
-    backdrop-filter:blur(18px) saturate(140%);
-  }
-  @media (prefers-color-scheme:dark){
-    input,select,textarea{background:rgba(255,255,255,.055);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
-  }
-  input:focus,select:focus,textarea:focus{
-    border-color:color-mix(in srgb,var(--accent) 48%, var(--glass-line));
-    box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 12%, transparent), inset 0 1px 0 rgba(255,255,255,.32);
-    outline:none;
-  }
-
-  /* botões: cor sólida só quando a ação precisa de destaque */
-  .btn.secondary,
-  .monthnav button{
-    background:var(--glass-bg-soft);
-    border-color:var(--glass-line);
-    -webkit-backdrop-filter:blur(18px) saturate(145%);
-    backdrop-filter:blur(18px) saturate(145%);
-  }
-  .btn:not(.secondary){
-    box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 18%, transparent), inset 0 1px 0 rgba(255,255,255,.18);
-  }
-  .fab{
-    box-shadow:0 14px 32px color-mix(in srgb,var(--accent) 25%, transparent), inset 0 1px 0 rgba(255,255,255,.25);
-  }
-
-  /* navegação inferior como uma lâmina de vidro */
-  nav{
-    background:color-mix(in srgb,var(--glass-bg-strong) 86%, transparent);
-    border-top-color:var(--glass-line);
-    box-shadow:0 -12px 38px rgba(15,20,35,.06), inset 0 1px 0 rgba(255,255,255,.28);
-    -webkit-backdrop-filter:blur(28px) saturate(180%);
-    backdrop-filter:blur(28px) saturate(180%);
-  }
-  @media (prefers-color-scheme:dark){
-    nav{box-shadow:0 -16px 42px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);}
-  }
-
-  /* onboarding = vidro escuro imersivo, sem abandonar a linguagem do app */
-  .modal-bg.ob-fullscreen::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 8% 18%,rgba(255,14,0,.12),transparent 25%),radial-gradient(circle at 90% 20%,rgba(56,76,255,.14),transparent 30%),radial-gradient(circle at 52% 92%,rgba(77,255,84,.08),transparent 28%);filter:blur(55px);pointer-events:none;}
-  .modal-bg.ob-fullscreen .modal{position:relative;overflow:hidden;}
-  .modal-bg.ob-fullscreen .modal input,
-  .modal-bg.ob-fullscreen .modal select,
-  .modal-bg.ob-fullscreen .modal textarea{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);}
-  .modal-bg.ob-fullscreen .modal .btn.secondary{background:rgba(255,255,255,.055);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
-
-  /* modal comum = vidro elevado */
-  .modal-bg:not(.ob-fullscreen){background:rgba(8,10,16,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-  .modal-bg:not(.ob-fullscreen) .modal{
-    background:var(--glass-bg-strong);
-    -webkit-backdrop-filter:blur(var(--glass-blur-strong)) saturate(170%);
-    backdrop-filter:blur(var(--glass-blur-strong)) saturate(170%);
-    border:1px solid var(--glass-line);
-    box-shadow:0 -18px 70px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.25);
-  }
-
-  /* logo: proporção óptica consistente em qualquer frase/tamanho */
-  .uric-logo-inline{
-    width:2.05em;
-    height:.72em;
-    vertical-align:-.075em;
-    background-size:100% 100%;
-  }
-  .uric-logo-inline.lg{
-    width:2.68em;
-    height:.94em;
-    vertical-align:-.09em;
-  }
-  .section-title .uric-logo-inline.lg{width:2.58em;height:.90em;}
-  nav .uric-logo-inline{width:2.25em;height:.79em;vertical-align:-.08em;}
-  .uric-label .uric-logo-inline{width:2.02em;height:.71em;}
-  .uric-health-caption .uric-logo-inline{margin-right:.12em;}
-
-  /* o texto que acompanha a marca nunca deve “cair” para outra linha */
-  .uric-brand-line{display:inline-flex;align-items:center;gap:.22em;vertical-align:middle;white-space:nowrap;}
-
-  @media (max-width:380px){
-    .uric-logo-inline{width:1.98em;height:.69em;}
-    .uric-logo-inline.lg{width:2.52em;height:.88em;}
-    .section-title .uric-logo-inline.lg{width:2.42em;height:.85em;}
-  }
-
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;}}
 </style>
 </head>
@@ -491,33 +271,14 @@
     <div class="card" id="dash-gastos"></div>
   </div>
 
-  <div class="view" id="view-dinheiro">
-    <div class="subtabs">
-      <button class="subtab active" data-sub="salario">Salário</button>
-      <button class="subtab" data-sub="ponto">Ponto</button>
-    </div>
-
-    <div class="subview active" id="sub-salario">
-      <div class="section-title">Histórico de holerites</div>
-      <div class="card" id="lista-holerites"></div>
-      <div class="section-title">Ganhos extras <a href="#" onclick="abrirExtra(null); return false;">+ novo</a></div>
-      <div class="card" id="lista-extras"></div>
-    </div>
-
-    <div class="subview" id="sub-ponto">
-      <div class="monthnav">
-        <button onclick="mudarMesPonto(-1)">‹</button>
-        <span class="lbl" id="ponto-mes-lbl"></span>
-        <button onclick="mudarMesPonto(1)">›</button>
-      </div>
-      <div id="ponto-dias"></div>
-      <button class="btn" style="margin:14px 0;" onclick="calcularHoleriteMes()">Calcular holerite deste mês</button>
-      <div class="section-title">Configurações da folha <a href="#" onclick="abrirConfig(); return false;">editar</a></div>
-      <div class="card" id="config-resumo"></div>
-    </div>
+  <div class="view" id="view-holerites">
+    <div class="section-title">Histórico de holerites</div>
+    <div class="card" id="lista-holerites"></div>
+    <div class="section-title">Ganhos extras <a href="#" onclick="abrirExtra(null); return false;">+ novo</a></div>
+    <div class="card" id="lista-extras"></div>
   </div>
 
-  <div class="view" id="view-compromissos">
+  <div class="view" id="view-contas">
     <div class="monthnav">
       <button onclick="mudarMesContas(-1)">‹</button>
       <span class="lbl" id="contas-mes-lbl"></span>
@@ -527,7 +288,7 @@
     <div class="card" id="lista-fixas-dia5"></div>
     <div class="section-title" id="titulo-fixas-dia20">grupo 2</div>
     <div class="card" id="lista-fixas-dia20"></div>
-    <div class="section-title">outros compromissos (avulsos)</div>
+    <div class="section-title">outras contas (avulsas)</div>
     <div class="card" id="lista-contas-avulsas"></div>
   </div>
 
@@ -539,40 +300,33 @@
     <div class="card" id="lista-gastos"></div>
   </div>
 
-</main>
-
-<button class="uric-capsule" id="uric-capsule">
-  <span class="uric-logo-inline" aria-label="Uric" role="img"></span>
-  <span class="uric-capsule-text" id="uric-capsule-text">viu seu mês financeiro</span>
-</button>
-
-<div class="uric-sheet-bg" id="uric-sheet-bg">
-  <div class="uric-sheet">
-    <div class="quickadd-handle"></div>
-    <div class="section-title" style="margin-top:0;"><span class="uric-logo-inline lg" aria-label="Uric" role="img"></span></div>
+  <div class="view" id="view-ponto">
+    <div class="monthnav">
+      <button onclick="mudarMesPonto(-1)">‹</button>
+      <span class="lbl" id="ponto-mes-lbl"></span>
+      <button onclick="mudarMesPonto(1)">›</button>
+    </div>
+    <div id="ponto-dias"></div>
+    <button class="btn" style="margin:14px 0;" onclick="calcularHoleriteMes()">Calcular holerite deste mês</button>
+    <div class="section-title">Configurações da folha <a href="#" onclick="abrirConfig(); return false;">editar</a></div>
+    <div class="card" id="config-resumo"></div>
+  </div>
+  <div class="view" id="view-uric">
+    <div class="section-title"><span class="uric-logo-inline lg" aria-label="Uric" role="img"></span></div>
     <div class="card" id="uric-feed"></div>
   </div>
-</div>
+
+</main>
 
 <button class="fab" id="fab">+</button>
 
-<div class="quickadd-bg" id="quickadd-bg">
-  <div class="quickadd-sheet">
-    <div class="quickadd-handle"></div>
-    <div class="quickadd-title">O que você quer adicionar?</div>
-    <button class="quickadd-item" data-action="gasto"><span class="qa-ico">💸</span>Gasto</button>
-    <button class="quickadd-item" data-action="conta"><span class="qa-ico">🧾</span>Conta / compromisso</button>
-    <button class="quickadd-item" data-action="ganho"><span class="qa-ico">💰</span>Ganho extra</button>
-    <button class="quickadd-item" data-action="foto"><span class="qa-ico">📷</span>Foto da nota</button>
-    <button class="quickadd-item" data-action="ponto"><span class="qa-ico">🕐</span>Bater ponto / config</button>
-  </div>
-</div>
-
 <nav>
   <button class="tab active" data-view="dashboard"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"/></svg></span>Início</button>
-  <button class="tab" data-view="dinheiro"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v0M18 15v0"/></svg></span>Dinheiro</button>
-  <button class="tab" data-view="compromissos"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1Z"/><path d="M9.5 12h5M9.5 15.5h5M9.5 8.5h2"/></svg></span>Compromissos</button>
+  <button class="tab" data-view="holerites"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v0M18 15v0"/></svg></span>Holerites</button>
+  <button class="tab" data-view="ponto"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>Ponto</button>
+  <button class="tab" data-view="contas"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1Z"/><path d="M9.5 12h5M9.5 15.5h5M9.5 8.5h2"/></svg></span>Contas</button>
   <button class="tab" data-view="gastos"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3v-17Z"/><path d="M9 8h6M9 11.5h6M9 15h4"/></svg></span>Gastos</button>
+  <button class="tab" data-view="uric"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 10.2a2.5 2.5 0 1 1 3.2 2.4c-.7.3-1.2.9-1.2 1.7v.4"/><circle cx="12" cy="16.8" r=".3" fill="currentColor"/></svg></span><span class="uric-logo-inline" aria-label="Uric" role="img"></span></button>
 </nav>
 
 <div class="modal-bg" id="modal-bg">
@@ -801,42 +555,15 @@ function gerarInsightsUric(){
 }
 function renderUric(){
   const feed = document.getElementById('uric-feed');
+  if(!feed) return;
   const insights = gerarInsightsUric();
   const labelTxt = {viu:uricLogoHTML()+' viu', calculou:uricLogoHTML()+' calculou', recomenda:uricLogoHTML()+' recomenda', alerta:uricLogoHTML()+' alerta', encontrou:uricLogoHTML()+' encontrou', confirmou:uricLogoHTML()+' confirmou'};
-  if(feed){
-    feed.innerHTML = insights.map(i=>`
-      <div class="uric-card">
-        <div class="uric-label ${i.label}">${labelTxt[i.label]}</div>
-        <div class="uric-text">${i.texto}</div>
-      </div>`).join('');
-  }
-  const capsuleText = document.getElementById('uric-capsule-text');
-  if(capsuleText){
-    const destaque = insights.find(i=>i.label==='alerta') || insights[0];
-    capsuleText.textContent = destaque ? destaque.texto : 'está lendo seu mês financeiro.';
-  }
+  feed.innerHTML = insights.map(i=>`
+    <div class="uric-card">
+      <div class="uric-label ${i.label}">${labelTxt[i.label]}</div>
+      <div class="uric-text">${i.texto}</div>
+    </div>`).join('');
 }
-
-let uricCapsuleTimer = null;
-function mostrarUricCapsuleTemporario(ms=4500){
-  const capsule = document.getElementById('uric-capsule');
-  if(!capsule) return;
-  capsule.classList.add('expanded');
-  clearTimeout(uricCapsuleTimer);
-  uricCapsuleTimer = setTimeout(()=>{ capsule.classList.remove('expanded'); }, ms);
-}
-
-function abrirUricSheet(){
-  document.getElementById('uric-sheet-bg').classList.add('active');
-}
-function fecharUricSheet(){
-  document.getElementById('uric-sheet-bg').classList.remove('active');
-}
-document.getElementById('uric-capsule').addEventListener('click', abrirUricSheet);
-document.getElementById('uric-sheet-bg').addEventListener('click', e=>{
-  if(e.target.id==='uric-sheet-bg') fecharUricSheet();
-});
-setTimeout(()=>mostrarUricCapsuleTemporario(5000), 900);
 
 function renderHeader(){
   const now = new Date();
@@ -917,7 +644,7 @@ function renderDashboard(){
     const labelTxt = {viu:uricLogoHTML()+' viu', calculou:uricLogoHTML()+' calculou', recomenda:uricLogoHTML()+' recomenda', alerta:uricLogoHTML()+' alerta', encontrou:uricLogoHTML()+' encontrou', confirmou:uricLogoHTML()+' confirmou'};
     const destaque = insights.find(i=>i.label==='alerta') || insights[0];
     tipsEl.innerHTML = destaque ? `
-      <div class="uric-mini" onclick="abrirUricSheet()">
+      <div class="uric-mini" onclick="mostrarView('uric')">
         <span class="dot" style="background:${destaque.label==='alerta'?'var(--uric-red)':(destaque.label==='recomenda'?'var(--uric-green)':(destaque.label==='encontrou'?'var(--uric-blue)':'var(--uric-cyan)'))};"></span>
         <div><div class="uric-label ${destaque.label}" style="margin-bottom:4px;">${labelTxt[destaque.label]}</div><div class="uric-text">${destaque.texto}</div></div>
       </div>` : '';
@@ -1460,81 +1187,14 @@ function mostrarView(name){
   document.getElementById('view-'+name).classList.add('active');
 }
 
-// sub-navegação dentro da view "Dinheiro" (Salário / Ponto)
-document.querySelectorAll('#view-dinheiro .subtab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('#view-dinheiro .subtab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('#view-dinheiro .subview').forEach(v=>v.classList.remove('active'));
-    document.getElementById('sub-'+btn.dataset.sub).classList.add('active');
-  });
+document.getElementById('fab').addEventListener('click', ()=>{
+  const view = currentView();
+  if(view==='holerites') abrirHolerite(null);
+  else if(view==='contas') abrirConta(null);
+  else if(view==='gastos') abrirGasto(null);
+  else if(view==='ponto') abrirConfig();
+  else abrirGasto(null);
 });
-function currentSubView(){
-  const el = document.querySelector('#view-dinheiro .subtab.active');
-  return el ? el.dataset.sub : 'salario';
-}
-function mostrarSubView(name){
-  document.querySelectorAll('#view-dinheiro .subtab').forEach(b=>b.classList.toggle('active', b.dataset.sub===name));
-  document.querySelectorAll('#view-dinheiro .subview').forEach(v=>v.classList.toggle('active', v.id==='sub-'+name));
-}
-
-// FAB: toque rápido = ação contextual da tela atual. Toque e segure = menu com todas as opções.
-(function(){
-  const fab = document.getElementById('fab');
-  const qaBg = document.getElementById('quickadd-bg');
-  let pressTimer = null;
-  let longPressed = false;
-
-  function openQuickAdd(){
-    longPressed = true;
-    if(navigator.vibrate) navigator.vibrate(12);
-    qaBg.classList.add('active');
-  }
-  function closeQuickAdd(){
-    qaBg.classList.remove('active');
-  }
-  function contextualAdd(){
-    const view = currentView();
-    if(view==='dinheiro'){
-      if(currentSubView()==='ponto') abrirConfig();
-      else abrirHolerite(null);
-    }
-    else if(view==='compromissos') abrirConta(null);
-    else if(view==='gastos') abrirGasto(null);
-    else abrirGasto(null);
-  }
-
-  fab.addEventListener('touchstart', ()=>{
-    longPressed = false;
-    pressTimer = setTimeout(openQuickAdd, 420);
-  }, {passive:true});
-  fab.addEventListener('touchend', ()=>{ clearTimeout(pressTimer); });
-  fab.addEventListener('mousedown', ()=>{
-    longPressed = false;
-    pressTimer = setTimeout(openQuickAdd, 420);
-  });
-  fab.addEventListener('mouseup', ()=>{ clearTimeout(pressTimer); });
-  fab.addEventListener('mouseleave', ()=>{ clearTimeout(pressTimer); });
-
-  fab.addEventListener('click', ()=>{
-    if(longPressed){ longPressed = false; return; }
-    contextualAdd();
-  });
-
-  qaBg.addEventListener('click', (e)=>{ if(e.target.id==='quickadd-bg') closeQuickAdd(); });
-
-  document.querySelectorAll('.quickadd-item').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      closeQuickAdd();
-      const action = btn.dataset.action;
-      if(action==='gasto') abrirGasto(null);
-      else if(action==='conta') abrirConta(null);
-      else if(action==='ganho') abrirExtra(null);
-      else if(action==='foto') abrirScanner();
-      else if(action==='ponto'){ mostrarView('dinheiro'); mostrarSubView('ponto'); }
-    });
-  });
-})();
 
 function closeModal(){ document.getElementById('modal-bg').classList.remove('active'); document.getElementById('modal-bg').classList.remove('ob-fullscreen'); }
 document.getElementById('modal-bg').addEventListener('click', e=>{ if(e.target.id==='modal-bg') closeModal(); });

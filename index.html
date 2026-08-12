@@ -287,19 +287,6 @@
     <div id="dash-tips"></div>
 
 
-    <div class="grid2">
-      <div class="card">
-        <p class="stat-label">Próximo pagamento</p>
-        <p class="stat-value pos" id="dash-proximo" style="font-size:19px;">--</p>
-        <p class="stat-label" id="dash-proximo-data"></p>
-      </div>
-      <div class="card">
-        <p class="stat-label" id="dash-cred-mini-label">devido</p>
-        <p class="stat-value" id="dash-cred-mini" style="font-size:19px;">--</p>
-        <p class="stat-label" id="dash-cred-mini-sub"></p>
-      </div>
-    </div>
-
     <div class="section-title" id="titulo-crediario">cartão / crediário</div>
     <div class="card" id="dash-crediario"></div>
 
@@ -511,6 +498,10 @@ function brl(v){
   const n = Number(v)||0;
   return (n<0?'-':'') + '<span class="rs">R</span>$ ' + Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
 }
+function brlTexto(v){
+  const n = Number(v)||0;
+  return (n<0?'-':'') + 'R$ ' + Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
+}
 function mesNome(m){ return MESES[m].charAt(0).toUpperCase()+MESES[m].slice(1); }
 
 // Escala oficial Uric — 9 estágios, do crítico ao excelente
@@ -552,6 +543,7 @@ function atualizarMarcadorSaude(saldo, receita){
 function renderAll(){
   renderHeader();
   renderDinheiro();
+  renderProjecaoPagamento();
   renderDashboard();
   renderHolerites();
   renderContas();
@@ -744,24 +736,26 @@ function renderDescontosFixosProjecao(targetId){
 }
 
 function renderProjecaoPagamento(){
-  const p=construirProjecaoPagamento();
+  let p;
+  try{ p=construirProjecaoPagamento(); }catch(e){ console.error('Uric: erro ao calcular projeção',e); return; }
   const dateTxt=`${String(p.pagamento.getDate()).padStart(2,'0')} de ${mesNome(p.pagamento.getMonth())}`;
   [['dash-payment-amount','dash-payment-date','dash-payment-status','dash-payment-note'],['money-payment-amount','money-payment-date','money-payment-status','money-payment-note']].forEach(([aid,did,sid,nid])=>{
-    const a=document.getElementById(aid);if(!a)return;
-    const d=document.getElementById(did),s=document.getElementById(sid),n=document.getElementById(nid);
-    a.textContent=brl(p.liquido);a.className=`payment-amount ${p.liquido<0?'neg':'pos'}`;
-    d.textContent=dateTxt;s.className=`payment-status ${p.liquido<0?'warn':'good'}`;
-    s.textContent=p.fechado?'resultado do holerite':'projeção atual';
-    n.textContent=p.liquido<0
-      ?(p.totalHoras>0?`Seu pagamento está ${brl(Math.abs(p.liquido))} abaixo do necessário neste momento. Você já registrou ${formatHoras(p.totalHoras)} de hora extra; novas horas extras podem melhorar esta projeção.`:`Seu pagamento está ${brl(Math.abs(p.liquido))} abaixo do necessário neste momento. Registre seu ponto e suas horas extras para acompanhar essa projeção.`)
-      :(p.totalHoras>0?`A projeção está positiva em ${brl(p.liquido)}. Ela ainda pode mudar conforme você registrar novas horas extras e descontos.`:`A projeção está positiva em ${brl(p.liquido)}. Ela pode mudar até o fechamento do mês.`);
+    const a=document.getElementById(aid); if(!a) return;
+    const d=document.getElementById(did), s=document.getElementById(sid), n=document.getElementById(nid);
+    a.innerHTML=brl(p.liquido); a.className=`payment-amount ${p.liquido<0?'neg':'pos'}`;
+    if(d) d.textContent=dateTxt;
+    if(s){ s.className=`payment-status ${p.liquido<0?'warn':'good'}`; s.textContent=p.fechado?'resultado do holerite':'projeção atual'; }
+    if(n){
+      n.textContent=p.liquido<0
+        ?(p.totalHoras>0?`Seu pagamento está ${brlTexto(Math.abs(p.liquido))} abaixo do necessário neste momento. Você já registrou ${formatHoras(p.totalHoras)} de hora extra; novas horas extras podem melhorar esta projeção.`:`Seu pagamento está ${brlTexto(Math.abs(p.liquido))} abaixo do necessário neste momento. Registre seu ponto e suas horas extras para acompanhar esta projeção.`)
+        :(p.totalHoras>0?`A projeção está positiva em ${brlTexto(p.liquido)}. Ela ainda pode mudar conforme você registrar novas horas extras e descontos.`:`A projeção está positiva em ${brlTexto(p.liquido)}. Ela pode mudar até o fechamento do mês.`);
+    }
   });
   renderBlocoProjecao('dash-payment-breakdown',p);
   renderBlocoProjecao('money-payment-breakdown',p);
   renderDescontosFixosProjecao('dash-fixed-discounts');
   renderDescontosFixosProjecao('money-fixed-discounts');
 }
-
 
 function renderDinheiro(){
   // Mantida para compatibilidade com a arquitetura existente.

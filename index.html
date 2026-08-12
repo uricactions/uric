@@ -413,9 +413,9 @@
       <span class="lbl" id="contas-mes-lbl"></span>
       <button onclick="mudarMesContas(1)">›</button>
     </div>
-    <div class="section-title"><span id="titulo-fixas-dia5">grupo 1</span> <a href="#" onclick="novaContaFixa(); return false;">+ item</a></div>
+    <div class="section-title"><span id="titulo-fixas-dia5">grupo 1</span> <a href="#" onclick="novaContaFixa('dia5'); return false;">+ item</a></div>
     <div class="card" id="lista-fixas-dia5"></div>
-    <div class="section-title" id="titulo-fixas-dia20">grupo 2</div>
+    <div class="section-title"><span id="titulo-fixas-dia20">grupo 2</span> <a href="#" onclick="novaContaFixa('dia20'); return false;">+ item</a></div>
     <div class="card" id="lista-fixas-dia20"></div>
     <div class="section-title">outras contas (avulsas)</div>
     <div class="card" id="lista-contas-avulsas"></div>
@@ -1704,9 +1704,9 @@ function abrirContaFixa(id){
   document.getElementById('modal-bg').classList.add('active');
 }
 function removerContaFixa(id){ data.contasFixas = data.contasFixas.filter(c=>c.id!==id); save(); renderAll(); closeModal(); }
-function novaContaFixa(){
+function novaContaFixa(grupo){
   const key = pontoKey(contasRef);
-  const c = {id:uid(), sigla:'', nome:'Nova conta', grupo:'dia5', valores:{}};
+  const c = {id:uid(), sigla:'', nome:'Nova conta', grupo:grupo==='dia20'?'dia20':'dia5', valores:{}};
   data.contasFixas.push(c);
   save(); renderAll();
   abrirContaFixa(c.id);

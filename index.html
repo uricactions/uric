@@ -221,6 +221,31 @@
   .splash-btn:active{transform:scale(.96);}
   @keyframes splashIn{to{opacity:1; transform:translateY(0);}}
   @keyframes splashSway{0%{background-position:0% 0%;} 50%{background-position:100% 0%;} 100%{background-position:0% 0%;}}
+
+/* ===== Uric · fluxo do próximo pagamento ===== */
+.payment-forecast{position:relative;overflow:hidden;padding:22px}
+.payment-forecast::after{content:"";position:absolute;width:180px;height:180px;right:-80px;top:-80px;border-radius:50%;background:radial-gradient(circle,rgba(112,199,255,.20),transparent 68%);pointer-events:none}
+.payment-kicker{margin:0 0 5px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+.payment-date{margin:0;font-size:14px;color:var(--sub)}
+.payment-amount{margin:14px 0 3px;font-size:clamp(38px,10vw,58px);line-height:.95;font-weight:800;letter-spacing:-.045em}
+.payment-amount.neg{color:#FF0E00}.payment-amount.pos{color:#4DFF54}
+.payment-status{font-size:13px;font-weight:700}.payment-status.warn{color:#FF9500}.payment-status.good{color:#4DFF54}.payment-status.neutral{color:var(--sub)}
+.payment-note{margin:12px 0 0;font-size:13px;line-height:1.45;color:var(--sub)}
+.payment-flow-card{overflow:hidden}.payment-flow-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.payment-flow-title{margin:0;font-size:17px;font-weight:800}.payment-flow-sub{margin:4px 0 0;font-size:12px;color:var(--sub)}
+.payment-flow-section{padding:12px 0;border-top:1px solid var(--line)}.payment-flow-section:first-of-type{border-top:0}
+.payment-flow-section-title{margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--sub)}
+.payment-line{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:6px 0;font-size:14px}
+.payment-line .money{font-weight:700;white-space:nowrap}.payment-line.total{margin-top:5px;padding-top:10px;border-top:1px solid var(--line);font-weight:800}.payment-line.total .money{font-size:16px}
+.payment-line.discount .money{color:var(--sub)}
+.payment-result{margin-top:10px;padding:15px 16px;border-radius:18px;background:rgba(255,255,255,.055);border:1px solid var(--line)}
+.payment-result .label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--sub)}
+.payment-result .value{margin-top:5px;font-size:27px;font-weight:800}.payment-result .value.neg{color:#FF0E00}.payment-result .value.pos{color:#4DFF54}
+.payment-commitments{display:grid;gap:8px}.payment-commitment{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border-radius:15px;background:rgba(255,255,255,.045);border:1px solid var(--line)}
+.payment-commitment .name{font-size:13px;font-weight:650}.payment-commitment .sub{display:block;margin-top:2px;font-size:11px;color:var(--sub)}.payment-commitment .value{font-weight:800;white-space:nowrap}
+.payment-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media (max-width:480px){.payment-forecast{padding:18px}.payment-amount{font-size:44px}}
+
 </style>
 </head>
 <body>
@@ -241,18 +266,26 @@
 <main>
 
   <div class="view active" id="view-dashboard">
-    <div class="card hero">
-      <p class="stat-label">Saldo do mês</p>
-      <p class="stat-value hero-value" id="dash-saldo">--</p>
-      <p class="stat-label" id="dash-saldo-sub"></p>
-      <div class="uric-spectrum-wrap" style="position:relative; margin-top:16px;">
-        <div class="uric-spectrum" aria-label="Escala de saúde financeira do Uric"></div>
-        <div class="uric-spectrum-marker" id="uric-spectrum-marker"></div>
+    <div class="payment-forecast glass-card card">
+      <p class="payment-kicker">próximo pagamento</p>
+      <p class="payment-date" id="dash-payment-date">--</p>
+      <div class="payment-amount" id="dash-payment-amount">--</div>
+      <div class="payment-status neutral" id="dash-payment-status">projeção atual</div>
+      <p class="payment-note" id="dash-payment-note">O Uric cruza salário, horas extras e descontos para estimar quanto realmente deve sobrar.</p>
+      <div class="payment-actions">
+        <button class="btn secondary small" onclick="mostrarView('dinheiro')">ver como chegou aqui</button>
+        <button class="btn secondary small" onclick="mostrarView('ponto')">ver meu ponto</button>
       </div>
-      <div class="uric-spectrum-labels" aria-hidden="true"><span>Crítico</span><span id="uric-spectrum-current" style="font-weight:700; color:var(--text);">--</span><span>Excelente</span></div>
     </div>
 
+    <div class="section-title">Como o Uric chegou a esse valor?</div>
+    <div class="card payment-flow-card" id="dash-payment-breakdown"></div>
+
+    <div class="section-title">Descontos fixos do pagamento</div>
+    <div class="card" id="dash-fixed-discounts"></div>
+
     <div id="dash-tips"></div>
+
 
     <div class="grid2">
       <div class="card">
@@ -283,27 +316,37 @@
     <div class="card" id="dash-gastos"></div>
   </div>
 
+  
   <div class="view" id="view-dinheiro">
     <div class="money-hero">
       <p class="hero-title">Seu dinheiro</p>
-      <p class="hero-sub">salário, pagamentos e ponto em um só lugar.</p>
+      <p class="hero-sub">quanto entra, quanto já tem destino e quanto pode sobrar.</p>
     </div>
-    <div class="card">
-      <p class="stat-label">Próximo pagamento</p>
-      <p class="stat-value pos" id="money-proximo" style="font-size:22px;">--</p>
-      <p class="stat-label" id="money-proximo-data"></p>
+
+    <div class="payment-forecast glass-card card">
+      <p class="payment-kicker">seu próximo pagamento</p>
+      <p class="payment-date" id="money-payment-date">--</p>
+      <div class="payment-amount" id="money-payment-amount">--</div>
+      <div class="payment-status neutral" id="money-payment-status">projeção atual</div>
+      <p class="payment-note" id="money-payment-note"></p>
     </div>
-    <div class="section-title">Salário</div>
+
+    <div class="section-title">Como está sendo calculado?</div>
+    <div class="card payment-flow-card" id="money-payment-breakdown"></div>
+
+    <div class="section-title">Descontos fixos</div>
+    <div class="card" id="money-fixed-discounts"></div>
+
+    <div class="section-title">Seu salário</div>
     <div class="card">
-      <div id="money-salario-resumo" class="row"></div>
-      <div class="money-shortcuts" style="margin-top:12px;">
+      <div class="money-shortcuts">
         <button class="menu-action" onclick="mostrarView('holerites','dinheiro')">
           <span class="menu-ico">🧾</span>
-          <span class="menu-copy"><span class="menu-title">Holerites</span><span class="menu-sub">veja seu histórico e os valores calculados.</span></span>
+          <span class="menu-copy"><span class="menu-title">Holerites</span><span class="menu-sub">veja o histórico e os valores calculados.</span></span>
         </button>
         <button class="menu-action" onclick="mostrarView('ponto','dinheiro')">
           <span class="menu-ico">🕐</span>
-          <span class="menu-copy"><span class="menu-title">Ponto</span><span class="menu-sub">registre horários e calcule o holerite.</span></span>
+          <span class="menu-copy"><span class="menu-title">Ponto</span><span class="menu-sub">suas horas extras alimentam esta projeção.</span></span>
         </button>
         <button class="menu-action" onclick="abrirExtra(null)">
           <span class="menu-ico">＋</span>
@@ -312,8 +355,7 @@
       </div>
     </div>
   </div>
-
-  <div class="view" id="view-holerites">
+<div class="view" id="view-holerites">
     <div class="section-title">Histórico de holerites</div>
     <div class="card" id="lista-holerites"></div>
     <div class="section-title">Ganhos extras <a href="#" onclick="abrirExtra(null); return false;">+ novo</a></div>
@@ -592,27 +634,138 @@ function renderHeader(){
   document.getElementById('header-sub').textContent = mesNome(now.getMonth()) + ' de ' + now.getFullYear();
 }
 
+
+function calcularExtrasDoPonto(ano, mes){
+  const key = `${ano}-${String(mes+1).padStart(2,'0')}`;
+  const registros = (data.ponto||{})[key] || {};
+  let horas50=0, horas100=0;
+  Object.keys(registros).forEach(diaStr=>{
+    const dia=Number(diaStr), r=registros[diaStr]||{};
+    const toMin=t=>{if(!t)return null;const [h,m]=String(t).split(':').map(Number);return h*60+m};
+    const e=toMin(r.entrada),sa=toMin(r.saidaAlmoco),re=toMin(r.retornoAlmoco),s=toMin(r.saida);
+    if(e===null&&sa===null&&re===null&&s===null)return;
+    let trabalhado=0;
+    if(e!==null&&sa!==null)trabalhado+=Math.max(0,sa-e);
+    if(re!==null&&s!==null)trabalhado+=Math.max(0,s-re);
+    const dow=new Date(ano,mes,dia).getDay();
+    const limite=dow===6?240:480;
+    const extra=Math.max(0,trabalhado-limite)/60;
+    if(dow===0)horas100+=extra;else horas50+=extra;
+  });
+  return {horas50,horas100};
+}
+
+function construirProjecaoPagamento(){
+  const now=new Date(), mes=now.getMonth(), ano=now.getFullYear(), cfg=data.config||{};
+  const base=Number(cfg.salarioBase||0);
+  const hSalvo=data.holerites.find(h=>h.mes===mes&&h.ano===ano);
+  const extrasPonto=calcularExtrasDoPonto(ano,mes);
+  let detalhe=hSalvo&&hSalvo.detalhe?hSalvo.detalhe:null;
+  let proventos=0,descontos=0,liquido=0,linhasReceb=[],linhasDesc=[];
+  let horas50=extrasPonto.horas50,horas100=extrasPonto.horas100;
+
+  if(detalhe){
+    proventos=Number(detalhe.proventos||hSalvo.dia5||0);
+    descontos=Number(detalhe.descontosTotal||0);
+    liquido=Number(detalhe.liquido??(proventos-descontos));
+    linhasReceb=[
+      ['Salário base',Number(detalhe.base||base)],
+      ...(Number(detalhe.he50v||0)>0?[['Horas extras 50%',Number(detalhe.he50v)]]:[]),
+      ...(Number(detalhe.he100v||0)>0?[['Horas extras 100%',Number(detalhe.he100v)]]:[]),
+      ...(Number(detalhe.feriadosValor||0)>0?[['Feriados',Number(detalhe.feriadosValor)]]:[]),
+      ...(Number(detalhe.domingosValor||0)>0?[['Domingos',Number(detalhe.domingosValor)]]:[]),
+      ...(Number(detalhe.dsr||0)>0?[['DSR sobre extras',Number(detalhe.dsr)]]:[])
+    ];
+    linhasDesc=[
+      ...(Number(detalhe.inss||0)>0?[['INSS',Number(detalhe.inss)]]:[]),
+      ...(Number(detalhe.irrf||0)>0?[['IRRF',Number(detalhe.irrf)]]:[]),
+      ...(Number(detalhe.vale||0)>0?[['Vale / adiantamento',Number(detalhe.vale)]]:[]),
+      ...(Number(detalhe.faltasValor||0)>0?[['Faltas e atrasos',Number(detalhe.faltasValor)]]:[]),
+      ...((detalhe.beneficios||[]).map(x=>[x.nome,Number(x.valor||0)])),
+      ...((detalhe.descFixosDetalhe||[]).filter(x=>Number(x.valor||0)>0).map(x=>[x.nome,Number(x.valor||0)])),
+      ...((detalhe.emprestimosDetalhe||[]).filter(x=>Number(x.valor||0)>0).map(x=>[x.nome,Number(x.valor||0)]))
+    ];
+  }else{
+    const rate50=base/220*1.5,rate100=base/220*2;
+    const he50v=horas50*rate50,he100v=horas100*rate100,dsr=(he50v+he100v)*0.16667;
+    proventos=base+he50v+he100v+dsr;
+    const inss=proventos*0.075,dependentes=Number(cfg.dependentes||0),pensao=Number(cfg.pensaoValor||0);
+    const baseIrrf=Math.max(0,proventos-inss-(dependentes*189.59)-pensao);
+    let irrf=0;
+    if(baseIrrf<=2259.20)irrf=0;else if(baseIrrf<=2826.65)irrf=baseIrrf*0.075-169.44;else if(baseIrrf<=3751.05)irrf=baseIrrf*0.15-381.44;else irrf=baseIrrf*0.275-662.75;
+    irrf=Math.max(0,irrf);
+    const vale=base*Number(cfg.valePct||0);
+    const beneficios=[
+      ...(pensao>0?[['Pensão alimentícia',pensao]]:[]),
+      ...(Number(cfg.valeTransporteValor||0)>0?[['Vale-transporte',Number(cfg.valeTransporteValor)]]:[]),
+      ...(Number(cfg.valeAlimentacaoValor||0)>0?[['Vale-alimentação/refeição',Number(cfg.valeAlimentacaoValor)]]:[]),
+      ...(Number(cfg.planoSaudeValor||0)>0?[['Plano de saúde',Number(cfg.planoSaudeValor)]]:[])
+    ];
+    const fixos=(cfg.descontosFixos||[]).filter(d=>Number(d.valor||0)>0).map(d=>[d.nome,Number(d.valor)]);
+    const emp=(cfg.emprestimos||[]).filter(e=>Number(e.parcela||0)>0).map(e=>[`Empréstimo CLT — ${e.nome}`,Number(e.parcela)]);
+    descontos=inss+irrf+vale+beneficios.reduce((s,x)=>s+x[1],0)+fixos.reduce((s,x)=>s+x[1],0)+emp.reduce((s,x)=>s+x[1],0);
+    liquido=proventos-descontos;
+    linhasReceb=[['Salário base',base],...(he50v>0?[['Horas extras 50%',he50v]]:[]),...(he100v>0?[['Horas extras 100%',he100v]]:[]),...(dsr>0?[['DSR sobre extras',dsr]]:[])];
+    linhasDesc=[...(inss>0?[['INSS',inss]]:[]),...(irrf>0?[['IRRF',irrf]]:[]),...(vale>0?[['Vale / adiantamento',vale]]:[]),...beneficios,...fixos,...emp];
+  }
+
+  const diaPg=Number(cfg.diaPagamento||5);
+  const pagamento=new Date(ano,mes,diaPg);
+  if(pagamento<=now)pagamento.setMonth(pagamento.getMonth()+1);
+
+  return {mes,ano,pagamento,proventos,descontos,liquido,linhasReceb,linhasDesc,horas50,horas100,totalHoras:horas50+horas100,fechado:!!detalhe};
+}
+
+function formatHoras(h){
+  const total=Math.max(0,Math.round(Number(h||0)*60)),hh=Math.floor(total/60),mm=total%60;
+  return `${hh}h${String(mm).padStart(2,'0')}`;
+}
+
+function renderBlocoProjecao(targetId,p){
+  const el=document.getElementById(targetId);if(!el)return;
+  const receb=p.linhasReceb.map(([n,v])=>`<div class="payment-line"><span>${n}</span><span class="money">${brl(v)}</span></div>`).join('');
+  const desc=p.linhasDesc.map(([n,v])=>`<div class="payment-line discount"><span>${n}</span><span class="money">-${brl(v)}</span></div>`).join('');
+  el.innerHTML=`
+    <div class="payment-flow-head"><div><p class="payment-flow-title">Como está sendo calculado?</p><p class="payment-flow-sub">${p.fechado?'valores do holerite calculado':'projeção com os dados registrados até agora'}</p></div></div>
+    <div class="payment-flow-section"><p class="payment-flow-section-title">O que vou receber</p>${receb||'<div class="empty">Cadastre seu salário para começar.</div>'}<div class="payment-line total"><span>Proventos</span><span class="money">${brl(p.proventos)}</span></div></div>
+    <div class="payment-flow-section"><p class="payment-flow-section-title">O que já está comprometido</p>${desc||'<div class="empty">Nenhum desconto cadastrado.</div>'}<div class="payment-line total"><span>Descontos</span><span class="money">-${brl(p.descontos)}</span></div></div>
+    <div class="payment-result"><div class="label">resultado projetado</div><div class="value ${p.liquido<0?'neg':'pos'}">${brl(p.liquido)}</div></div>`;
+}
+
+function renderDescontosFixosProjecao(targetId){
+  const el=document.getElementById(targetId);if(!el)return;
+  const cfg=data.config||{};
+  const itens=[
+    ...(cfg.descontosFixos||[]).filter(d=>Number(d.valor||0)>0).map(d=>({nome:d.nome,valor:Number(d.valor),sub:'desconto cadastrado'})),
+    ...(cfg.emprestimos||[]).filter(e=>Number(e.parcela||0)>0).map(e=>({nome:`Empréstimo CLT — ${e.nome}`,valor:Number(e.parcela),sub:'desconto em folha'}))
+  ];
+  const total=itens.reduce((s,x)=>s+x.valor,0);
+  el.innerHTML=itens.length?`<div class="payment-commitments">${itens.map(x=>`<div class="payment-commitment"><div><span class="name">${x.nome}</span><span class="sub">${x.sub}</span></div><span class="value">-${brl(x.valor)}</span></div>`).join('')}</div><div class="payment-line total" style="margin-top:12px;"><span>Total de descontos fixos</span><span class="money">-${brl(total)}</span></div>`:'<div class="empty">Nenhum desconto fixo cadastrado ainda.</div>';
+}
+
+function renderProjecaoPagamento(){
+  const p=construirProjecaoPagamento();
+  const dateTxt=`${String(p.pagamento.getDate()).padStart(2,'0')} de ${mesNome(p.pagamento.getMonth())}`;
+  [['dash-payment-amount','dash-payment-date','dash-payment-status','dash-payment-note'],['money-payment-amount','money-payment-date','money-payment-status','money-payment-note']].forEach(([aid,did,sid,nid])=>{
+    const a=document.getElementById(aid);if(!a)return;
+    const d=document.getElementById(did),s=document.getElementById(sid),n=document.getElementById(nid);
+    a.textContent=brl(p.liquido);a.className=`payment-amount ${p.liquido<0?'neg':'pos'}`;
+    d.textContent=dateTxt;s.className=`payment-status ${p.liquido<0?'warn':'good'}`;
+    s.textContent=p.fechado?'resultado do holerite':'projeção atual';
+    n.textContent=p.liquido<0
+      ?(p.totalHoras>0?`Seu pagamento está ${brl(Math.abs(p.liquido))} abaixo do necessário neste momento. Você já registrou ${formatHoras(p.totalHoras)} de hora extra; novas horas extras podem melhorar esta projeção.`:`Seu pagamento está ${brl(Math.abs(p.liquido))} abaixo do necessário neste momento. Registre seu ponto e suas horas extras para acompanhar essa projeção.`)
+      :(p.totalHoras>0?`A projeção está positiva em ${brl(p.liquido)}. Ela ainda pode mudar conforme você registrar novas horas extras e descontos.`:`A projeção está positiva em ${brl(p.liquido)}. Ela pode mudar até o fechamento do mês.`);
+  });
+  renderBlocoProjecao('dash-payment-breakdown',p);
+  renderBlocoProjecao('money-payment-breakdown',p);
+  renderDescontosFixosProjecao('dash-fixed-discounts');
+  renderDescontosFixosProjecao('money-fixed-discounts');
+}
+
+
 function renderDinheiro(){
-  const now = new Date();
-  const mes = now.getMonth(), ano = now.getFullYear();
-  const h = data.holerites.find(x=>x.mes===mes && x.ano===ano);
-  const extras = data.extras.filter(x=>{ const d=new Date(x.data); return d.getMonth()===mes && d.getFullYear()===ano; }).reduce((a,x)=>a+Number(x.valor||0),0);
-  const total = (h ? Number(h.dia5||0)+Number(h.dia20||0) : 0) + extras;
-  const gn = data.config.grupoNomes || {dia5:'entrada 1',dia20:'entrada 2'};
-  const el = document.getElementById('money-salario-resumo');
-  if(el){
-    el.innerHTML = `<div class="desc"><strong>${h ? 'salário previsto neste mês' : 'salário ainda não calculado'}</strong><div style="font-size:12px;color:var(--sub);margin-top:3px;">${h ? `${gn.dia5}: ${brl(h.dia5||0)} · ${gn.dia20}: ${brl(h.dia20||0)}` : 'registre ou calcule seu primeiro holerite.'}</div></div><div class="amount ${total>=0?'pos':'neg'}">${brl(total)}</div>`;
-  }
-  const p = document.getElementById('money-proximo');
-  const pd = document.getElementById('money-proximo-data');
-  if(p){
-    const dia = Number(data.config.diaPagamento||5);
-    const d = new Date(ano, mes, dia);
-    if(d < now) d.setMonth(d.getMonth()+1);
-    const proxH = data.holerites.find(x=>x.mes===d.getMonth() && x.ano===d.getFullYear());
-    p.textContent = proxH ? brl(proxH.dia5||0) : 'a configurar';
-    pd.textContent = proxH ? `entrada prevista em ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}` : 'calcule ou cadastre seu próximo pagamento';
-  }
+  // Mantida para compatibilidade com a arquitetura existente.
+  // O conteúdo de Dinheiro é preenchido por renderProjecaoPagamento().
 }
 
 function ultimosHolerites(n){
@@ -641,7 +794,7 @@ function renderDashboard(){
   const gnProx = data.config.grupoNomes || {dia5:'entrada 1', dia20:'entrada 2'};
   let proximoValor, proximoLabel;
   if(proxIsDia20){
-    proximoValor = data.config.salarioBase * data.config.valePct;
+    proximoValor = Number(data.config.salarioBase||0) * Number(data.config.valePct||0);
     proximoLabel = `${gnProx.dia20} fixa (${Math.round((data.config.valePct||0)*100)}% do salário, sem descontos)`;
   } else {
     const calculados = data.holerites.filter(h=>h.calculado).sort((a,b)=>(a.ano*12+a.mes)-(b.ano*12+b.mes));
@@ -649,8 +802,10 @@ function renderDashboard(){
     proximoValor = ultimos3d5.length ? ultimos3d5.reduce((a,b)=>a+b,0)/ultimos3d5.length : 0;
     proximoLabel = ultimos3d5.length ? `estimativa baseada nos últimos ${ultimos3d5.length} valores de ${gnProx.dia5.toLowerCase()}` : `calcule o holerite do mês em ponto pra ver uma estimativa de ${gnProx.dia5.toLowerCase()}`;
   }
-  document.getElementById('dash-proximo').innerHTML = brl(proximoValor);
-  document.getElementById('dash-proximo-data').textContent = proximoLabel;
+  const legacyProximo = document.getElementById('dash-proximo');
+  const legacyProximoData = document.getElementById('dash-proximo-data');
+  if(legacyProximo) legacyProximo.innerHTML = brl(proximoValor);
+  if(legacyProximoData) legacyProximoData.textContent = proximoLabel;
 
   const mesAtual = now.getMonth(), anoAtual = now.getFullYear();
   const keyAtual = pontoKey(now);
@@ -663,9 +818,12 @@ function renderDashboard(){
   const fixasTotal = totalFixas('dia5', keyAtual) + totalFixas('dia20', keyAtual);
   const saldo = receitaMes - totalGastosMes - fixasTotal;
   const saldoEl = document.getElementById('dash-saldo');
-  saldoEl.innerHTML = brl(saldo);
-  saldoEl.className = 'stat-value hero-value ' + (saldo>=0?'pos':'neg');
-  document.getElementById('dash-saldo-sub').innerHTML = brl(totalGastosMes+fixasTotal) + ' comprometido de ' + brl(receitaMes);
+  const saldoSubEl = document.getElementById('dash-saldo-sub');
+  if(saldoEl){
+    saldoEl.innerHTML = brl(saldo);
+    saldoEl.className = 'stat-value hero-value ' + (saldo>=0?'pos':'neg');
+  }
+  if(saldoSubEl) saldoSubEl.innerHTML = brl(totalGastosMes+fixasTotal) + ' comprometido de ' + brl(receitaMes);
   atualizarMarcadorSaude(saldo, receitaMes);
   const credMiniEl = document.getElementById('dash-cred-mini');
   const credMiniSubEl = document.getElementById('dash-cred-mini-sub');

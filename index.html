@@ -246,6 +246,77 @@
 .payment-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media (max-width:480px){.payment-forecast{padding:18px}.payment-amount{font-size:44px}}
 
+/* ===== Uric · próximos pagamentos + saúde financeira ===== */
+.finance-health{
+  margin:4px 0 18px;
+  padding:16px 16px 14px;
+  border-radius:22px;
+  background:var(--card-glass);
+  border:1px solid var(--border);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  box-shadow:0 10px 34px rgba(0,0,0,.08);
+}
+.finance-health-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px}
+.finance-health-title{margin:0;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+.finance-health-sub{margin:4px 0 0;font-size:12px;color:var(--sub);line-height:1.35}
+.finance-health-score{text-align:right;font-size:12px;color:var(--sub);white-space:nowrap}
+.finance-health-score strong{display:block;font-size:17px;color:var(--text)}
+.finance-health-track{position:relative;height:10px;border-radius:999px;background:rgba(255,255,255,.07);overflow:visible}
+.finance-health-track::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--uric-gradient);background-size:100% 100%;opacity:.92}
+.finance-health-marker{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--card);border:3px solid var(--text);box-shadow:0 2px 12px rgba(0,0,0,.35);transform:translate(-50%,-50%);z-index:2;transition:left .35s ease}
+.finance-health-scale{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)}
+.finance-health-foot{margin-top:10px;font-size:12px;color:var(--sub);line-height:1.4}
+.finance-health-foot strong{color:var(--text)}
+.payments-title{margin:18px 4px 9px;font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--sub);text-transform:uppercase}
+.payment-list{display:grid;gap:12px}
+.payment-card{
+  position:relative;overflow:hidden;padding:0;border-radius:22px;
+  background:var(--card-glass);border:1px solid var(--border);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  box-shadow:0 10px 34px rgba(0,0,0,.09);
+}
+.payment-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--uric-gradient);background-size:100% 180%;}
+.payment-card-head{padding:18px 18px 15px 22px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.payment-card-kicker{margin:0 0 5px;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--sub)}
+.payment-card-date{margin:0;font-size:22px;font-weight:850;letter-spacing:-.025em;color:var(--text)}
+.payment-card-type{margin:4px 0 0;font-size:12px;color:var(--sub)}
+.payment-card-available{text-align:right;min-width:118px}
+.payment-card-available .label{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+.payment-card-available .value{margin-top:4px;font-size:27px;line-height:1;font-weight:850;letter-spacing:-.04em;color:var(--text);white-space:nowrap}
+.payment-card-available .value.negative{color:var(--text)}
+.payment-card-status{display:inline-block;margin-top:7px;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;color:var(--text);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05)}
+.payment-card-status::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;background:var(--uric-gradient)}
+.payment-card-body{padding:0 18px 16px 22px}
+.payment-card-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--border);padding-top:13px}
+.payment-card-col{min-width:0;padding-right:10px}.payment-card-col+.payment-card-col{border-left:1px solid var(--border);padding-left:12px}
+.payment-card-col .col-title{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:6px}
+.payment-card-col .col-main{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.payment-card-col .col-sub{font-size:10px;color:var(--sub);margin-top:3px;line-height:1.35}
+.payment-card-progress{position:relative;height:8px;border-radius:999px;background:rgba(255,255,255,.08);margin-top:13px;overflow:visible}
+.payment-card-progress::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--in-pct,50%);border-radius:inherit;background:var(--uric-gradient);background-size:260% 100%;background-position:left center;opacity:.9}
+.payment-card-progress .in-marker,.payment-card-progress .out-marker{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--text);transform:translate(-50%,-50%);box-shadow:0 1px 8px rgba(0,0,0,.3);z-index:2}
+.payment-card-progress .in-marker{left:var(--in-pct,50%)}
+.payment-card-progress .out-marker{left:var(--out-pct,50%)}
+.payment-card-legend{display:flex;justify-content:space-between;margin-top:7px;font-size:10px;color:var(--sub)}
+.payment-card-note{margin-top:13px;padding:10px 11px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid var(--border);font-size:11px;line-height:1.4;color:var(--sub)}
+.payment-card-note strong{color:var(--text)}
+.payment-card-details{margin-top:11px}
+.payment-card-details summary{cursor:pointer;list-style:none;font-size:11px;font-weight:800;color:var(--text)}
+.payment-card-details summary::-webkit-details-marker{display:none}
+.payment-card-details summary::before{content:"＋";margin-right:6px;color:var(--sub)}
+.payment-card-details[open] summary::before{content:"−"}
+.payment-card-lines{margin-top:8px;border-top:1px solid var(--border);padding-top:6px}
+.payment-card-line{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:11px;color:var(--sub)}
+.payment-card-line strong{color:var(--text);font-weight:750}.payment-card-line.total{padding-top:8px;margin-top:3px;border-top:1px solid var(--border);font-weight:800;color:var(--text)}
+@media(max-width:480px){
+ .finance-health{border-radius:20px;padding:15px 14px 13px}
+ .payment-card-head{padding:17px 15px 14px 20px}.payment-card-body{padding:0 15px 15px 20px}
+ .payment-card-date{font-size:20px}.payment-card-available .value{font-size:24px;max-width:132px}
+ .payment-card-cols{grid-template-columns:1fr 1fr 1fr}.payment-card-col .col-main{font-size:13px}
+}
+
+
 </style>
 </head>
 <body>
@@ -266,25 +337,11 @@
 <main>
 
   <div class="view active" id="view-dashboard">
-    <div class="payment-forecast glass-card card">
-      <p class="payment-kicker">próximo pagamento</p>
-      <p class="payment-date" id="dash-payment-date">--</p>
-      <div class="payment-amount" id="dash-payment-amount">--</div>
-      <div class="payment-status neutral" id="dash-payment-status">projeção atual</div>
-      <p class="payment-note" id="dash-payment-note">O Uric cruza salário, horas extras e descontos para estimar quanto realmente deve sobrar.</p>
-      <div class="payment-actions">
-        <button class="btn secondary small" onclick="mostrarView('dinheiro')">ver como chegou aqui</button>
-        <button class="btn secondary small" onclick="mostrarView('ponto')">ver meu ponto</button>
-      </div>
-    </div>
-
-    <div class="section-title">Como o Uric chegou a esse valor?</div>
-    <div class="card payment-flow-card" id="dash-payment-breakdown"></div>
-
-    <div class="section-title">Descontos fixos do pagamento</div>
-    <div class="card" id="dash-fixed-discounts"></div>
-
+    <div class="finance-health" id="dash-finance-health"></div>
+    <div class="payments-title">meus próximos pagamentos</div>
+    <div class="payment-list" id="dash-payment-cards"></div>
     <div id="dash-tips"></div>
+
 
 
     <div class="section-title" id="titulo-crediario">cartão / crediário</div>
@@ -544,6 +601,7 @@ function renderAll(){
   renderHeader();
   renderDinheiro();
   renderProjecaoPagamento();
+  renderProximosPagamentos();
   renderDashboard();
   renderHolerites();
   renderContas();
@@ -733,6 +791,108 @@ function renderDescontosFixosProjecao(targetId){
   ];
   const total=itens.reduce((s,x)=>s+x.valor,0);
   el.innerHTML=itens.length?`<div class="payment-commitments">${itens.map(x=>`<div class="payment-commitment"><div><span class="name">${x.nome}</span><span class="sub">${x.sub}</span></div><span class="value">-${brl(x.valor)}</span></div>`).join('')}</div><div class="payment-line total" style="margin-top:12px;"><span>Total de descontos fixos</span><span class="money">-${brl(total)}</span></div>`:'<div class="empty">Nenhum desconto fixo cadastrado ainda.</div>';
+}
+
+
+function proximaDataPagamento(tipo, baseDate){
+  const now=new Date(baseDate); now.setHours(0,0,0,0);
+  const y=now.getFullYear(), m=now.getMonth();
+  const dia5=Number((data.config||{}).diaPagamento||5);
+  let d=tipo==='dia20' ? new Date(y,m,20) : new Date(y,m,dia5);
+  if(d<=now) d.setMonth(d.getMonth()+1);
+  return d;
+}
+
+function valorContasFixasGrupo(grupo, ano, mes){
+  const key=`${ano}-${String(mes+1).padStart(2,'0')}`;
+  return (data.contasFixas||[]).filter(c=>c.grupo===grupo).map(c=>({nome:c.nome,valor:valorFixaMes(c,key)})).filter(x=>x.valor>0);
+}
+
+function construirPagamentoSeparado(tipo, dataPagamento){
+  const cfg=data.config||{};
+  const base=Number(cfg.salarioBase||0);
+  const pBase=construirProjecaoPagamento();
+  let entradas=[], descontos=[], observacao='';
+
+  if(tipo==='dia20'){
+    const vale=base*Number(cfg.valePct||0);
+    entradas=[['Vale / adiantamento',vale]];
+    // Contas que o usuário já vinculou explicitamente ao grupo do dia 20.
+    valorContasFixasGrupo('dia20',dataPagamento.getFullYear(),dataPagamento.getMonth()).forEach(x=>descontos.push([x.nome,x.valor]));
+    observacao='este é o vale/adiantamento que entra antes do salário. os compromissos do grupo do dia 20 são descontados desta entrada.';
+  }else{
+    // O pagamento do dia 5 não deve carregar o vale novamente: o vale já entrou no dia 20.
+    entradas=pBase.linhasReceb.slice();
+    descontos=pBase.linhasDesc.filter(([nome])=>!/^vale \/ adiantamento$/i.test(nome));
+    valorContasFixasGrupo('dia5',dataPagamento.getFullYear(),dataPagamento.getMonth()).forEach(x=>descontos.push([x.nome,x.valor]));
+    observacao=pBase.fechado?'valores baseados no holerite calculado.':'projeção com salário, ponto e descontos registrados até agora.';
+  }
+
+  const totalEntrada=entradas.reduce((s,x)=>s+Number(x[1]||0),0);
+  const totalDescontos=descontos.reduce((s,x)=>s+Number(x[1]||0),0);
+  const disponivel=totalEntrada-totalDescontos;
+  return {tipo,dataPagamento,entradas,descontos,totalEntrada,totalDescontos,disponivel,observacao,fechado:tipo==='dia5'&&pBase.fechado,horas50:pBase.horas50,horas100:pBase.horas100,totalHoras:pBase.totalHoras};
+}
+
+function renderLinhaPagamento(n,v,negativo){
+  return `<div class="payment-card-line"><span>${n}</span><strong>${negativo?'-':''}${brl(v)}</strong></div>`;
+}
+
+function renderCardPagamento(p, index, totalEntradas){
+  const tipoLabel=p.tipo==='dia20'?'vale / adiantamento':'salário';
+  const date=`${String(p.dataPagamento.getDate()).padStart(2,'0')} de ${mesNome(p.dataPagamento.getMonth())}`;
+  const disponivelPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.disponivel/totalEntradas)*100)) : 0;
+  const entradaPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.totalEntrada/Math.max(totalEntradas,p.totalDescontos,p.totalEntrada)))) : 50;
+  const saidaPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.totalDescontos/Math.max(totalEntradas,p.totalDescontos,p.totalEntrada)))) : 50;
+  const status=p.disponivel<0?'saldo comprometido':'saldo disponível';
+  const note=p.disponivel<0
+    ? `esta entrada fica <strong>${brlTexto(Math.abs(p.disponivel))}</strong> abaixo do necessário depois dos compromissos vinculados a ela.`
+    : `depois dos compromissos desta entrada, ficam <strong>${brlTexto(p.disponivel)}</strong> disponíveis para você.`;
+  const receb=p.entradas.map(x=>renderLinhaPagamento(x[0],x[1],false)).join('');
+  const desc=p.descontos.map(x=>renderLinhaPagamento(x[0],x[1],true)).join('');
+  const detalhes=`<details class="payment-card-details"><summary>ver composição desta entrada</summary><div class="payment-card-lines">${receb||'<div class="payment-card-line"><span>nenhuma entrada cadastrada</span><strong>R$ 0,00</strong></div>'}${desc||'<div class="payment-card-line"><span>nenhum compromisso vinculado</span><strong>R$ 0,00</strong></div>'}<div class="payment-card-line total"><span>disponível nesta entrada</span><strong>${brl(p.disponivel)}</strong></div></div></details>`;
+  return `<article class="payment-card">
+    <div class="payment-card-head">
+      <div><p class="payment-card-kicker">${index===0?'próximo pagamento':'depois dele'}</p><p class="payment-card-date">${date}</p><p class="payment-card-type">${tipoLabel}</p></div>
+      <div class="payment-card-available"><div class="label">dinheiro disponível</div><div class="value ${p.disponivel<0?'negative':''}">${brl(p.disponivel)}</div><div class="payment-card-status">${status}</div></div>
+    </div>
+    <div class="payment-card-body">
+      <div class="payment-card-cols">
+        <div class="payment-card-col"><div class="col-title">o que entra</div><div class="col-main">${brl(p.totalEntrada)}</div><div class="col-sub">${p.entradas.length>1?'salário + extras':tipoLabel}</div></div>
+        <div class="payment-card-col"><div class="col-title">o que sai</div><div class="col-main">-${brl(p.totalDescontos)}</div><div class="col-sub">compromissos desta entrada</div></div>
+        <div class="payment-card-col"><div class="col-title">o que fica</div><div class="col-main">${brl(p.disponivel)}</div><div class="col-sub">livre após os compromissos</div></div>
+      </div>
+      <div class="payment-card-progress" style="--in-pct:${entradaPct}%;--out-pct:${saidaPct}%"><span class="in-marker"></span><span class="out-marker"></span></div>
+      <div class="payment-card-legend"><span>entrada ${brl(p.totalEntrada)}</span><span>saída ${brl(p.totalDescontos)}</span></div>
+      <div class="payment-card-note">${note} <span>${p.observacao}</span></div>
+      ${detalhes}
+    </div>
+  </article>`;
+}
+
+function renderSaudeFinanceira(pagamentos){
+  const el=document.getElementById('dash-finance-health'); if(!el)return;
+  const entrada=pagamentos.reduce((s,p)=>s+p.totalEntrada,0);
+  const saida=pagamentos.reduce((s,p)=>s+p.totalDescontos,0);
+  const disponivel=entrada-saida;
+  const taxa=entrada>0?(disponivel/entrada)*100:0;
+  // 0% de folga fica no meio do espectro; negativo caminha para o vermelho, folga alta caminha para o azul.
+  const score=Math.max(0,Math.min(100,50+(taxa*1.25)));
+  const pctLivre=Math.max(0,Math.round(taxa));
+  const leitura=disponivel<0
+    ? `os próximos pagamentos estão <strong>${brlTexto(Math.abs(disponivel))}</strong> abaixo do total comprometido.`
+    : `depois dos próximos compromissos, você preserva <strong>${brlTexto(disponivel)}</strong> em dinheiro disponível.`;
+  el.innerHTML=`<div class="finance-health-head"><div><p class="finance-health-title">saúde financeira</p><p class="finance-health-sub">quanto dos próximos pagamentos permanece livre depois dos compromissos.</p></div><div class="finance-health-score"><strong>${Math.round(score)}/100</strong>${pctLivre>0?pctLivre+'% livre':'comprometido'}</div></div><div class="finance-health-track"><span class="finance-health-marker" style="left:${score}%"></span></div><div class="finance-health-scale"><span>comprometido</span><span>equilíbrio</span><span>folga</span></div><div class="finance-health-foot">${leitura}</div>`;
+}
+
+function renderProximosPagamentos(){
+  const el=document.getElementById('dash-payment-cards'); if(!el)return;
+  const now=new Date(); now.setHours(0,0,0,0);
+  const candidates=[{tipo:'dia20',dataPagamento:proximaDataPagamento('dia20',now)},{tipo:'dia5',dataPagamento:proximaDataPagamento('dia5',now)}].sort((a,b)=>a.dataPagamento-b.dataPagamento).slice(0,2);
+  const pagamentos=candidates.map(x=>construirPagamentoSeparado(x.tipo,x.dataPagamento));
+  const totalEntradas=pagamentos.reduce((s,p)=>s+p.totalEntrada,0);
+  el.innerHTML=pagamentos.map((p,i)=>renderCardPagamento(p,i,totalEntradas)).join('');
+  renderSaudeFinanceira(pagamentos);
 }
 
 function renderProjecaoPagamento(){

@@ -281,6 +281,7 @@
 .payment-card-kicker{margin:0 0 5px;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--sub)}
 .payment-card-date{margin:0;font-size:22px;font-weight:850;letter-spacing:-.025em;color:var(--text)}
 .payment-card-type{margin:4px 0 0;font-size:12px;color:var(--sub)}
+.payment-card-type-hint{color:var(--sub);opacity:.65;font-weight:400}
 .payment-card-available{text-align:right;min-width:118px}
 .payment-card-available .label{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
 .payment-card-available .value{margin-top:4px;font-size:27px;line-height:1;font-weight:850;letter-spacing:-.04em;color:var(--text);white-space:nowrap}
@@ -821,7 +822,6 @@ function construirPagamentoSeparado(tipo, dataPagamento){
     valorContasFixasGrupo('dia20',dataPagamento.getFullYear(),dataPagamento.getMonth()).forEach(x=>descontos.push([x.nome,x.valor]));
     observacao='este é o vale/adiantamento que entra antes do salário. os compromissos do grupo do dia 20 são descontados desta entrada.';
   }else{
-    // O pagamento do dia 5 não deve carregar o vale novamente: o vale já entrou no dia 20.
     entradas=pBase.linhasReceb.slice();
     descontos=pBase.linhasDesc.slice();
     valorContasFixasGrupo('dia5',dataPagamento.getFullYear(),dataPagamento.getMonth()).forEach(x=>descontos.push([x.nome,x.valor]));
@@ -839,11 +839,16 @@ function renderLinhaPagamento(n,v,negativo){
 }
 
 function renderCardPagamento(p, index, totalEntradas){
+  const gn=(data.config&&data.config.grupoNomes)||{dia5:'salário',dia20:'vale / adiantamento'};
+  const nomeGrupo=p.tipo==='dia20'?(gn.dia20||'vale / adiantamento'):(gn.dia5||'salário');
   const tipoLabel=p.tipo==='dia20'?'vale / adiantamento':'salário';
+  const explicacao=p.tipo==='dia20'
+    ? 'esta é a parte do seu salário que cai adiantada no dia 20.'
+    : 'este é o restante do mesmo salário, que cai no 5º dia útil.';
   const date=`${String(p.dataPagamento.getDate()).padStart(2,'0')} de ${mesNome(p.dataPagamento.getMonth())}`;
   const disponivelPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.disponivel/totalEntradas)*100)) : 0;
-  const entradaPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.totalEntrada/Math.max(totalEntradas,p.totalDescontos,p.totalEntrada)))) : 50;
-  const saidaPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.totalDescontos/Math.max(totalEntradas,p.totalDescontos,p.totalEntrada)))) : 50;
+  const entradaPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.totalEntrada/Math.max(totalEntradas,p.totalDescontos,p.totalEntrada))*100)) : 50;
+  const saidaPct=totalEntradas>0 ? Math.max(0,Math.min(100,(p.totalDescontos/Math.max(totalEntradas,p.totalDescontos,p.totalEntrada))*100)) : 50;
   const status=p.disponivel<0?'saldo comprometido':'saldo disponível';
   const note=p.disponivel<0
     ? `esta entrada fica <strong>${brlTexto(Math.abs(p.disponivel))}</strong> abaixo do necessário depois dos compromissos vinculados a ela.`
@@ -853,12 +858,12 @@ function renderCardPagamento(p, index, totalEntradas){
   const detalhes=`<details class="payment-card-details"><summary>ver composição desta entrada</summary><div class="payment-card-lines">${receb||'<div class="payment-card-line"><span>nenhuma entrada cadastrada</span><strong>R$ 0,00</strong></div>'}${desc||'<div class="payment-card-line"><span>nenhum compromisso vinculado</span><strong>R$ 0,00</strong></div>'}<div class="payment-card-line total"><span>disponível nesta entrada</span><strong>${brl(p.disponivel)}</strong></div></div></details>`;
   return `<article class="payment-card">
     <div class="payment-card-head">
-      <div><p class="payment-card-kicker">${index===0?'próximo pagamento':'depois dele'}</p><p class="payment-card-date">${date}</p><p class="payment-card-type">${tipoLabel}</p></div>
+      <div><p class="payment-card-kicker">${index===0?'próximo pagamento':'depois dele'}</p><p class="payment-card-date">${date}</p><p class="payment-card-type">${nomeGrupo}<span class="payment-card-type-hint"> — ${explicacao}</span></p></div>
       <div class="payment-card-available"><div class="label">dinheiro disponível</div><div class="value ${p.disponivel<0?'negative':''}">${brl(p.disponivel)}</div><div class="payment-card-status">${status}</div></div>
     </div>
     <div class="payment-card-body">
       <div class="payment-card-cols">
-        <div class="payment-card-col"><div class="col-title">o que entra</div><div class="col-main">${brl(p.totalEntrada)}</div><div class="col-sub">${p.entradas.length>1?'salário + extras':tipoLabel}</div></div>
+        <div class="payment-card-col"><div class="col-title">o que entra</div><div class="col-main">${brl(p.totalEntrada)}</div><div class="col-sub">${p.entradas.length>1?'salário + extras':nomeGrupo}</div></div>
         <div class="payment-card-col"><div class="col-title">o que sai</div><div class="col-main">-${brl(p.totalDescontos)}</div><div class="col-sub">compromissos desta entrada</div></div>
         <div class="payment-card-col"><div class="col-title">o que fica</div><div class="col-main">${brl(p.disponivel)}</div><div class="col-sub">livre após os compromissos</div></div>
       </div>
@@ -872,17 +877,24 @@ function renderCardPagamento(p, index, totalEntradas){
 
 function renderSaudeFinanceira(pagamentos){
   const el=document.getElementById('dash-finance-health'); if(!el)return;
-  const entrada=pagamentos.reduce((s,p)=>s+p.totalEntrada,0);
-  const saida=pagamentos.reduce((s,p)=>s+p.totalDescontos,0);
-  const disponivel=entrada-saida;
-  const taxa=entrada>0?(disponivel/entrada)*100:0;
+  // Usa o pior card (maior comprometimento relativo) em vez de somar os dois,
+  // pra um card zerado (ex: dia 20 sem contas lançadas ainda) não mascarar o outro estar negativo.
+  const piores=pagamentos.map(p=>({
+    disponivel:p.disponivel,
+    taxa:p.totalEntrada>0?(p.disponivel/p.totalEntrada)*100:0
+  })).sort((a,b)=>a.taxa-b.taxa);
+  const pior=piores[0]||{disponivel:0,taxa:0};
+  const disponivelTotal=pagamentos.reduce((s,p)=>s+p.disponivel,0);
+  const taxa=pior.taxa;
   // 0% de folga fica no meio do espectro; negativo caminha para o vermelho, folga alta caminha para o azul.
   const score=Math.max(0,Math.min(100,50+(taxa*1.25)));
   const pctLivre=Math.max(0,Math.round(taxa));
-  const leitura=disponivel<0
-    ? `os próximos pagamentos estão <strong>${brlTexto(Math.abs(disponivel))}</strong> abaixo do total comprometido.`
-    : `depois dos próximos compromissos, você preserva <strong>${brlTexto(disponivel)}</strong> em dinheiro disponível.`;
-  el.innerHTML=`<div class="finance-health-head"><div><p class="finance-health-title">saúde financeira</p><p class="finance-health-sub">quanto dos próximos pagamentos permanece livre depois dos compromissos.</p></div><div class="finance-health-score"><strong>${Math.round(score)}/100</strong>${pctLivre>0?pctLivre+'% livre':'comprometido'}</div></div><div class="finance-health-track"><span class="finance-health-marker" style="left:${score}%"></span></div><div class="finance-health-scale"><span>comprometido</span><span>equilíbrio</span><span>folga</span></div><div class="finance-health-foot">${leitura}</div>`;
+  const leitura=pior.disponivel<0
+    ? `uma das suas próximas entradas está <strong>${brlTexto(Math.abs(pior.disponivel))}</strong> abaixo do necessário depois dos compromissos vinculados a ela.`
+    : (disponivelTotal<0
+      ? `os próximos pagamentos, somados, ainda ficam <strong>${brlTexto(Math.abs(disponivelTotal))}</strong> no vermelho.`
+      : `depois dos próximos compromissos, você preserva <strong>${brlTexto(disponivelTotal)}</strong> em dinheiro disponível.`);
+  el.innerHTML=`<div class="finance-health-head"><div><p class="finance-health-title">saúde financeira</p><p class="finance-health-sub">o quanto sua entrada mais apertada continua livre depois dos compromissos dela.</p></div><div class="finance-health-score"><strong>${Math.round(score)}/100</strong>${pctLivre>0?pctLivre+'% livre':'comprometido'}</div></div><div class="finance-health-track"><span class="finance-health-marker" style="left:${score}%"></span></div><div class="finance-health-scale"><span>comprometido</span><span>equilíbrio</span><span>folga</span></div><div class="finance-health-foot">${leitura}</div>`;
 }
 
 function renderProximosPagamentos(){

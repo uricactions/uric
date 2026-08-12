@@ -823,9 +823,9 @@ function construirPagamentoSeparado(tipo, dataPagamento){
   }else{
     // O pagamento do dia 5 não deve carregar o vale novamente: o vale já entrou no dia 20.
     entradas=pBase.linhasReceb.slice();
-    descontos=pBase.linhasDesc.filter(([nome])=>!/^vale \/ adiantamento$/i.test(nome));
+    descontos=pBase.linhasDesc.slice();
     valorContasFixasGrupo('dia5',dataPagamento.getFullYear(),dataPagamento.getMonth()).forEach(x=>descontos.push([x.nome,x.valor]));
-    observacao=pBase.fechado?'valores baseados no holerite calculado.':'projeção com salário, ponto e descontos registrados até agora.';
+    observacao=pBase.fechado?'valores baseados no holerite calculado.':'projeção com salário, ponto e descontos registrados até agora. o vale do dia 20 entra como desconto aqui, pois é adiantamento deste mesmo salário.';
   }
 
   const totalEntrada=entradas.reduce((s,x)=>s+Number(x[1]||0),0);

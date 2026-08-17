@@ -52,11 +52,6 @@
   .card.hero{background:var(--card-glass); backdrop-filter:blur(28px) saturate(200%); -webkit-backdrop-filter:blur(28px) saturate(200%); padding:26px 22px; text-align:left;}
   .card.hero{position:relative; overflow:hidden;}
   .card.hero::before{content:""; position:absolute; left:0; right:0; top:0; height:4px; background:var(--uric-gradient); opacity:.95;}
-  .uric-spectrum{height:7px; border-radius:999px; background:var(--uric-gradient); box-shadow:0 2px 12px rgba(56,76,255,.08);}
-  .uric-spectrum-marker{position:absolute; top:-4px; width:15px; height:15px; border-radius:50%; background:#fff; border:3px solid var(--uric-blue); box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translateX(-50%); transition:left .3s ease, border-color .3s ease; left:50%;}
-  .uric-spectrum-labels{display:flex; justify-content:space-between; gap:8px; margin-top:8px; font-size:9px; color:var(--sub);}
-  .uric-spectrum-labels span:first-child, .uric-spectrum-labels span:last-child{letter-spacing:.03em;}
-  .uric-spectrum-labels #uric-spectrum-current{font-size:11px;}
   .uric-state-dot{width:9px; height:9px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:6px; background:var(--accent);}
   .uric-logo-inline{
     display:inline-block;
@@ -262,28 +257,7 @@
 .payment-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media (max-width:480px){.payment-forecast{padding:18px}.payment-amount{font-size:44px}}
 
-/* ===== Uric · próximos pagamentos + saúde financeira ===== */
-.finance-health{
-  margin:4px 0 18px;
-  padding:16px 16px 14px;
-  border-radius:22px;
-  background:var(--card-glass);
-  border:1px solid var(--border);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:0 10px 34px rgba(0,0,0,.08);
-}
-.finance-health-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px}
-.finance-health-title{margin:0;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
-.finance-health-sub{margin:4px 0 0;font-size:12px;color:var(--sub);line-height:1.35}
-.finance-health-score{text-align:right;font-size:12px;color:var(--sub);white-space:nowrap}
-.finance-health-score strong{display:block;font-size:17px;color:var(--text)}
-.finance-health-track{position:relative;height:10px;border-radius:999px;background:rgba(255,255,255,.07);overflow:visible}
-.finance-health-track::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--uric-gradient);background-size:100% 100%;opacity:.92}
-.finance-health-marker{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--card);border:3px solid var(--text);box-shadow:0 2px 12px rgba(0,0,0,.35);transform:translate(-50%,-50%);z-index:2;transition:left .35s ease}
-.finance-health-scale{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)}
-.finance-health-foot{margin-top:10px;font-size:12px;color:var(--sub);line-height:1.4}
-.finance-health-foot strong{color:var(--text)}
+/* ===== Uric · próximos pagamentos ===== */
 .payments-title{margin:18px 4px 9px;font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--sub);text-transform:uppercase}
 .payment-list{display:grid;gap:12px}
 .payment-card{
@@ -327,7 +301,6 @@
 .payment-card-line{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:11px;color:var(--sub)}
 .payment-card-line strong{color:var(--text);font-weight:750}.payment-card-line.total{padding-top:8px;margin-top:3px;border-top:1px solid var(--border);font-weight:800;color:var(--text)}
 @media(max-width:480px){
- .finance-health{border-radius:20px;padding:15px 14px 13px}
  .payment-card-head{padding:17px 15px 14px 20px}.payment-card-body{padding:0 15px 15px 20px}
  .payment-card-date{font-size:20px}.payment-card-available .value{font-size:24px;max-width:132px}
  .payment-card-cols{grid-template-columns:1fr 1fr 1fr}.payment-card-col .col-main{font-size:13px}
@@ -925,41 +898,6 @@ function brlTexto(v){
 }
 function mesNome(m){ return MESES[m].charAt(0).toUpperCase()+MESES[m].slice(1); }
 
-// Escala oficial Uric — 9 estágios, do crítico ao excelente
-const URIC_ESCALA = [
-  {p:0,    hex:'#FF0E00', label:'Crítico'},
-  {p:12.5, hex:'#FF9500', label:'Atenção'},
-  {p:25,   hex:'#FFFF1B', label:'Recuperação'},
-  {p:37.5, hex:'#FFFFFF', label:'Equilíbrio'},
-  {p:50,   hex:'#FFFFFF', label:'Equilíbrio'},
-  {p:62.5, hex:'#FFFFFF', label:'Equilíbrio'},
-  {p:75,   hex:'#4DFF54', label:'Saudável'},
-  {p:87.5, hex:'#70C7FF', label:'Evolução'},
-  {p:100,  hex:'#384CFF', label:'Excelente'},
-];
-// Posição 0-100 na escala a partir do saldo do mês vs receita do mês.
-// saldo <= -30% da receita -> 0 (crítico) · saldo == 0 -> ~45 (equilíbrio) · saldo >= +50% da receita -> 100 (excelente)
-function uricSaudePct(saldo, receita){
-  if(!receita || receita<=0) return 45;
-  const ratio = saldo/receita;
-  const pct = ((ratio+0.30)/0.80)*100;
-  return Math.max(2, Math.min(98, pct));
-}
-function uricEscalaAtual(pct){
-  let melhor = URIC_ESCALA[0];
-  URIC_ESCALA.forEach(s=>{ if(Math.abs(s.p-pct) < Math.abs(melhor.p-pct)) melhor = s; });
-  return melhor;
-}
-function atualizarMarcadorSaude(saldo, receita){
-  const marker = document.getElementById('uric-spectrum-marker');
-  const curLbl = document.getElementById('uric-spectrum-current');
-  if(!marker) return;
-  const pct = uricSaudePct(saldo, receita);
-  const step = uricEscalaAtual(pct);
-  marker.style.left = pct + '%';
-  marker.style.borderColor = step.hex === '#FFFFFF' ? 'var(--sub)' : step.hex;
-  if(curLbl) curLbl.textContent = step.label;
-}
 
 function renderAll(){
   renderHeader();
@@ -1238,28 +1176,6 @@ function renderCardPagamento(p, index, totalEntradas){
   </article>`;
 }
 
-function renderSaudeFinanceira(pagamentos){
-  const el=document.getElementById('dash-finance-health'); if(!el)return;
-  // Usa o pior card (maior comprometimento relativo) em vez de somar os dois,
-  // pra um card zerado (ex: dia 20 sem contas lançadas ainda) não mascarar o outro estar negativo.
-  const piores=pagamentos.map(p=>({
-    disponivel:p.disponivel,
-    taxa:p.totalEntrada>0?(p.disponivel/p.totalEntrada)*100:0
-  })).sort((a,b)=>a.taxa-b.taxa);
-  const pior=piores[0]||{disponivel:0,taxa:0};
-  const disponivelTotal=pagamentos.reduce((s,p)=>s+p.disponivel,0);
-  const taxa=pior.taxa;
-  // 0% de folga fica no meio do espectro; negativo caminha para o vermelho, folga alta caminha para o azul.
-  const score=Math.max(0,Math.min(100,50+(taxa*1.25)));
-  const pctLivre=Math.max(0,Math.round(taxa));
-  const leitura=pior.disponivel<0
-    ? `uma das suas próximas entradas está <strong>${brlTexto(Math.abs(pior.disponivel))}</strong> abaixo do necessário depois dos compromissos vinculados a ela.`
-    : (disponivelTotal<0
-      ? `os próximos pagamentos, somados, ainda ficam <strong>${brlTexto(Math.abs(disponivelTotal))}</strong> no vermelho.`
-      : `depois dos próximos compromissos, você preserva <strong>${brlTexto(disponivelTotal)}</strong> em dinheiro disponível.`);
-  el.innerHTML=`<div class="finance-health-head"><div><p class="finance-health-title">saúde financeira</p><p class="finance-health-sub">o quanto sua entrada mais apertada continua livre depois dos compromissos dela.</p></div><div class="finance-health-score"><strong>${Math.round(score)}/100</strong>${pctLivre>0?pctLivre+'% livre':'comprometido'}</div></div><div class="finance-health-track"><span class="finance-health-marker" style="left:${score}%"></span></div><div class="finance-health-scale"><span>comprometido</span><span>equilíbrio</span><span>folga</span></div><div class="finance-health-foot">${leitura}</div>`;
-}
-
 function renderProximosPagamentos(){
   const el=document.getElementById('dash-payment-cards'); if(!el)return;
   const now=new Date(); now.setHours(0,0,0,0);
@@ -1267,7 +1183,6 @@ function renderProximosPagamentos(){
   const pagamentos=candidates.map(x=>construirPagamentoSeparado(x.tipo,x.dataPagamento));
   const totalEntradas=pagamentos.reduce((s,p)=>s+p.totalEntrada,0);
   el.innerHTML=pagamentos.map((p,i)=>renderCardPagamento(p,i,totalEntradas)).join('');
-  renderSaudeFinanceira(pagamentos);
 }
 
 function renderProjecaoPagamento(){
@@ -2017,7 +1932,7 @@ function abrirContaFixa(id){
       <label>Sigla</label>
       <input type="text" id="f-sigla" value="${c.sigla}">
       <label>Valor em ${mesNome(contasRef.getMonth())}/${contasRef.getFullYear()}</label>
-      <input type="number" step="0.01" id="f-valor" value="${valorFixaMes(c,key)}">
+      <input type="number" step="0.01" id="f-valor-fixa" value="${valorFixaMes(c,key)}">
       <label>Paga com dinheiro de</label>
       <select id="f-grupo">
         <option value="dia5" ${c.grupo==='dia5'?'selected':''}>${data.config.grupoNomes.dia5}</option>
@@ -2033,7 +1948,7 @@ function abrirContaFixa(id){
     c.nome = document.getElementById('f-nome').value;
     c.sigla = document.getElementById('f-sigla').value;
     c.grupo = document.getElementById('f-grupo').value;
-    setValorFixaMes(c, key, document.getElementById('f-valor').value);
+    setValorFixaMes(c, key, document.getElementById('f-valor-fixa').value);
     save(); renderAll(); closeModal();
   });
   document.getElementById('modal-bg').classList.add('active');
@@ -2056,9 +1971,9 @@ function abrirConta(id){
     <h3>${c?'Editar conta':'Nova conta avulsa'}</h3>
     <form id="form-conta">
       <label>Descrição</label>
-      <input type="text" id="f-desc" placeholder="Ex: Consulta médica, presente..." value="${c?c.desc:''}" required>
+      <input type="text" id="f-desc-conta" placeholder="Ex: Consulta médica, presente..." value="${c?c.desc:''}" required>
       <label>Valor</label>
-      <input type="number" step="0.01" id="f-valor" placeholder="0,00" value="${c?c.valor:''}" required>
+      <input type="number" step="0.01" id="f-valor-conta" placeholder="0,00" value="${c?c.valor:''}" required>
       <label>Vencimento</label>
       <input type="date" id="f-venc" value="${c?c.vencimento:hoje}" required>
       <label>Tipo</label>
@@ -2074,8 +1989,8 @@ function abrirConta(id){
     </form>`;
   document.getElementById('form-conta').addEventListener('submit', e=>{
     e.preventDefault();
-    const desc = document.getElementById('f-desc').value;
-    const valor = Number(document.getElementById('f-valor').value)||0;
+    const desc = document.getElementById('f-desc-conta').value;
+    const valor = Number(document.getElementById('f-valor-conta').value)||0;
     const vencimento = document.getElementById('f-venc').value;
     const tipo = document.getElementById('f-tipo').value;
     const paga = document.getElementById('f-paga').checked;
@@ -2102,9 +2017,9 @@ function abrirGasto(id, prefill){
     ${prefill && prefill.imgSrc ? `<img src="${prefill.imgSrc}" style="width:100%; max-height:180px; object-fit:contain; border-radius:8px; margin-bottom:8px;">` : ''}
     <form id="form-gasto">
       <label>Descrição</label>
-      <input type="text" id="f-desc" placeholder="Ex: Lanche, doce, festa..." value="${descIni}" required>
+      <input type="text" id="f-desc-gasto" placeholder="Ex: Lanche, doce, festa..." value="${descIni}" required>
       <label>Valor</label>
-      <input type="number" step="0.01" id="f-valor" placeholder="0,00" value="${valorIni}" required>
+      <input type="number" step="0.01" id="f-valor-gasto" placeholder="0,00" value="${valorIni}" required>
       <label>Data</label>
       <input type="date" id="f-data" value="${g?g.data:hoje}" required>
       <label>Categoria</label>
@@ -2123,8 +2038,8 @@ function abrirGasto(id, prefill){
     </form>`;
   document.getElementById('form-gasto').addEventListener('submit', e=>{
     e.preventDefault();
-    const desc = document.getElementById('f-desc').value;
-    const valor = Number(document.getElementById('f-valor').value)||0;
+    const desc = document.getElementById('f-desc-gasto').value;
+    const valor = Number(document.getElementById('f-valor-gasto').value)||0;
     const dataC = document.getElementById('f-data').value;
     const categoria = document.getElementById('f-cat').value;
     const fonte = document.getElementById('f-fonte').value;
@@ -2169,7 +2084,7 @@ document.getElementById('input-scan').addEventListener('change', async e=>{
     document.getElementById('input-scan').value = '';
     abrirGasto(null, { valor: melhor?melhor.valor:'', desc:'', imgSrc });
     if(!melhor){
-      setTimeout(()=>{ const fv=document.getElementById('f-valor'); if(fv) fv.placeholder='Não consegui ler o valor, digite manualmente'; }, 50);
+      setTimeout(()=>{ const fv=document.getElementById('f-valor-gasto'); if(fv) fv.placeholder='Não consegui ler o valor, digite manualmente'; }, 50);
     }
   }catch(err){
     document.getElementById('input-scan').value = '';

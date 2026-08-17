@@ -542,6 +542,61 @@ html.uric-is-loading body{
 /* Logo inline: proporção oficial ~2.88:1, sem caixa quadrada */
 .uric-logo-inline{aspect-ratio:2.88/1;}
 .uric-logo-inline.lg{aspect-ratio:2.88/1;}
+
+/* =========================================================
+   URIC — HOME / DASHBOARD CLARO
+   Hierarquia: 1) disponível 2) entra 3) comprometido 4) próximos passos
+   ========================================================= */
+.home-hero{
+  position:relative; overflow:hidden; padding:26px 22px 24px; margin:8px 0 14px;
+  border:1px solid rgba(255,255,255,.13); border-radius:28px;
+  background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.035) 55%,rgba(56,76,255,.045));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.38);
+  -webkit-backdrop-filter:blur(28px) saturate(135%); backdrop-filter:blur(28px) saturate(135%);
+}
+.home-hero:after{content:"";position:absolute;width:170px;height:170px;right:-90px;top:-100px;border-radius:50%;background:linear-gradient(135deg,#FF0E00,#FF9500,#FFFF1B,#4DFF54,#70C7FF,#384CFF);opacity:.14;filter:blur(28px);pointer-events:none;}
+.home-kicker,.home-available-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.52);font-weight:700;}
+.home-date{margin-top:4px;color:rgba(255,255,255,.78);font-size:14px;font-weight:600;}
+.home-available-label{margin-top:24px;color:rgba(255,255,255,.60);}
+.home-available{font-size:clamp(42px,12vw,64px);line-height:1.02;font-weight:800;letter-spacing:-.055em;margin-top:4px;font-variant-numeric:tabular-nums;}
+.home-available.positive{color:#4DFF54 !important}.home-available.negative{color:#FF0E00 !important}
+.home-status{display:inline-flex;margin-top:10px;padding:6px 10px;border:1px solid rgba(255,255,255,.11);border-radius:999px;background:rgba(255,255,255,.055);font-size:11px;font-weight:700;color:rgba(255,255,255,.68);}
+.home-status.warn{color:#FF9500}.home-status.good{color:#4DFF54}
+.home-note{margin:12px 0 0;max-width:640px;color:rgba(255,255,255,.62);font-size:13px;line-height:1.5;}
+.home-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:22px;}
+.home-flow-card{min-width:0;padding:14px 12px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.045);display:flex;gap:9px;align-items:flex-start;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);}
+.home-flow-icon{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:15px;font-weight:800;flex:none;}
+.home-flow-label{display:block;color:rgba(255,255,255,.48);font-size:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
+.home-flow-card strong{display:block;margin-top:3px;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.home-flow-card.receive .home-flow-icon,.home-flow-card.receive strong{color:#4DFF54}.home-flow-card.committed .home-flow-icon,.home-flow-card.committed strong{color:#FF9500}.home-flow-card.remaining .home-flow-icon{color:#70C7FF}.home-flow-card.remaining strong{color:#fff;}
+.home-section{margin:0 0 20px;}
+.home-section-head{display:flex;align-items:flex-end;justify-content:space-between;margin:0 2px 10px;}
+.home-section-head h2{margin:0;font-size:16px;line-height:1.2;letter-spacing:-.02em;text-transform:none;}
+.home-section-head p{margin:4px 0 0;color:rgba(255,255,255,.48);font-size:12px;line-height:1.35;}
+.home-actions{display:grid;gap:7px;}
+.home-action{width:100%;display:grid;grid-template-columns:34px 1fr 20px;align-items:center;text-align:left;gap:10px;padding:13px 12px;border:1px solid rgba(255,255,255,.09);border-radius:17px;background:rgba(255,255,255,.045);color:#fff;cursor:pointer;}
+.home-action:hover{background:rgba(255,255,255,.075);}
+.action-icon{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.07);color:#70C7FF;font-size:15px;}
+.home-action b{display:block;font-size:13px}.home-action small{display:block;margin-top:2px;color:rgba(255,255,255,.48);font-size:11px;line-height:1.3;}.action-arrow{color:rgba(255,255,255,.35);font-size:22px;text-align:right;}
+#dash-tips{margin-bottom:20px;}
+#dash-tips .uric-mini{margin:0;}
+#dash-tips .uric-mini .dot{background:linear-gradient(135deg,#FF0E00,#FF9500,#4DFF54,#70C7FF,#384CFF) !important;box-shadow:0 0 12px rgba(112,199,255,.25);}
+
+/* pagamentos no dashboard: mais compactos e com leitura por fluxo */
+#dash-payment-cards .payment-card{border-radius:20px;margin-bottom:9px;}
+#dash-payment-cards .payment-card-head{padding:15px 16px;}
+#dash-payment-cards .payment-card-available .value{font-size:24px;}
+#dash-payment-cards .payment-card-body{padding:0 16px 15px;}
+
+@media(max-width:520px){
+  .home-hero{padding:22px 18px 20px;border-radius:24px;}
+  .home-flow{gap:6px;}
+  .home-flow-card{padding:12px 9px;border-radius:15px;gap:7px;}
+  .home-flow-icon{width:21px;height:21px;font-size:13px;}
+  .home-flow-label{font-size:8.5px;}
+  .home-flow-card strong{font-size:12.5px;}
+  .home-section-head h2{font-size:15px;}
+}
 </style>
 </head>
 <body>
@@ -569,31 +624,52 @@ html.uric-is-loading body{
 <main>
 
   <div class="view active" id="view-dashboard">
-    <div class="finance-health" id="dash-finance-health"></div>
-    <div class="payments-title">meus próximos pagamentos</div>
-    <div class="payment-list" id="dash-payment-cards"></div>
+    <section class="home-hero" id="dash-home-hero">
+      <div class="home-kicker">próximo pagamento</div>
+      <div class="home-date" id="dash-home-date">--</div>
+      <div class="home-available-label">dinheiro disponível</div>
+      <div class="home-available" id="dash-home-available">--</div>
+      <div class="home-status" id="dash-home-status">projeção atual</div>
+      <p class="home-note" id="dash-home-note"></p>
+    </section>
+
+    <section class="home-flow" aria-label="Resumo do próximo pagamento">
+      <div class="home-flow-card receive">
+        <span class="home-flow-icon">↓</span>
+        <div><span class="home-flow-label">vai entrar</span><strong id="dash-home-in">--</strong></div>
+      </div>
+      <div class="home-flow-card committed">
+        <span class="home-flow-icon">−</span>
+        <div><span class="home-flow-label">já comprometido</span><strong id="dash-home-committed">--</strong></div>
+      </div>
+      <div class="home-flow-card remaining">
+        <span class="home-flow-icon">=</span>
+        <div><span class="home-flow-label">vai sobrar</span><strong id="dash-home-remaining">--</strong></div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="home-section-head">
+        <div><h2>seus próximos pagamentos</h2><p>o que entra, o que já tem destino e o que fica livre.</p></div>
+      </div>
+      <div class="payment-list" id="dash-payment-cards"></div>
+    </section>
+
     <div id="dash-ferias"></div>
     <div id="dash-tips"></div>
 
-
-
-    <div class="section-title" id="titulo-crediario">cartão / crediário</div>
-    <div class="card" id="dash-crediario"></div>
-
-    <div class="section-title">Empréstimos consignados (desconto em folha)</div>
-    <div class="card" id="dash-emprestimos"></div>
-
-    <div class="section-title">Contas fixas do mês</div>
-    <div class="card" id="dash-contas-fixas"></div>
-
-    <div class="section-title">Contas avulsas próximas</div>
-    <div class="card" id="dash-contas"></div>
-
-    <div class="section-title">Últimos gastos</div>
-    <div class="card" id="dash-gastos"></div>
+    <section class="home-section home-actions-section">
+      <div class="home-section-head">
+        <div><h2>o que pode mudar sua projeção</h2><p>registre as coisas que fazem o número mudar.</p></div>
+      </div>
+      <div class="home-actions">
+        <button class="home-action" onclick="mostrarView('ponto','dinheiro')"><span class="action-icon">◷</span><span><b>registrar ponto</b><small>horas extras aumentam a projeção.</small></span><span class="action-arrow">›</span></button>
+        <button class="home-action" onclick="mostrarView('contas','gastos')"><span class="action-icon">▤</span><span><b>ver compromissos</b><small>contas que já têm destino.</small></span><span class="action-arrow">›</span></button>
+        <button class="home-action" onclick="mostrarView('holerites','dinheiro')"><span class="action-icon">▥</span><span><b>ver holerite</b><small>confira como chegamos ao valor.</small></span><span class="action-arrow">›</span></button>
+      </div>
+    </section>
   </div>
 
-  
   <div class="view" id="view-dinheiro">
     <div class="money-hero">
       <p class="hero-title">Seu dinheiro</p>
@@ -1241,150 +1317,48 @@ function setValorFixaMes(c, key, val){
 }
 
 function renderDashboard(){
-  const now = new Date();
-  const diaHoje = now.getDate();
-  const proxIsDia20 = diaHoje >= 5 && diaHoje < 20; // depois do dia5 e antes do dia20, o próximo é o dia20
-  const gnProx = data.config.grupoNomes || {dia5:'entrada 1', dia20:'entrada 2'};
-  let proximoValor, proximoLabel;
-  if(proxIsDia20){
-    proximoValor = Number(data.config.salarioBase||0) * Number(data.config.valePct||0);
-    proximoLabel = `${gnProx.dia20} fixa (${Math.round((data.config.valePct||0)*100)}% do salário, sem descontos)`;
-  } else {
-    const calculados = data.holerites.filter(h=>h.calculado).sort((a,b)=>(a.ano*12+a.mes)-(b.ano*12+b.mes));
-    const ultimos3d5 = calculados.slice(-3).map(h=>h.dia5||0);
-    proximoValor = ultimos3d5.length ? ultimos3d5.reduce((a,b)=>a+b,0)/ultimos3d5.length : 0;
-    proximoLabel = ultimos3d5.length ? `estimativa baseada nos últimos ${ultimos3d5.length} valores de ${gnProx.dia5.toLowerCase()}` : `calcule o holerite do mês em ponto pra ver uma estimativa de ${gnProx.dia5.toLowerCase()}`;
-  }
-  const legacyProximo = document.getElementById('dash-proximo');
-  const legacyProximoData = document.getElementById('dash-proximo-data');
-  if(legacyProximo) legacyProximo.innerHTML = brl(proximoValor);
-  if(legacyProximoData) legacyProximoData.textContent = proximoLabel;
+  const now=new Date();
+  now.setHours(0,0,0,0);
+  const candidates=[
+    {tipo:'dia20',dataPagamento:proximaDataPagamento('dia20',now)},
+    {tipo:'dia5',dataPagamento:proximaDataPagamento('dia5',now)}
+  ].sort((a,b)=>a.dataPagamento-b.dataPagamento);
+  const proximo=candidates[0] ? construirPagamentoSeparado(candidates[0].tipo,candidates[0].dataPagamento) : null;
 
-  const mesAtual = now.getMonth(), anoAtual = now.getFullYear();
-  const keyAtual = pontoKey(now);
-  const gastosMes = data.gastos.filter(g=>{ const d = new Date(g.data); return d.getMonth()===mesAtual && d.getFullYear()===anoAtual; });
-  const extrasMes = data.extras.filter(x=>{ const d = new Date(x.data); return d.getMonth()===mesAtual && d.getFullYear()===anoAtual; });
-  const totalExtrasMes = extrasMes.reduce((a,x)=>a+Number(x.valor||0),0);
-  const totalGastosMes = gastosMes.reduce((a,g)=>a+Number(g.valor||0),0);
-  const holeriteAtual = data.holerites.find(h=>h.mes===mesAtual && h.ano===anoAtual);
-  const receitaMes = (holeriteAtual ? (holeriteAtual.dia5||0)+(holeriteAtual.dia20||0) : proximoValor) + totalExtrasMes;
-  const fixasTotal = totalFixas('dia5', keyAtual) + totalFixas('dia20', keyAtual);
-  const saldo = receitaMes - totalGastosMes - fixasTotal;
-  const saldoEl = document.getElementById('dash-saldo');
-  const saldoSubEl = document.getElementById('dash-saldo-sub');
-  if(saldoEl){
-    saldoEl.innerHTML = brl(saldo);
-    saldoEl.className = 'stat-value hero-value ' + (saldo>=0?'pos':'neg');
-  }
-  if(saldoSubEl) saldoSubEl.innerHTML = brl(totalGastosMes+fixasTotal) + ' comprometido de ' + brl(receitaMes);
-  atualizarMarcadorSaude(saldo, receitaMes);
-  const credMiniEl = document.getElementById('dash-cred-mini');
-  const credMiniSubEl = document.getElementById('dash-cred-mini-sub');
-  const credMiniLabelEl = document.getElementById('dash-cred-mini-label');
-  const credItemMini = data.config.descontosFixos.find(d=>d.limite>0);
-  if(credItemMini && credMiniEl){
-    if(credMiniLabelEl) credMiniLabelEl.textContent = (credItemMini.nome || 'cartão / crediário') + ' devido';
-    credMiniEl.innerHTML = brl(credItemMini.valor);
-    credMiniEl.className = 'stat-value ' + (credItemMini.valor>credItemMini.meta?'neg':'pos');
-    credMiniSubEl.innerHTML = 'de até ' + brl(credItemMini.meta);
+  const amount=document.getElementById('dash-home-available');
+  const date=document.getElementById('dash-home-date');
+  const status=document.getElementById('dash-home-status');
+  const note=document.getElementById('dash-home-note');
+  const incoming=document.getElementById('dash-home-in');
+  const committed=document.getElementById('dash-home-committed');
+  const remaining=document.getElementById('dash-home-remaining');
+
+  if(proximo){
+    if(date) date.textContent=formatDataBR(proximo.dataPagamento.toISOString().slice(0,10));
+    if(amount){ amount.innerHTML=brl(proximo.disponivel); amount.className='home-available '+(proximo.disponivel<0?'negative':'positive'); }
+    if(status){ status.className='home-status '+(proximo.disponivel<0?'warn':'good'); status.textContent=proximo.fechado?'resultado do holerite':'projeção atual'; }
+    if(incoming) incoming.textContent=brl(proximo.totalEntrada);
+    if(committed) committed.textContent='-'+brl(proximo.totalDescontos);
+    if(remaining){ remaining.textContent=brl(proximo.disponivel); remaining.className=''+(proximo.disponivel<0?' negative':' positive'); }
+    if(note){
+      note.textContent=proximo.disponivel<0
+        ? (proximo.totalHoras>0 ? `está ${brlTexto(Math.abs(proximo.disponivel))} abaixo do necessário. você já registrou ${formatHoras(proximo.totalHoras)} de hora extra; novas horas podem melhorar a projeção.` : `está ${brlTexto(Math.abs(proximo.disponivel))} abaixo do necessário. registre seu ponto para acompanhar essa projeção.`)
+        : (proximo.totalHoras>0 ? `depois dos compromissos, você preserva ${brlTexto(proximo.disponivel)}. novas horas extras ainda podem mudar esse valor.` : `depois dos compromissos, você preserva ${brlTexto(proximo.disponivel)}. essa é uma projeção do momento.`);
+    }
   }
 
-  // Uric — destaque com o insight mais relevante do momento
-  const tipsEl = document.getElementById('dash-tips');
+  renderProximosPagamentos();
+  renderFeriasNoDashboard();
+
+  const tipsEl=document.getElementById('dash-tips');
   if(tipsEl){
-    const insights = gerarInsightsUric();
-    const labelTxt = {viu:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> viu', calculou:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> calculou', recomenda:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> recomenda', alerta:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> alerta'};
-    const destaque = insights.find(i=>i.label==='alerta') || insights[0];
-    tipsEl.innerHTML = destaque ? `
-      <div class="uric-mini" onclick="mostrarView('uric')">
-        <span class="dot" style="background:${destaque.label==='alerta'?'var(--uric-red)':(destaque.label==='recomenda'?'var(--uric-green)':'var(--uric-cyan)')};"></span>
-        <div><div class="uric-label ${destaque.label}" style="margin-bottom:4px;">${labelTxt[destaque.label]}</div><div class="uric-text">${destaque.texto}</div></div>
-      </div>` : '';
+    const insights=gerarInsightsUric();
+    const labelTxt={viu:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> viu',calculou:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> calculou',recomenda:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> recomenda',alerta:'<span class="uric-logo-inline" aria-label="Uric" role="img"></span> alerta'};
+    const destaque=insights.find(i=>i.label==='alerta')||insights[0];
+    tipsEl.innerHTML=destaque?`<div class="uric-mini" onclick="mostrarView('uric')"><span class="dot"></span><div><div class="uric-label ${destaque.label}">${labelTxt[destaque.label]}</div><div class="uric-text">${destaque.texto}</div></div></div>`:'';
   }
-
-  // crediario — atualizado manualmente pelo usuário a cada compra, com slider
-  const cred = credItemMini;
-  const credEl = document.getElementById('dash-crediario');
-  const tituloCred = document.getElementById('titulo-crediario');
-  if(tituloCred) tituloCred.textContent = (cred && cred.nome) ? cred.nome : 'cartão / crediário';
-  if(cred){
-    const pct = Math.min(100, Math.round((cred.valor/cred.limite)*100));
-    credEl.innerHTML = `
-      <div class="row"><div class="desc">Valor total devido</div><div class="amount ${cred.valor>cred.meta?'neg':'pos'}" id="cred-valor-display">${brl(cred.valor)}</div></div>
-      <div class="row"><div class="desc">Meta (diminuindo sempre)</div><div class="amount">até ${brl(cred.meta)}</div></div>
-      <div class="row"><div class="desc">Limite do cartão</div><div class="amount">${brl(cred.limite)}</div></div>
-      <div class="progress"><div class="fill" id="cred-progress-fill" style="width:${pct}%; background:${cred.valor>cred.meta?'var(--danger)':'var(--healthy)'};"></div></div>
-      <input type="range" id="cred-slider" class="slider" min="0" max="${cred.limite}" step="5" value="${Math.min(cred.valor, cred.limite)}" style="margin-top:14px;">
-      <div class="row" style="border:none; padding-top:4px;"><span class="meta">R$ 0</span><span class="meta">${brl(cred.limite)}</span></div>
-      <form id="form-cred-quick" style="margin-top:6px; display:flex; gap:8px; align-items:flex-end;">
-        <div style="flex:1;"><label>Ou digite o valor exato</label><input type="number" step="0.01" id="cred-quick-valor" value="${cred.valor}"></div>
-        <button type="submit" class="btn" style="width:auto; padding:11px 16px;">Salvar</button>
-      </form>
-    `;
-    const slider = document.getElementById('cred-slider');
-    const numInput = document.getElementById('cred-quick-valor');
-    const display = document.getElementById('cred-valor-display');
-    const fill = document.getElementById('cred-progress-fill');
-    const updateLive = (val)=>{
-      const p = Math.min(100, Math.round((val/cred.limite)*100));
-      display.innerHTML = brl(val);
-      display.className = 'amount ' + (val>cred.meta?'neg':'pos');
-      fill.style.width = p+'%';
-      fill.style.background = val>cred.meta?'var(--danger)':'var(--healthy)';
-    };
-    slider.addEventListener('input', ()=>{ numInput.value = slider.value; updateLive(Number(slider.value)); });
-    slider.addEventListener('change', ()=>{ cred.valor = Number(slider.value)||0; save(); renderDashboard(); });
-    numInput.addEventListener('input', ()=>{ const v = Number(numInput.value)||0; if(v<=cred.limite) slider.value = v; updateLive(v); });
-    const fq = document.getElementById('form-cred-quick');
-    if(fq) fq.addEventListener('submit', e=>{
-      e.preventDefault();
-      cred.valor = Number(document.getElementById('cred-quick-valor').value)||0;
-      save(); renderAll();
-    });
-  } else {
-    credEl.innerHTML = '<div class="empty">Configure o crediário em Ponto → editar</div>';
-  }
-
-  // empréstimos consignados — parcela fixa, descontada direto da folha, sem limite/meta/slider
-  const emprestimosEl = document.getElementById('dash-emprestimos');
-  const emprestimos = data.config.emprestimos || [];
-  if(emprestimos.length){
-    const totalParcelas = emprestimos.reduce((a,e)=>a+Number(e.parcela||0),0);
-    emprestimosEl.innerHTML = `
-      ${emprestimos.map(e=>`<div class="row"><div><div class="desc">${e.nome}</div><div class="meta">${e.parcelasRestantes>0 ? e.parcelasRestantes+' parcela(s) restante(s)' : 'parcela fixa mensal'}</div></div><div class="amount neg">-${brl(e.parcela)}</div></div>`).join('')}
-      <div class="row" style="border:none; padding-top:6px;"><div class="desc" style="font-weight:600;">Total descontado da folha</div><div class="amount neg" style="font-weight:600;">-${brl(totalParcelas)}</div></div>
-      <button type="button" class="btn secondary small" style="margin-top:8px;" onclick="abrirConfig()">+ adicionar / editar empréstimo</button>
-    `;
-  } else {
-    emprestimosEl.innerHTML = '<div class="empty">Nenhum empréstimo consignado cadastrado</div><button type="button" class="btn secondary small" style="margin-top:8px;" onclick="abrirConfig()">+ adicionar empréstimo consignado</button>';
-  }
-
-  // contas fixas resumo (com remanente, igual à planilha)
-  const fixasEl = document.getElementById('dash-contas-fixas');
-  const d5 = data.contasFixas.filter(c=>c.grupo==='dia5');
-  const d20 = data.contasFixas.filter(c=>c.grupo==='dia20');
-  const tot5 = totalFixas('dia5', keyAtual), tot20 = totalFixas('dia20', keyAtual);
-  const recDia5 = holeriteAtual ? (holeriteAtual.dia5||0) : 0;
-  const recDia20 = holeriteAtual ? (holeriteAtual.dia20||0) : 0;
-  const rem5 = recDia5 - tot5, rem20 = recDia20 - tot20;
-  const gn = data.config.grupoNomes || {dia5:'Sobra do dia 5', dia20:'Dinheiro do dia 20'};
-  fixasEl.innerHTML = `
-    <div class="grouphead"><span><span class="dot" style="background:var(--blue);"></span>${gn.dia5}</span><span>${brl(tot5)}</span></div>
-    ${d5.map(c=>`<div class="row"><div class="desc">${c.nome} <span class="meta">(${c.sigla})</span></div><div class="amount neg">-${brl(valorFixaMes(c,keyAtual))}</div></div>`).join('')}
-    <div class="row" style="border:none; padding-top:6px;"><div class="desc" style="font-weight:600;">Remanente ${gn.dia5}</div><div class="amount ${rem5>=0?'pos':'neg'}" style="font-weight:600;">${brl(rem5)}</div></div>
-    <div class="grouphead" style="margin-top:10px;"><span><span class="dot" style="background:var(--muted);"></span>${gn.dia20}</span><span>${brl(tot20)}</span></div>
-    ${d20.map(c=>`<div class="row"><div class="desc">${c.nome} <span class="meta">(${c.sigla})</span></div><div class="amount neg">-${brl(valorFixaMes(c,keyAtual))}</div></div>`).join('')}
-    <div class="row" style="border:none; padding-top:6px;"><div class="desc" style="font-weight:600;">Remanente ${gn.dia20}</div><div class="amount ${rem20>=0?'pos':'neg'}" style="font-weight:600;">${brl(rem20)}</div></div>
-  `;
-
-  const contasEl = document.getElementById('dash-contas');
-  const proximas = [...data.contas].filter(c=>!c.paga).sort((a,b)=> new Date(a.vencimento)-new Date(b.vencimento)).slice(0,4);
-  contasEl.innerHTML = proximas.length ? proximas.map(c=>rowConta(c,false)).join('') : '<div class="empty">Nenhuma conta avulsa pendente</div>';
-
-  const gastosEl = document.getElementById('dash-gastos');
-  const ultimosG = [...data.gastos].sort((a,b)=> new Date(b.data)-new Date(a.data)).slice(0,4);
-  gastosEl.innerHTML = ultimosG.length ? ultimosG.map(g=>rowGasto(g,false)).join('') : '<div class="empty">Nenhum gasto lançado ainda</div>';
 }
+
 
 function rowConta(c, withActions){
   const venc = new Date(c.vencimento+'T00:00:00');
